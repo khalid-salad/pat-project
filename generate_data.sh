@@ -6,16 +6,21 @@ function usage {
 	echo "Usage: $(basename $0) [-m MODE]" 2>&1
 	echo "Generate Numpy test report."
 	echo "    -m MODE        'fast' or 'full' (default fast)"
+	echo "    -b             rebuild numpy in /tmp folder"
 }
 
 function build {
-        git clone git@github.com:numpy/numpy.git $NUMPYDIR --recursive --branch v1.21.6; 
+        git clone git@github.com:numpy/numpy.git $NUMPYDIR --branch v1.21.6; 
         python3.9 -m pip install -r $NUMPYDIR/test_requirements.txt;
         python3.9 $NUMPYDIR/runtests.py --mode $MODE --coverage;
         python3.9 $NUMPYDIR/runtests.py --mode $MODE --gcov;
         python3.9 $NUMPYDIR/runtests.py --mode $MODE --lcov-html;
-        cp -r $NUMPYDIR/build/lcov ./
-        cp -r $NUMPYDIR/build/coverage ./
+        for DIR in lcov coverage; do
+            if [ -d $DIR ]; then
+                rm -rf $DIR
+            fi
+            cp -r $NUMPYDIR/build/$DIR ./
+	done
 }
 
 DIR=/tmp
@@ -45,11 +50,15 @@ fi
 
 if [ $BUILD == true ]; then
     if [ -d $NUMPYDIR ]; then
-    	echo "Found numpy folder in $DIR. Removing.";
+    	echo "Found Numpy folder in $DIR. Removing.";
     	rm -rf $NUMPYDIR;
     fi
     build
+elif ! [ -d $NUMPYDIR ]; then
+    echo "No Numpy folder in $DIR. Building";
+    build
 fi
+
 TESTCSV="./test.csv"
 PRODCSV="./prod.csv"
 

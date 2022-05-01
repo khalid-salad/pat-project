@@ -1,0 +1,672 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.out - /tmp/numpy/numpy/core/include/numpy/npy_math.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../../../../index.html">top level</a> - <a href="index.html">tmp/numpy/numpy/core/include/numpy</a> - npy_math.h<span style="font-size: 80%;"> (source / <a href="npy_math.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.out</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">30</td>
+            <td class="headerCovTableEntry">30</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">-</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #ifndef __NPY_MATH_C99_H_</a>
+<a name="2"><span class="lineNum">       2 </span>            : #define __NPY_MATH_C99_H_</a>
+<a name="3"><span class="lineNum">       3 </span>            : </a>
+<a name="4"><span class="lineNum">       4 </span>            : #ifdef __cplusplus</a>
+<a name="5"><span class="lineNum">       5 </span>            : extern &quot;C&quot; {</a>
+<a name="6"><span class="lineNum">       6 </span>            : #endif</a>
+<a name="7"><span class="lineNum">       7 </span>            : </a>
+<a name="8"><span class="lineNum">       8 </span>            : #include &lt;numpy/npy_common.h&gt;</a>
+<a name="9"><span class="lineNum">       9 </span>            : </a>
+<a name="10"><span class="lineNum">      10 </span>            : #include &lt;math.h&gt;</a>
+<a name="11"><span class="lineNum">      11 </span>            : #ifdef __SUNPRO_CC</a>
+<a name="12"><span class="lineNum">      12 </span>            : #include &lt;sunmath.h&gt;</a>
+<a name="13"><span class="lineNum">      13 </span>            : #endif</a>
+<a name="14"><span class="lineNum">      14 </span>            : </a>
+<a name="15"><span class="lineNum">      15 </span>            : /* By adding static inline specifiers to npy_math function definitions when</a>
+<a name="16"><span class="lineNum">      16 </span>            :    appropriate, compiler is given the opportunity to optimize */</a>
+<a name="17"><span class="lineNum">      17 </span>            : #if NPY_INLINE_MATH</a>
+<a name="18"><span class="lineNum">      18 </span>            : #define NPY_INPLACE NPY_INLINE static</a>
+<a name="19"><span class="lineNum">      19 </span>            : #else</a>
+<a name="20"><span class="lineNum">      20 </span>            : #define NPY_INPLACE</a>
+<a name="21"><span class="lineNum">      21 </span>            : #endif</a>
+<a name="22"><span class="lineNum">      22 </span>            : </a>
+<a name="23"><span class="lineNum">      23 </span>            : </a>
+<a name="24"><span class="lineNum">      24 </span>            : /*</a>
+<a name="25"><span class="lineNum">      25 </span>            :  * NAN and INFINITY like macros (same behavior as glibc for NAN, same as C99</a>
+<a name="26"><span class="lineNum">      26 </span>            :  * for INFINITY)</a>
+<a name="27"><span class="lineNum">      27 </span>            :  *</a>
+<a name="28"><span class="lineNum">      28 </span>            :  * XXX: I should test whether INFINITY and NAN are available on the platform</a>
+<a name="29"><span class="lineNum">      29 </span>            :  */</a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">       2170 : NPY_INLINE static float __npy_inff(void)</span></a>
+<a name="31"><span class="lineNum">      31 </span>            : {</a>
+<a name="32"><span class="lineNum">      32 </span><span class="lineCov">       2170 :     const union { npy_uint32 __i; float __f;} __bint = {0x7f800000UL};</span></a>
+<a name="33"><span class="lineNum">      33 </span><span class="lineCov">       2170 :     return __bint.__f;</span></a>
+<a name="34"><span class="lineNum">      34 </span>            : }</a>
+<a name="35"><span class="lineNum">      35 </span>            : </a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">     637198 : NPY_INLINE static float __npy_nanf(void)</span></a>
+<a name="37"><span class="lineNum">      37 </span>            : {</a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">     637198 :     const union { npy_uint32 __i; float __f;} __bint = {0x7fc00000UL};</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">     637198 :     return __bint.__f;</span></a>
+<a name="40"><span class="lineNum">      40 </span>            : }</a>
+<a name="41"><span class="lineNum">      41 </span>            : </a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">         49 : NPY_INLINE static float __npy_pzerof(void)</span></a>
+<a name="43"><span class="lineNum">      43 </span>            : {</a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">         49 :     const union { npy_uint32 __i; float __f;} __bint = {0x00000000UL};</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">         49 :     return __bint.__f;</span></a>
+<a name="46"><span class="lineNum">      46 </span>            : }</a>
+<a name="47"><span class="lineNum">      47 </span>            : </a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">         49 : NPY_INLINE static float __npy_nzerof(void)</span></a>
+<a name="49"><span class="lineNum">      49 </span>            : {</a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">         49 :     const union { npy_uint32 __i; float __f;} __bint = {0x80000000UL};</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         49 :     return __bint.__f;</span></a>
+<a name="52"><span class="lineNum">      52 </span>            : }</a>
+<a name="53"><span class="lineNum">      53 </span>            : </a>
+<a name="54"><span class="lineNum">      54 </span>            : #define NPY_INFINITYF __npy_inff()</a>
+<a name="55"><span class="lineNum">      55 </span>            : #define NPY_NANF __npy_nanf()</a>
+<a name="56"><span class="lineNum">      56 </span>            : #define NPY_PZEROF __npy_pzerof()</a>
+<a name="57"><span class="lineNum">      57 </span>            : #define NPY_NZEROF __npy_nzerof()</a>
+<a name="58"><span class="lineNum">      58 </span>            : </a>
+<a name="59"><span class="lineNum">      59 </span>            : #define NPY_INFINITY ((npy_double)NPY_INFINITYF)</a>
+<a name="60"><span class="lineNum">      60 </span>            : #define NPY_NAN ((npy_double)NPY_NANF)</a>
+<a name="61"><span class="lineNum">      61 </span>            : #define NPY_PZERO ((npy_double)NPY_PZEROF)</a>
+<a name="62"><span class="lineNum">      62 </span>            : #define NPY_NZERO ((npy_double)NPY_NZEROF)</a>
+<a name="63"><span class="lineNum">      63 </span>            : </a>
+<a name="64"><span class="lineNum">      64 </span>            : #define NPY_INFINITYL ((npy_longdouble)NPY_INFINITYF)</a>
+<a name="65"><span class="lineNum">      65 </span>            : #define NPY_NANL ((npy_longdouble)NPY_NANF)</a>
+<a name="66"><span class="lineNum">      66 </span>            : #define NPY_PZEROL ((npy_longdouble)NPY_PZEROF)</a>
+<a name="67"><span class="lineNum">      67 </span>            : #define NPY_NZEROL ((npy_longdouble)NPY_NZEROF)</a>
+<a name="68"><span class="lineNum">      68 </span>            : </a>
+<a name="69"><span class="lineNum">      69 </span>            : /*</a>
+<a name="70"><span class="lineNum">      70 </span>            :  * Useful constants</a>
+<a name="71"><span class="lineNum">      71 </span>            :  */</a>
+<a name="72"><span class="lineNum">      72 </span>            : #define NPY_E         2.718281828459045235360287471352662498  /* e */</a>
+<a name="73"><span class="lineNum">      73 </span>            : #define NPY_LOG2E     1.442695040888963407359924681001892137  /* log_2 e */</a>
+<a name="74"><span class="lineNum">      74 </span>            : #define NPY_LOG10E    0.434294481903251827651128918916605082  /* log_10 e */</a>
+<a name="75"><span class="lineNum">      75 </span>            : #define NPY_LOGE2     0.693147180559945309417232121458176568  /* log_e 2 */</a>
+<a name="76"><span class="lineNum">      76 </span>            : #define NPY_LOGE10    2.302585092994045684017991454684364208  /* log_e 10 */</a>
+<a name="77"><span class="lineNum">      77 </span>            : #define NPY_PI        3.141592653589793238462643383279502884  /* pi */</a>
+<a name="78"><span class="lineNum">      78 </span>            : #define NPY_PI_2      1.570796326794896619231321691639751442  /* pi/2 */</a>
+<a name="79"><span class="lineNum">      79 </span>            : #define NPY_PI_4      0.785398163397448309615660845819875721  /* pi/4 */</a>
+<a name="80"><span class="lineNum">      80 </span>            : #define NPY_1_PI      0.318309886183790671537767526745028724  /* 1/pi */</a>
+<a name="81"><span class="lineNum">      81 </span>            : #define NPY_2_PI      0.636619772367581343075535053490057448  /* 2/pi */</a>
+<a name="82"><span class="lineNum">      82 </span>            : #define NPY_EULER     0.577215664901532860606512090082402431  /* Euler constant */</a>
+<a name="83"><span class="lineNum">      83 </span>            : #define NPY_SQRT2     1.414213562373095048801688724209698079  /* sqrt(2) */</a>
+<a name="84"><span class="lineNum">      84 </span>            : #define NPY_SQRT1_2   0.707106781186547524400844362104849039  /* 1/sqrt(2) */</a>
+<a name="85"><span class="lineNum">      85 </span>            : </a>
+<a name="86"><span class="lineNum">      86 </span>            : #define NPY_Ef        2.718281828459045235360287471352662498F /* e */</a>
+<a name="87"><span class="lineNum">      87 </span>            : #define NPY_LOG2Ef    1.442695040888963407359924681001892137F /* log_2 e */</a>
+<a name="88"><span class="lineNum">      88 </span>            : #define NPY_LOG10Ef   0.434294481903251827651128918916605082F /* log_10 e */</a>
+<a name="89"><span class="lineNum">      89 </span>            : #define NPY_LOGE2f    0.693147180559945309417232121458176568F /* log_e 2 */</a>
+<a name="90"><span class="lineNum">      90 </span>            : #define NPY_LOGE10f   2.302585092994045684017991454684364208F /* log_e 10 */</a>
+<a name="91"><span class="lineNum">      91 </span>            : #define NPY_PIf       3.141592653589793238462643383279502884F /* pi */</a>
+<a name="92"><span class="lineNum">      92 </span>            : #define NPY_PI_2f     1.570796326794896619231321691639751442F /* pi/2 */</a>
+<a name="93"><span class="lineNum">      93 </span>            : #define NPY_PI_4f     0.785398163397448309615660845819875721F /* pi/4 */</a>
+<a name="94"><span class="lineNum">      94 </span>            : #define NPY_1_PIf     0.318309886183790671537767526745028724F /* 1/pi */</a>
+<a name="95"><span class="lineNum">      95 </span>            : #define NPY_2_PIf     0.636619772367581343075535053490057448F /* 2/pi */</a>
+<a name="96"><span class="lineNum">      96 </span>            : #define NPY_EULERf    0.577215664901532860606512090082402431F /* Euler constant */</a>
+<a name="97"><span class="lineNum">      97 </span>            : #define NPY_SQRT2f    1.414213562373095048801688724209698079F /* sqrt(2) */</a>
+<a name="98"><span class="lineNum">      98 </span>            : #define NPY_SQRT1_2f  0.707106781186547524400844362104849039F /* 1/sqrt(2) */</a>
+<a name="99"><span class="lineNum">      99 </span>            : </a>
+<a name="100"><span class="lineNum">     100 </span>            : #define NPY_El        2.718281828459045235360287471352662498L /* e */</a>
+<a name="101"><span class="lineNum">     101 </span>            : #define NPY_LOG2El    1.442695040888963407359924681001892137L /* log_2 e */</a>
+<a name="102"><span class="lineNum">     102 </span>            : #define NPY_LOG10El   0.434294481903251827651128918916605082L /* log_10 e */</a>
+<a name="103"><span class="lineNum">     103 </span>            : #define NPY_LOGE2l    0.693147180559945309417232121458176568L /* log_e 2 */</a>
+<a name="104"><span class="lineNum">     104 </span>            : #define NPY_LOGE10l   2.302585092994045684017991454684364208L /* log_e 10 */</a>
+<a name="105"><span class="lineNum">     105 </span>            : #define NPY_PIl       3.141592653589793238462643383279502884L /* pi */</a>
+<a name="106"><span class="lineNum">     106 </span>            : #define NPY_PI_2l     1.570796326794896619231321691639751442L /* pi/2 */</a>
+<a name="107"><span class="lineNum">     107 </span>            : #define NPY_PI_4l     0.785398163397448309615660845819875721L /* pi/4 */</a>
+<a name="108"><span class="lineNum">     108 </span>            : #define NPY_1_PIl     0.318309886183790671537767526745028724L /* 1/pi */</a>
+<a name="109"><span class="lineNum">     109 </span>            : #define NPY_2_PIl     0.636619772367581343075535053490057448L /* 2/pi */</a>
+<a name="110"><span class="lineNum">     110 </span>            : #define NPY_EULERl    0.577215664901532860606512090082402431L /* Euler constant */</a>
+<a name="111"><span class="lineNum">     111 </span>            : #define NPY_SQRT2l    1.414213562373095048801688724209698079L /* sqrt(2) */</a>
+<a name="112"><span class="lineNum">     112 </span>            : #define NPY_SQRT1_2l  0.707106781186547524400844362104849039L /* 1/sqrt(2) */</a>
+<a name="113"><span class="lineNum">     113 </span>            : </a>
+<a name="114"><span class="lineNum">     114 </span>            : /*</a>
+<a name="115"><span class="lineNum">     115 </span>            :  * Integer functions.</a>
+<a name="116"><span class="lineNum">     116 </span>            :  */</a>
+<a name="117"><span class="lineNum">     117 </span>            : NPY_INPLACE npy_uint npy_gcdu(npy_uint a, npy_uint b);</a>
+<a name="118"><span class="lineNum">     118 </span>            : NPY_INPLACE npy_uint npy_lcmu(npy_uint a, npy_uint b);</a>
+<a name="119"><span class="lineNum">     119 </span>            : NPY_INPLACE npy_ulong npy_gcdul(npy_ulong a, npy_ulong b);</a>
+<a name="120"><span class="lineNum">     120 </span>            : NPY_INPLACE npy_ulong npy_lcmul(npy_ulong a, npy_ulong b);</a>
+<a name="121"><span class="lineNum">     121 </span>            : NPY_INPLACE npy_ulonglong npy_gcdull(npy_ulonglong a, npy_ulonglong b);</a>
+<a name="122"><span class="lineNum">     122 </span>            : NPY_INPLACE npy_ulonglong npy_lcmull(npy_ulonglong a, npy_ulonglong b);</a>
+<a name="123"><span class="lineNum">     123 </span>            : </a>
+<a name="124"><span class="lineNum">     124 </span>            : NPY_INPLACE npy_int npy_gcd(npy_int a, npy_int b);</a>
+<a name="125"><span class="lineNum">     125 </span>            : NPY_INPLACE npy_int npy_lcm(npy_int a, npy_int b);</a>
+<a name="126"><span class="lineNum">     126 </span>            : NPY_INPLACE npy_long npy_gcdl(npy_long a, npy_long b);</a>
+<a name="127"><span class="lineNum">     127 </span>            : NPY_INPLACE npy_long npy_lcml(npy_long a, npy_long b);</a>
+<a name="128"><span class="lineNum">     128 </span>            : NPY_INPLACE npy_longlong npy_gcdll(npy_longlong a, npy_longlong b);</a>
+<a name="129"><span class="lineNum">     129 </span>            : NPY_INPLACE npy_longlong npy_lcmll(npy_longlong a, npy_longlong b);</a>
+<a name="130"><span class="lineNum">     130 </span>            : </a>
+<a name="131"><span class="lineNum">     131 </span>            : NPY_INPLACE npy_ubyte npy_rshiftuhh(npy_ubyte a, npy_ubyte b);</a>
+<a name="132"><span class="lineNum">     132 </span>            : NPY_INPLACE npy_ubyte npy_lshiftuhh(npy_ubyte a, npy_ubyte b);</a>
+<a name="133"><span class="lineNum">     133 </span>            : NPY_INPLACE npy_ushort npy_rshiftuh(npy_ushort a, npy_ushort b);</a>
+<a name="134"><span class="lineNum">     134 </span>            : NPY_INPLACE npy_ushort npy_lshiftuh(npy_ushort a, npy_ushort b);</a>
+<a name="135"><span class="lineNum">     135 </span>            : NPY_INPLACE npy_uint npy_rshiftu(npy_uint a, npy_uint b);</a>
+<a name="136"><span class="lineNum">     136 </span>            : NPY_INPLACE npy_uint npy_lshiftu(npy_uint a, npy_uint b);</a>
+<a name="137"><span class="lineNum">     137 </span>            : NPY_INPLACE npy_ulong npy_rshiftul(npy_ulong a, npy_ulong b);</a>
+<a name="138"><span class="lineNum">     138 </span>            : NPY_INPLACE npy_ulong npy_lshiftul(npy_ulong a, npy_ulong b);</a>
+<a name="139"><span class="lineNum">     139 </span>            : NPY_INPLACE npy_ulonglong npy_rshiftull(npy_ulonglong a, npy_ulonglong b);</a>
+<a name="140"><span class="lineNum">     140 </span>            : NPY_INPLACE npy_ulonglong npy_lshiftull(npy_ulonglong a, npy_ulonglong b);</a>
+<a name="141"><span class="lineNum">     141 </span>            : </a>
+<a name="142"><span class="lineNum">     142 </span>            : NPY_INPLACE npy_byte npy_rshifthh(npy_byte a, npy_byte b);</a>
+<a name="143"><span class="lineNum">     143 </span>            : NPY_INPLACE npy_byte npy_lshifthh(npy_byte a, npy_byte b);</a>
+<a name="144"><span class="lineNum">     144 </span>            : NPY_INPLACE npy_short npy_rshifth(npy_short a, npy_short b);</a>
+<a name="145"><span class="lineNum">     145 </span>            : NPY_INPLACE npy_short npy_lshifth(npy_short a, npy_short b);</a>
+<a name="146"><span class="lineNum">     146 </span>            : NPY_INPLACE npy_int npy_rshift(npy_int a, npy_int b);</a>
+<a name="147"><span class="lineNum">     147 </span>            : NPY_INPLACE npy_int npy_lshift(npy_int a, npy_int b);</a>
+<a name="148"><span class="lineNum">     148 </span>            : NPY_INPLACE npy_long npy_rshiftl(npy_long a, npy_long b);</a>
+<a name="149"><span class="lineNum">     149 </span>            : NPY_INPLACE npy_long npy_lshiftl(npy_long a, npy_long b);</a>
+<a name="150"><span class="lineNum">     150 </span>            : NPY_INPLACE npy_longlong npy_rshiftll(npy_longlong a, npy_longlong b);</a>
+<a name="151"><span class="lineNum">     151 </span>            : NPY_INPLACE npy_longlong npy_lshiftll(npy_longlong a, npy_longlong b);</a>
+<a name="152"><span class="lineNum">     152 </span>            : </a>
+<a name="153"><span class="lineNum">     153 </span>            : /*</a>
+<a name="154"><span class="lineNum">     154 </span>            :  * C99 double math funcs</a>
+<a name="155"><span class="lineNum">     155 </span>            :  */</a>
+<a name="156"><span class="lineNum">     156 </span>            : NPY_INPLACE double npy_sin(double x);</a>
+<a name="157"><span class="lineNum">     157 </span>            : NPY_INPLACE double npy_cos(double x);</a>
+<a name="158"><span class="lineNum">     158 </span>            : NPY_INPLACE double npy_tan(double x);</a>
+<a name="159"><span class="lineNum">     159 </span>            : NPY_INPLACE double npy_sinh(double x);</a>
+<a name="160"><span class="lineNum">     160 </span>            : NPY_INPLACE double npy_cosh(double x);</a>
+<a name="161"><span class="lineNum">     161 </span>            : NPY_INPLACE double npy_tanh(double x);</a>
+<a name="162"><span class="lineNum">     162 </span>            : </a>
+<a name="163"><span class="lineNum">     163 </span>            : NPY_INPLACE double npy_asin(double x);</a>
+<a name="164"><span class="lineNum">     164 </span>            : NPY_INPLACE double npy_acos(double x);</a>
+<a name="165"><span class="lineNum">     165 </span>            : NPY_INPLACE double npy_atan(double x);</a>
+<a name="166"><span class="lineNum">     166 </span>            : </a>
+<a name="167"><span class="lineNum">     167 </span>            : NPY_INPLACE double npy_log(double x);</a>
+<a name="168"><span class="lineNum">     168 </span>            : NPY_INPLACE double npy_log10(double x);</a>
+<a name="169"><span class="lineNum">     169 </span>            : NPY_INPLACE double npy_exp(double x);</a>
+<a name="170"><span class="lineNum">     170 </span>            : NPY_INPLACE double npy_sqrt(double x);</a>
+<a name="171"><span class="lineNum">     171 </span>            : NPY_INPLACE double npy_cbrt(double x);</a>
+<a name="172"><span class="lineNum">     172 </span>            : </a>
+<a name="173"><span class="lineNum">     173 </span>            : NPY_INPLACE double npy_fabs(double x);</a>
+<a name="174"><span class="lineNum">     174 </span>            : NPY_INPLACE double npy_ceil(double x);</a>
+<a name="175"><span class="lineNum">     175 </span>            : NPY_INPLACE double npy_fmod(double x, double y);</a>
+<a name="176"><span class="lineNum">     176 </span>            : NPY_INPLACE double npy_floor(double x);</a>
+<a name="177"><span class="lineNum">     177 </span>            : </a>
+<a name="178"><span class="lineNum">     178 </span>            : NPY_INPLACE double npy_expm1(double x);</a>
+<a name="179"><span class="lineNum">     179 </span>            : NPY_INPLACE double npy_log1p(double x);</a>
+<a name="180"><span class="lineNum">     180 </span>            : NPY_INPLACE double npy_hypot(double x, double y);</a>
+<a name="181"><span class="lineNum">     181 </span>            : NPY_INPLACE double npy_acosh(double x);</a>
+<a name="182"><span class="lineNum">     182 </span>            : NPY_INPLACE double npy_asinh(double xx);</a>
+<a name="183"><span class="lineNum">     183 </span>            : NPY_INPLACE double npy_atanh(double x);</a>
+<a name="184"><span class="lineNum">     184 </span>            : NPY_INPLACE double npy_rint(double x);</a>
+<a name="185"><span class="lineNum">     185 </span>            : NPY_INPLACE double npy_trunc(double x);</a>
+<a name="186"><span class="lineNum">     186 </span>            : NPY_INPLACE double npy_exp2(double x);</a>
+<a name="187"><span class="lineNum">     187 </span>            : NPY_INPLACE double npy_log2(double x);</a>
+<a name="188"><span class="lineNum">     188 </span>            : </a>
+<a name="189"><span class="lineNum">     189 </span>            : NPY_INPLACE double npy_atan2(double x, double y);</a>
+<a name="190"><span class="lineNum">     190 </span>            : NPY_INPLACE double npy_pow(double x, double y);</a>
+<a name="191"><span class="lineNum">     191 </span>            : NPY_INPLACE double npy_modf(double x, double* y);</a>
+<a name="192"><span class="lineNum">     192 </span>            : NPY_INPLACE double npy_frexp(double x, int* y);</a>
+<a name="193"><span class="lineNum">     193 </span>            : NPY_INPLACE double npy_ldexp(double n, int y);</a>
+<a name="194"><span class="lineNum">     194 </span>            : </a>
+<a name="195"><span class="lineNum">     195 </span>            : NPY_INPLACE double npy_copysign(double x, double y);</a>
+<a name="196"><span class="lineNum">     196 </span>            : double npy_nextafter(double x, double y);</a>
+<a name="197"><span class="lineNum">     197 </span>            : double npy_spacing(double x);</a>
+<a name="198"><span class="lineNum">     198 </span>            : </a>
+<a name="199"><span class="lineNum">     199 </span>            : /*</a>
+<a name="200"><span class="lineNum">     200 </span>            :  * IEEE 754 fpu handling. Those are guaranteed to be macros</a>
+<a name="201"><span class="lineNum">     201 </span>            :  */</a>
+<a name="202"><span class="lineNum">     202 </span>            : </a>
+<a name="203"><span class="lineNum">     203 </span>            : /* use builtins to avoid function calls in tight loops</a>
+<a name="204"><span class="lineNum">     204 </span>            :  * only available if npy_config.h is available (= numpys own build) */</a>
+<a name="205"><span class="lineNum">     205 </span>            : #ifdef HAVE___BUILTIN_ISNAN</a>
+<a name="206"><span class="lineNum">     206 </span>            :     #define npy_isnan(x) __builtin_isnan(x)</a>
+<a name="207"><span class="lineNum">     207 </span>            : #else</a>
+<a name="208"><span class="lineNum">     208 </span>            :     #ifndef NPY_HAVE_DECL_ISNAN</a>
+<a name="209"><span class="lineNum">     209 </span>            :         #define npy_isnan(x) ((x) != (x))</a>
+<a name="210"><span class="lineNum">     210 </span>            :     #else</a>
+<a name="211"><span class="lineNum">     211 </span>            :         #if defined(_MSC_VER) &amp;&amp; (_MSC_VER &lt; 1900)</a>
+<a name="212"><span class="lineNum">     212 </span>            :             #define npy_isnan(x) _isnan((x))</a>
+<a name="213"><span class="lineNum">     213 </span>            :         #else</a>
+<a name="214"><span class="lineNum">     214 </span>            :             #define npy_isnan(x) isnan(x)</a>
+<a name="215"><span class="lineNum">     215 </span>            :         #endif</a>
+<a name="216"><span class="lineNum">     216 </span>            :     #endif</a>
+<a name="217"><span class="lineNum">     217 </span>            : #endif</a>
+<a name="218"><span class="lineNum">     218 </span>            : </a>
+<a name="219"><span class="lineNum">     219 </span>            : </a>
+<a name="220"><span class="lineNum">     220 </span>            : /* only available if npy_config.h is available (= numpys own build) */</a>
+<a name="221"><span class="lineNum">     221 </span>            : #ifdef HAVE___BUILTIN_ISFINITE</a>
+<a name="222"><span class="lineNum">     222 </span>            :     #define npy_isfinite(x) __builtin_isfinite(x)</a>
+<a name="223"><span class="lineNum">     223 </span>            : #else</a>
+<a name="224"><span class="lineNum">     224 </span>            :     #ifndef NPY_HAVE_DECL_ISFINITE</a>
+<a name="225"><span class="lineNum">     225 </span>            :         #ifdef _MSC_VER</a>
+<a name="226"><span class="lineNum">     226 </span>            :             #define npy_isfinite(x) _finite((x))</a>
+<a name="227"><span class="lineNum">     227 </span>            :         #else</a>
+<a name="228"><span class="lineNum">     228 </span>            :             #define npy_isfinite(x) !npy_isnan((x) + (-x))</a>
+<a name="229"><span class="lineNum">     229 </span>            :         #endif</a>
+<a name="230"><span class="lineNum">     230 </span>            :     #else</a>
+<a name="231"><span class="lineNum">     231 </span>            :         #define npy_isfinite(x) isfinite((x))</a>
+<a name="232"><span class="lineNum">     232 </span>            :     #endif</a>
+<a name="233"><span class="lineNum">     233 </span>            : #endif</a>
+<a name="234"><span class="lineNum">     234 </span>            : </a>
+<a name="235"><span class="lineNum">     235 </span>            : /* only available if npy_config.h is available (= numpys own build) */</a>
+<a name="236"><span class="lineNum">     236 </span>            : #ifdef HAVE___BUILTIN_ISINF</a>
+<a name="237"><span class="lineNum">     237 </span>            :     #define npy_isinf(x) __builtin_isinf(x)</a>
+<a name="238"><span class="lineNum">     238 </span>            : #else</a>
+<a name="239"><span class="lineNum">     239 </span>            :     #ifndef NPY_HAVE_DECL_ISINF</a>
+<a name="240"><span class="lineNum">     240 </span>            :         #define npy_isinf(x) (!npy_isfinite(x) &amp;&amp; !npy_isnan(x))</a>
+<a name="241"><span class="lineNum">     241 </span>            :     #else</a>
+<a name="242"><span class="lineNum">     242 </span>            :         #if defined(_MSC_VER) &amp;&amp; (_MSC_VER &lt; 1900)</a>
+<a name="243"><span class="lineNum">     243 </span>            :             #define npy_isinf(x) (!_finite((x)) &amp;&amp; !_isnan((x)))</a>
+<a name="244"><span class="lineNum">     244 </span>            :         #else</a>
+<a name="245"><span class="lineNum">     245 </span>            :             #define npy_isinf(x) isinf((x))</a>
+<a name="246"><span class="lineNum">     246 </span>            :         #endif</a>
+<a name="247"><span class="lineNum">     247 </span>            :     #endif</a>
+<a name="248"><span class="lineNum">     248 </span>            : #endif</a>
+<a name="249"><span class="lineNum">     249 </span>            : </a>
+<a name="250"><span class="lineNum">     250 </span>            : #ifndef NPY_HAVE_DECL_SIGNBIT</a>
+<a name="251"><span class="lineNum">     251 </span>            :     int _npy_signbit_f(float x);</a>
+<a name="252"><span class="lineNum">     252 </span>            :     int _npy_signbit_d(double x);</a>
+<a name="253"><span class="lineNum">     253 </span>            :     int _npy_signbit_ld(long double x);</a>
+<a name="254"><span class="lineNum">     254 </span>            :     #define npy_signbit(x) \</a>
+<a name="255"><span class="lineNum">     255 </span>            :         (sizeof (x) == sizeof (long double) ? _npy_signbit_ld (x) \</a>
+<a name="256"><span class="lineNum">     256 </span>            :          : sizeof (x) == sizeof (double) ? _npy_signbit_d (x) \</a>
+<a name="257"><span class="lineNum">     257 </span>            :          : _npy_signbit_f (x))</a>
+<a name="258"><span class="lineNum">     258 </span>            : #else</a>
+<a name="259"><span class="lineNum">     259 </span>            :     #define npy_signbit(x) signbit((x))</a>
+<a name="260"><span class="lineNum">     260 </span>            : #endif</a>
+<a name="261"><span class="lineNum">     261 </span>            : </a>
+<a name="262"><span class="lineNum">     262 </span>            : /*</a>
+<a name="263"><span class="lineNum">     263 </span>            :  * float C99 math functions</a>
+<a name="264"><span class="lineNum">     264 </span>            :  */</a>
+<a name="265"><span class="lineNum">     265 </span>            : NPY_INPLACE float npy_sinf(float x);</a>
+<a name="266"><span class="lineNum">     266 </span>            : NPY_INPLACE float npy_cosf(float x);</a>
+<a name="267"><span class="lineNum">     267 </span>            : NPY_INPLACE float npy_tanf(float x);</a>
+<a name="268"><span class="lineNum">     268 </span>            : NPY_INPLACE float npy_sinhf(float x);</a>
+<a name="269"><span class="lineNum">     269 </span>            : NPY_INPLACE float npy_coshf(float x);</a>
+<a name="270"><span class="lineNum">     270 </span>            : NPY_INPLACE float npy_tanhf(float x);</a>
+<a name="271"><span class="lineNum">     271 </span>            : NPY_INPLACE float npy_fabsf(float x);</a>
+<a name="272"><span class="lineNum">     272 </span>            : NPY_INPLACE float npy_floorf(float x);</a>
+<a name="273"><span class="lineNum">     273 </span>            : NPY_INPLACE float npy_ceilf(float x);</a>
+<a name="274"><span class="lineNum">     274 </span>            : NPY_INPLACE float npy_rintf(float x);</a>
+<a name="275"><span class="lineNum">     275 </span>            : NPY_INPLACE float npy_truncf(float x);</a>
+<a name="276"><span class="lineNum">     276 </span>            : NPY_INPLACE float npy_sqrtf(float x);</a>
+<a name="277"><span class="lineNum">     277 </span>            : NPY_INPLACE float npy_cbrtf(float x);</a>
+<a name="278"><span class="lineNum">     278 </span>            : NPY_INPLACE float npy_log10f(float x);</a>
+<a name="279"><span class="lineNum">     279 </span>            : NPY_INPLACE float npy_logf(float x);</a>
+<a name="280"><span class="lineNum">     280 </span>            : NPY_INPLACE float npy_expf(float x);</a>
+<a name="281"><span class="lineNum">     281 </span>            : NPY_INPLACE float npy_expm1f(float x);</a>
+<a name="282"><span class="lineNum">     282 </span>            : NPY_INPLACE float npy_asinf(float x);</a>
+<a name="283"><span class="lineNum">     283 </span>            : NPY_INPLACE float npy_acosf(float x);</a>
+<a name="284"><span class="lineNum">     284 </span>            : NPY_INPLACE float npy_atanf(float x);</a>
+<a name="285"><span class="lineNum">     285 </span>            : NPY_INPLACE float npy_asinhf(float x);</a>
+<a name="286"><span class="lineNum">     286 </span>            : NPY_INPLACE float npy_acoshf(float x);</a>
+<a name="287"><span class="lineNum">     287 </span>            : NPY_INPLACE float npy_atanhf(float x);</a>
+<a name="288"><span class="lineNum">     288 </span>            : NPY_INPLACE float npy_log1pf(float x);</a>
+<a name="289"><span class="lineNum">     289 </span>            : NPY_INPLACE float npy_exp2f(float x);</a>
+<a name="290"><span class="lineNum">     290 </span>            : NPY_INPLACE float npy_log2f(float x);</a>
+<a name="291"><span class="lineNum">     291 </span>            : </a>
+<a name="292"><span class="lineNum">     292 </span>            : NPY_INPLACE float npy_atan2f(float x, float y);</a>
+<a name="293"><span class="lineNum">     293 </span>            : NPY_INPLACE float npy_hypotf(float x, float y);</a>
+<a name="294"><span class="lineNum">     294 </span>            : NPY_INPLACE float npy_powf(float x, float y);</a>
+<a name="295"><span class="lineNum">     295 </span>            : NPY_INPLACE float npy_fmodf(float x, float y);</a>
+<a name="296"><span class="lineNum">     296 </span>            : </a>
+<a name="297"><span class="lineNum">     297 </span>            : NPY_INPLACE float npy_modff(float x, float* y);</a>
+<a name="298"><span class="lineNum">     298 </span>            : NPY_INPLACE float npy_frexpf(float x, int* y);</a>
+<a name="299"><span class="lineNum">     299 </span>            : NPY_INPLACE float npy_ldexpf(float x, int y);</a>
+<a name="300"><span class="lineNum">     300 </span>            : </a>
+<a name="301"><span class="lineNum">     301 </span>            : NPY_INPLACE float npy_copysignf(float x, float y);</a>
+<a name="302"><span class="lineNum">     302 </span>            : float npy_nextafterf(float x, float y);</a>
+<a name="303"><span class="lineNum">     303 </span>            : float npy_spacingf(float x);</a>
+<a name="304"><span class="lineNum">     304 </span>            : </a>
+<a name="305"><span class="lineNum">     305 </span>            : /*</a>
+<a name="306"><span class="lineNum">     306 </span>            :  * long double C99 math functions</a>
+<a name="307"><span class="lineNum">     307 </span>            :  */</a>
+<a name="308"><span class="lineNum">     308 </span>            : NPY_INPLACE npy_longdouble npy_sinl(npy_longdouble x);</a>
+<a name="309"><span class="lineNum">     309 </span>            : NPY_INPLACE npy_longdouble npy_cosl(npy_longdouble x);</a>
+<a name="310"><span class="lineNum">     310 </span>            : NPY_INPLACE npy_longdouble npy_tanl(npy_longdouble x);</a>
+<a name="311"><span class="lineNum">     311 </span>            : NPY_INPLACE npy_longdouble npy_sinhl(npy_longdouble x);</a>
+<a name="312"><span class="lineNum">     312 </span>            : NPY_INPLACE npy_longdouble npy_coshl(npy_longdouble x);</a>
+<a name="313"><span class="lineNum">     313 </span>            : NPY_INPLACE npy_longdouble npy_tanhl(npy_longdouble x);</a>
+<a name="314"><span class="lineNum">     314 </span>            : NPY_INPLACE npy_longdouble npy_fabsl(npy_longdouble x);</a>
+<a name="315"><span class="lineNum">     315 </span>            : NPY_INPLACE npy_longdouble npy_floorl(npy_longdouble x);</a>
+<a name="316"><span class="lineNum">     316 </span>            : NPY_INPLACE npy_longdouble npy_ceill(npy_longdouble x);</a>
+<a name="317"><span class="lineNum">     317 </span>            : NPY_INPLACE npy_longdouble npy_rintl(npy_longdouble x);</a>
+<a name="318"><span class="lineNum">     318 </span>            : NPY_INPLACE npy_longdouble npy_truncl(npy_longdouble x);</a>
+<a name="319"><span class="lineNum">     319 </span>            : NPY_INPLACE npy_longdouble npy_sqrtl(npy_longdouble x);</a>
+<a name="320"><span class="lineNum">     320 </span>            : NPY_INPLACE npy_longdouble npy_cbrtl(npy_longdouble x);</a>
+<a name="321"><span class="lineNum">     321 </span>            : NPY_INPLACE npy_longdouble npy_log10l(npy_longdouble x);</a>
+<a name="322"><span class="lineNum">     322 </span>            : NPY_INPLACE npy_longdouble npy_logl(npy_longdouble x);</a>
+<a name="323"><span class="lineNum">     323 </span>            : NPY_INPLACE npy_longdouble npy_expl(npy_longdouble x);</a>
+<a name="324"><span class="lineNum">     324 </span>            : NPY_INPLACE npy_longdouble npy_expm1l(npy_longdouble x);</a>
+<a name="325"><span class="lineNum">     325 </span>            : NPY_INPLACE npy_longdouble npy_asinl(npy_longdouble x);</a>
+<a name="326"><span class="lineNum">     326 </span>            : NPY_INPLACE npy_longdouble npy_acosl(npy_longdouble x);</a>
+<a name="327"><span class="lineNum">     327 </span>            : NPY_INPLACE npy_longdouble npy_atanl(npy_longdouble x);</a>
+<a name="328"><span class="lineNum">     328 </span>            : NPY_INPLACE npy_longdouble npy_asinhl(npy_longdouble x);</a>
+<a name="329"><span class="lineNum">     329 </span>            : NPY_INPLACE npy_longdouble npy_acoshl(npy_longdouble x);</a>
+<a name="330"><span class="lineNum">     330 </span>            : NPY_INPLACE npy_longdouble npy_atanhl(npy_longdouble x);</a>
+<a name="331"><span class="lineNum">     331 </span>            : NPY_INPLACE npy_longdouble npy_log1pl(npy_longdouble x);</a>
+<a name="332"><span class="lineNum">     332 </span>            : NPY_INPLACE npy_longdouble npy_exp2l(npy_longdouble x);</a>
+<a name="333"><span class="lineNum">     333 </span>            : NPY_INPLACE npy_longdouble npy_log2l(npy_longdouble x);</a>
+<a name="334"><span class="lineNum">     334 </span>            : </a>
+<a name="335"><span class="lineNum">     335 </span>            : NPY_INPLACE npy_longdouble npy_atan2l(npy_longdouble x, npy_longdouble y);</a>
+<a name="336"><span class="lineNum">     336 </span>            : NPY_INPLACE npy_longdouble npy_hypotl(npy_longdouble x, npy_longdouble y);</a>
+<a name="337"><span class="lineNum">     337 </span>            : NPY_INPLACE npy_longdouble npy_powl(npy_longdouble x, npy_longdouble y);</a>
+<a name="338"><span class="lineNum">     338 </span>            : NPY_INPLACE npy_longdouble npy_fmodl(npy_longdouble x, npy_longdouble y);</a>
+<a name="339"><span class="lineNum">     339 </span>            : </a>
+<a name="340"><span class="lineNum">     340 </span>            : NPY_INPLACE npy_longdouble npy_modfl(npy_longdouble x, npy_longdouble* y);</a>
+<a name="341"><span class="lineNum">     341 </span>            : NPY_INPLACE npy_longdouble npy_frexpl(npy_longdouble x, int* y);</a>
+<a name="342"><span class="lineNum">     342 </span>            : NPY_INPLACE npy_longdouble npy_ldexpl(npy_longdouble x, int y);</a>
+<a name="343"><span class="lineNum">     343 </span>            : </a>
+<a name="344"><span class="lineNum">     344 </span>            : NPY_INPLACE npy_longdouble npy_copysignl(npy_longdouble x, npy_longdouble y);</a>
+<a name="345"><span class="lineNum">     345 </span>            : npy_longdouble npy_nextafterl(npy_longdouble x, npy_longdouble y);</a>
+<a name="346"><span class="lineNum">     346 </span>            : npy_longdouble npy_spacingl(npy_longdouble x);</a>
+<a name="347"><span class="lineNum">     347 </span>            : </a>
+<a name="348"><span class="lineNum">     348 </span>            : /*</a>
+<a name="349"><span class="lineNum">     349 </span>            :  * Non standard functions</a>
+<a name="350"><span class="lineNum">     350 </span>            :  */</a>
+<a name="351"><span class="lineNum">     351 </span>            : NPY_INPLACE double npy_deg2rad(double x);</a>
+<a name="352"><span class="lineNum">     352 </span>            : NPY_INPLACE double npy_rad2deg(double x);</a>
+<a name="353"><span class="lineNum">     353 </span>            : NPY_INPLACE double npy_logaddexp(double x, double y);</a>
+<a name="354"><span class="lineNum">     354 </span>            : NPY_INPLACE double npy_logaddexp2(double x, double y);</a>
+<a name="355"><span class="lineNum">     355 </span>            : NPY_INPLACE double npy_divmod(double x, double y, double *modulus);</a>
+<a name="356"><span class="lineNum">     356 </span>            : NPY_INPLACE double npy_heaviside(double x, double h0);</a>
+<a name="357"><span class="lineNum">     357 </span>            : </a>
+<a name="358"><span class="lineNum">     358 </span>            : NPY_INPLACE float npy_deg2radf(float x);</a>
+<a name="359"><span class="lineNum">     359 </span>            : NPY_INPLACE float npy_rad2degf(float x);</a>
+<a name="360"><span class="lineNum">     360 </span>            : NPY_INPLACE float npy_logaddexpf(float x, float y);</a>
+<a name="361"><span class="lineNum">     361 </span>            : NPY_INPLACE float npy_logaddexp2f(float x, float y);</a>
+<a name="362"><span class="lineNum">     362 </span>            : NPY_INPLACE float npy_divmodf(float x, float y, float *modulus);</a>
+<a name="363"><span class="lineNum">     363 </span>            : NPY_INPLACE float npy_heavisidef(float x, float h0);</a>
+<a name="364"><span class="lineNum">     364 </span>            : </a>
+<a name="365"><span class="lineNum">     365 </span>            : NPY_INPLACE npy_longdouble npy_deg2radl(npy_longdouble x);</a>
+<a name="366"><span class="lineNum">     366 </span>            : NPY_INPLACE npy_longdouble npy_rad2degl(npy_longdouble x);</a>
+<a name="367"><span class="lineNum">     367 </span>            : NPY_INPLACE npy_longdouble npy_logaddexpl(npy_longdouble x, npy_longdouble y);</a>
+<a name="368"><span class="lineNum">     368 </span>            : NPY_INPLACE npy_longdouble npy_logaddexp2l(npy_longdouble x, npy_longdouble y);</a>
+<a name="369"><span class="lineNum">     369 </span>            : NPY_INPLACE npy_longdouble npy_divmodl(npy_longdouble x, npy_longdouble y,</a>
+<a name="370"><span class="lineNum">     370 </span>            :                            npy_longdouble *modulus);</a>
+<a name="371"><span class="lineNum">     371 </span>            : NPY_INPLACE npy_longdouble npy_heavisidel(npy_longdouble x, npy_longdouble h0);</a>
+<a name="372"><span class="lineNum">     372 </span>            : </a>
+<a name="373"><span class="lineNum">     373 </span>            : #define npy_degrees npy_rad2deg</a>
+<a name="374"><span class="lineNum">     374 </span>            : #define npy_degreesf npy_rad2degf</a>
+<a name="375"><span class="lineNum">     375 </span>            : #define npy_degreesl npy_rad2degl</a>
+<a name="376"><span class="lineNum">     376 </span>            : </a>
+<a name="377"><span class="lineNum">     377 </span>            : #define npy_radians npy_deg2rad</a>
+<a name="378"><span class="lineNum">     378 </span>            : #define npy_radiansf npy_deg2radf</a>
+<a name="379"><span class="lineNum">     379 </span>            : #define npy_radiansl npy_deg2radl</a>
+<a name="380"><span class="lineNum">     380 </span>            : </a>
+<a name="381"><span class="lineNum">     381 </span>            : /*</a>
+<a name="382"><span class="lineNum">     382 </span>            :  * Complex declarations</a>
+<a name="383"><span class="lineNum">     383 </span>            :  */</a>
+<a name="384"><span class="lineNum">     384 </span>            : </a>
+<a name="385"><span class="lineNum">     385 </span>            : /*</a>
+<a name="386"><span class="lineNum">     386 </span>            :  * C99 specifies that complex numbers have the same representation as</a>
+<a name="387"><span class="lineNum">     387 </span>            :  * an array of two elements, where the first element is the real part</a>
+<a name="388"><span class="lineNum">     388 </span>            :  * and the second element is the imaginary part.</a>
+<a name="389"><span class="lineNum">     389 </span>            :  */</a>
+<a name="390"><span class="lineNum">     390 </span>            : #define __NPY_CPACK_IMP(x, y, type, ctype)   \</a>
+<a name="391"><span class="lineNum">     391 </span>            :     union {                                  \</a>
+<a name="392"><span class="lineNum">     392 </span>            :         ctype z;                             \</a>
+<a name="393"><span class="lineNum">     393 </span>            :         type a[2];                           \</a>
+<a name="394"><span class="lineNum">     394 </span>            :     } z1;;                                   \</a>
+<a name="395"><span class="lineNum">     395 </span>            :                                              \</a>
+<a name="396"><span class="lineNum">     396 </span>            :     z1.a[0] = (x);                           \</a>
+<a name="397"><span class="lineNum">     397 </span>            :     z1.a[1] = (y);                           \</a>
+<a name="398"><span class="lineNum">     398 </span>            :                                              \</a>
+<a name="399"><span class="lineNum">     399 </span>            :     return z1.z;</a>
+<a name="400"><span class="lineNum">     400 </span>            : </a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineCov">        369 : static NPY_INLINE npy_cdouble npy_cpack(double x, double y)</span></a>
+<a name="402"><span class="lineNum">     402 </span>            : {</a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineCov">        326 :     __NPY_CPACK_IMP(x, y, double, npy_cdouble);</span></a>
+<a name="404"><span class="lineNum">     404 </span>            : }</a>
+<a name="405"><span class="lineNum">     405 </span>            : </a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineCov">         65 : static NPY_INLINE npy_cfloat npy_cpackf(float x, float y)</span></a>
+<a name="407"><span class="lineNum">     407 </span>            : {</a>
+<a name="408"><span class="lineNum">     408 </span><span class="lineCov">         59 :     __NPY_CPACK_IMP(x, y, float, npy_cfloat);</span></a>
+<a name="409"><span class="lineNum">     409 </span>            : }</a>
+<a name="410"><span class="lineNum">     410 </span>            : </a>
+<a name="411"><span class="lineNum">     411 </span><span class="lineCov">        115 : static NPY_INLINE npy_clongdouble npy_cpackl(npy_longdouble x, npy_longdouble y)</span></a>
+<a name="412"><span class="lineNum">     412 </span>            : {</a>
+<a name="413"><span class="lineNum">     413 </span><span class="lineCov">        103 :     __NPY_CPACK_IMP(x, y, npy_longdouble, npy_clongdouble);</span></a>
+<a name="414"><span class="lineNum">     414 </span>            : }</a>
+<a name="415"><span class="lineNum">     415 </span>            : #undef __NPY_CPACK_IMP</a>
+<a name="416"><span class="lineNum">     416 </span>            : </a>
+<a name="417"><span class="lineNum">     417 </span>            : /*</a>
+<a name="418"><span class="lineNum">     418 </span>            :  * Same remark as above, but in the other direction: extract first/second</a>
+<a name="419"><span class="lineNum">     419 </span>            :  * member of complex number, assuming a C99-compatible representation</a>
+<a name="420"><span class="lineNum">     420 </span>            :  *</a>
+<a name="421"><span class="lineNum">     421 </span>            :  * Those are defineds as static inline, and such as a reasonable compiler would</a>
+<a name="422"><span class="lineNum">     422 </span>            :  * most likely compile this to one or two instructions (on CISC at least)</a>
+<a name="423"><span class="lineNum">     423 </span>            :  */</a>
+<a name="424"><span class="lineNum">     424 </span>            : #define __NPY_CEXTRACT_IMP(z, index, type, ctype)   \</a>
+<a name="425"><span class="lineNum">     425 </span>            :     union {                                         \</a>
+<a name="426"><span class="lineNum">     426 </span>            :         ctype z;                                    \</a>
+<a name="427"><span class="lineNum">     427 </span>            :         type a[2];                                  \</a>
+<a name="428"><span class="lineNum">     428 </span>            :     } __z_repr;                                     \</a>
+<a name="429"><span class="lineNum">     429 </span>            :     __z_repr.z = z;                                 \</a>
+<a name="430"><span class="lineNum">     430 </span>            :                                                     \</a>
+<a name="431"><span class="lineNum">     431 </span>            :     return __z_repr.a[index];</a>
+<a name="432"><span class="lineNum">     432 </span>            : </a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineCov">        614 : static NPY_INLINE double npy_creal(npy_cdouble z)</span></a>
+<a name="434"><span class="lineNum">     434 </span>            : {</a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineCov">        571 :     __NPY_CEXTRACT_IMP(z, 0, double, npy_cdouble);</span></a>
+<a name="436"><span class="lineNum">     436 </span>            : }</a>
+<a name="437"><span class="lineNum">     437 </span>            : </a>
+<a name="438"><span class="lineNum">     438 </span><span class="lineCov">        614 : static NPY_INLINE double npy_cimag(npy_cdouble z)</span></a>
+<a name="439"><span class="lineNum">     439 </span>            : {</a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineCov">        614 :     __NPY_CEXTRACT_IMP(z, 1, double, npy_cdouble);</span></a>
+<a name="441"><span class="lineNum">     441 </span>            : }</a>
+<a name="442"><span class="lineNum">     442 </span>            : </a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineCov">         75 : static NPY_INLINE float npy_crealf(npy_cfloat z)</span></a>
+<a name="444"><span class="lineNum">     444 </span>            : {</a>
+<a name="445"><span class="lineNum">     445 </span><span class="lineCov">         69 :     __NPY_CEXTRACT_IMP(z, 0, float, npy_cfloat);</span></a>
+<a name="446"><span class="lineNum">     446 </span>            : }</a>
+<a name="447"><span class="lineNum">     447 </span>            : </a>
+<a name="448"><span class="lineNum">     448 </span><span class="lineCov">         75 : static NPY_INLINE float npy_cimagf(npy_cfloat z)</span></a>
+<a name="449"><span class="lineNum">     449 </span>            : {</a>
+<a name="450"><span class="lineNum">     450 </span><span class="lineCov">         75 :     __NPY_CEXTRACT_IMP(z, 1, float, npy_cfloat);</span></a>
+<a name="451"><span class="lineNum">     451 </span>            : }</a>
+<a name="452"><span class="lineNum">     452 </span>            : </a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineCov">        130 : static NPY_INLINE npy_longdouble npy_creall(npy_clongdouble z)</span></a>
+<a name="454"><span class="lineNum">     454 </span>            : {</a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineCov">        118 :     __NPY_CEXTRACT_IMP(z, 0, npy_longdouble, npy_clongdouble);</span></a>
+<a name="456"><span class="lineNum">     456 </span>            : }</a>
+<a name="457"><span class="lineNum">     457 </span>            : </a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineCov">        130 : static NPY_INLINE npy_longdouble npy_cimagl(npy_clongdouble z)</span></a>
+<a name="459"><span class="lineNum">     459 </span>            : {</a>
+<a name="460"><span class="lineNum">     460 </span><span class="lineCov">        130 :     __NPY_CEXTRACT_IMP(z, 1, npy_longdouble, npy_clongdouble);</span></a>
+<a name="461"><span class="lineNum">     461 </span>            : }</a>
+<a name="462"><span class="lineNum">     462 </span>            : #undef __NPY_CEXTRACT_IMP</a>
+<a name="463"><span class="lineNum">     463 </span>            : </a>
+<a name="464"><span class="lineNum">     464 </span>            : /*</a>
+<a name="465"><span class="lineNum">     465 </span>            :  * Double precision complex functions</a>
+<a name="466"><span class="lineNum">     466 </span>            :  */</a>
+<a name="467"><span class="lineNum">     467 </span>            : double npy_cabs(npy_cdouble z);</a>
+<a name="468"><span class="lineNum">     468 </span>            : double npy_carg(npy_cdouble z);</a>
+<a name="469"><span class="lineNum">     469 </span>            : </a>
+<a name="470"><span class="lineNum">     470 </span>            : npy_cdouble npy_cexp(npy_cdouble z);</a>
+<a name="471"><span class="lineNum">     471 </span>            : npy_cdouble npy_clog(npy_cdouble z);</a>
+<a name="472"><span class="lineNum">     472 </span>            : npy_cdouble npy_cpow(npy_cdouble x, npy_cdouble y);</a>
+<a name="473"><span class="lineNum">     473 </span>            : </a>
+<a name="474"><span class="lineNum">     474 </span>            : npy_cdouble npy_csqrt(npy_cdouble z);</a>
+<a name="475"><span class="lineNum">     475 </span>            : </a>
+<a name="476"><span class="lineNum">     476 </span>            : npy_cdouble npy_ccos(npy_cdouble z);</a>
+<a name="477"><span class="lineNum">     477 </span>            : npy_cdouble npy_csin(npy_cdouble z);</a>
+<a name="478"><span class="lineNum">     478 </span>            : npy_cdouble npy_ctan(npy_cdouble z);</a>
+<a name="479"><span class="lineNum">     479 </span>            : </a>
+<a name="480"><span class="lineNum">     480 </span>            : npy_cdouble npy_ccosh(npy_cdouble z);</a>
+<a name="481"><span class="lineNum">     481 </span>            : npy_cdouble npy_csinh(npy_cdouble z);</a>
+<a name="482"><span class="lineNum">     482 </span>            : npy_cdouble npy_ctanh(npy_cdouble z);</a>
+<a name="483"><span class="lineNum">     483 </span>            : </a>
+<a name="484"><span class="lineNum">     484 </span>            : npy_cdouble npy_cacos(npy_cdouble z);</a>
+<a name="485"><span class="lineNum">     485 </span>            : npy_cdouble npy_casin(npy_cdouble z);</a>
+<a name="486"><span class="lineNum">     486 </span>            : npy_cdouble npy_catan(npy_cdouble z);</a>
+<a name="487"><span class="lineNum">     487 </span>            : </a>
+<a name="488"><span class="lineNum">     488 </span>            : npy_cdouble npy_cacosh(npy_cdouble z);</a>
+<a name="489"><span class="lineNum">     489 </span>            : npy_cdouble npy_casinh(npy_cdouble z);</a>
+<a name="490"><span class="lineNum">     490 </span>            : npy_cdouble npy_catanh(npy_cdouble z);</a>
+<a name="491"><span class="lineNum">     491 </span>            : </a>
+<a name="492"><span class="lineNum">     492 </span>            : /*</a>
+<a name="493"><span class="lineNum">     493 </span>            :  * Single precision complex functions</a>
+<a name="494"><span class="lineNum">     494 </span>            :  */</a>
+<a name="495"><span class="lineNum">     495 </span>            : float npy_cabsf(npy_cfloat z);</a>
+<a name="496"><span class="lineNum">     496 </span>            : float npy_cargf(npy_cfloat z);</a>
+<a name="497"><span class="lineNum">     497 </span>            : </a>
+<a name="498"><span class="lineNum">     498 </span>            : npy_cfloat npy_cexpf(npy_cfloat z);</a>
+<a name="499"><span class="lineNum">     499 </span>            : npy_cfloat npy_clogf(npy_cfloat z);</a>
+<a name="500"><span class="lineNum">     500 </span>            : npy_cfloat npy_cpowf(npy_cfloat x, npy_cfloat y);</a>
+<a name="501"><span class="lineNum">     501 </span>            : </a>
+<a name="502"><span class="lineNum">     502 </span>            : npy_cfloat npy_csqrtf(npy_cfloat z);</a>
+<a name="503"><span class="lineNum">     503 </span>            : </a>
+<a name="504"><span class="lineNum">     504 </span>            : npy_cfloat npy_ccosf(npy_cfloat z);</a>
+<a name="505"><span class="lineNum">     505 </span>            : npy_cfloat npy_csinf(npy_cfloat z);</a>
+<a name="506"><span class="lineNum">     506 </span>            : npy_cfloat npy_ctanf(npy_cfloat z);</a>
+<a name="507"><span class="lineNum">     507 </span>            : </a>
+<a name="508"><span class="lineNum">     508 </span>            : npy_cfloat npy_ccoshf(npy_cfloat z);</a>
+<a name="509"><span class="lineNum">     509 </span>            : npy_cfloat npy_csinhf(npy_cfloat z);</a>
+<a name="510"><span class="lineNum">     510 </span>            : npy_cfloat npy_ctanhf(npy_cfloat z);</a>
+<a name="511"><span class="lineNum">     511 </span>            : </a>
+<a name="512"><span class="lineNum">     512 </span>            : npy_cfloat npy_cacosf(npy_cfloat z);</a>
+<a name="513"><span class="lineNum">     513 </span>            : npy_cfloat npy_casinf(npy_cfloat z);</a>
+<a name="514"><span class="lineNum">     514 </span>            : npy_cfloat npy_catanf(npy_cfloat z);</a>
+<a name="515"><span class="lineNum">     515 </span>            : </a>
+<a name="516"><span class="lineNum">     516 </span>            : npy_cfloat npy_cacoshf(npy_cfloat z);</a>
+<a name="517"><span class="lineNum">     517 </span>            : npy_cfloat npy_casinhf(npy_cfloat z);</a>
+<a name="518"><span class="lineNum">     518 </span>            : npy_cfloat npy_catanhf(npy_cfloat z);</a>
+<a name="519"><span class="lineNum">     519 </span>            : </a>
+<a name="520"><span class="lineNum">     520 </span>            : </a>
+<a name="521"><span class="lineNum">     521 </span>            : /*</a>
+<a name="522"><span class="lineNum">     522 </span>            :  * Extended precision complex functions</a>
+<a name="523"><span class="lineNum">     523 </span>            :  */</a>
+<a name="524"><span class="lineNum">     524 </span>            : npy_longdouble npy_cabsl(npy_clongdouble z);</a>
+<a name="525"><span class="lineNum">     525 </span>            : npy_longdouble npy_cargl(npy_clongdouble z);</a>
+<a name="526"><span class="lineNum">     526 </span>            : </a>
+<a name="527"><span class="lineNum">     527 </span>            : npy_clongdouble npy_cexpl(npy_clongdouble z);</a>
+<a name="528"><span class="lineNum">     528 </span>            : npy_clongdouble npy_clogl(npy_clongdouble z);</a>
+<a name="529"><span class="lineNum">     529 </span>            : npy_clongdouble npy_cpowl(npy_clongdouble x, npy_clongdouble y);</a>
+<a name="530"><span class="lineNum">     530 </span>            : </a>
+<a name="531"><span class="lineNum">     531 </span>            : npy_clongdouble npy_csqrtl(npy_clongdouble z);</a>
+<a name="532"><span class="lineNum">     532 </span>            : </a>
+<a name="533"><span class="lineNum">     533 </span>            : npy_clongdouble npy_ccosl(npy_clongdouble z);</a>
+<a name="534"><span class="lineNum">     534 </span>            : npy_clongdouble npy_csinl(npy_clongdouble z);</a>
+<a name="535"><span class="lineNum">     535 </span>            : npy_clongdouble npy_ctanl(npy_clongdouble z);</a>
+<a name="536"><span class="lineNum">     536 </span>            : </a>
+<a name="537"><span class="lineNum">     537 </span>            : npy_clongdouble npy_ccoshl(npy_clongdouble z);</a>
+<a name="538"><span class="lineNum">     538 </span>            : npy_clongdouble npy_csinhl(npy_clongdouble z);</a>
+<a name="539"><span class="lineNum">     539 </span>            : npy_clongdouble npy_ctanhl(npy_clongdouble z);</a>
+<a name="540"><span class="lineNum">     540 </span>            : </a>
+<a name="541"><span class="lineNum">     541 </span>            : npy_clongdouble npy_cacosl(npy_clongdouble z);</a>
+<a name="542"><span class="lineNum">     542 </span>            : npy_clongdouble npy_casinl(npy_clongdouble z);</a>
+<a name="543"><span class="lineNum">     543 </span>            : npy_clongdouble npy_catanl(npy_clongdouble z);</a>
+<a name="544"><span class="lineNum">     544 </span>            : </a>
+<a name="545"><span class="lineNum">     545 </span>            : npy_clongdouble npy_cacoshl(npy_clongdouble z);</a>
+<a name="546"><span class="lineNum">     546 </span>            : npy_clongdouble npy_casinhl(npy_clongdouble z);</a>
+<a name="547"><span class="lineNum">     547 </span>            : npy_clongdouble npy_catanhl(npy_clongdouble z);</a>
+<a name="548"><span class="lineNum">     548 </span>            : </a>
+<a name="549"><span class="lineNum">     549 </span>            : </a>
+<a name="550"><span class="lineNum">     550 </span>            : /*</a>
+<a name="551"><span class="lineNum">     551 </span>            :  * Functions that set the floating point error</a>
+<a name="552"><span class="lineNum">     552 </span>            :  * status word.</a>
+<a name="553"><span class="lineNum">     553 </span>            :  */</a>
+<a name="554"><span class="lineNum">     554 </span>            : </a>
+<a name="555"><span class="lineNum">     555 </span>            : /*</a>
+<a name="556"><span class="lineNum">     556 </span>            :  * platform-dependent code translates floating point</a>
+<a name="557"><span class="lineNum">     557 </span>            :  * status to an integer sum of these values</a>
+<a name="558"><span class="lineNum">     558 </span>            :  */</a>
+<a name="559"><span class="lineNum">     559 </span>            : #define NPY_FPE_DIVIDEBYZERO  1</a>
+<a name="560"><span class="lineNum">     560 </span>            : #define NPY_FPE_OVERFLOW      2</a>
+<a name="561"><span class="lineNum">     561 </span>            : #define NPY_FPE_UNDERFLOW     4</a>
+<a name="562"><span class="lineNum">     562 </span>            : #define NPY_FPE_INVALID       8</a>
+<a name="563"><span class="lineNum">     563 </span>            : </a>
+<a name="564"><span class="lineNum">     564 </span>            : int npy_clear_floatstatus_barrier(char*);</a>
+<a name="565"><span class="lineNum">     565 </span>            : int npy_get_floatstatus_barrier(char*);</a>
+<a name="566"><span class="lineNum">     566 </span>            : /*</a>
+<a name="567"><span class="lineNum">     567 </span>            :  * use caution with these - clang and gcc8.1 are known to reorder calls</a>
+<a name="568"><span class="lineNum">     568 </span>            :  * to this form of the function which can defeat the check. The _barrier</a>
+<a name="569"><span class="lineNum">     569 </span>            :  * form of the call is preferable, where the argument is</a>
+<a name="570"><span class="lineNum">     570 </span>            :  * (char*)&amp;local_variable</a>
+<a name="571"><span class="lineNum">     571 </span>            :  */</a>
+<a name="572"><span class="lineNum">     572 </span>            : int npy_clear_floatstatus(void);</a>
+<a name="573"><span class="lineNum">     573 </span>            : int npy_get_floatstatus(void);</a>
+<a name="574"><span class="lineNum">     574 </span>            : </a>
+<a name="575"><span class="lineNum">     575 </span>            : void npy_set_floatstatus_divbyzero(void);</a>
+<a name="576"><span class="lineNum">     576 </span>            : void npy_set_floatstatus_overflow(void);</a>
+<a name="577"><span class="lineNum">     577 </span>            : void npy_set_floatstatus_underflow(void);</a>
+<a name="578"><span class="lineNum">     578 </span>            : void npy_set_floatstatus_invalid(void);</a>
+<a name="579"><span class="lineNum">     579 </span>            : </a>
+<a name="580"><span class="lineNum">     580 </span>            : #ifdef __cplusplus</a>
+<a name="581"><span class="lineNum">     581 </span>            : }</a>
+<a name="582"><span class="lineNum">     582 </span>            : #endif</a>
+<a name="583"><span class="lineNum">     583 </span>            : </a>
+<a name="584"><span class="lineNum">     584 </span>            : #if NPY_INLINE_MATH</a>
+<a name="585"><span class="lineNum">     585 </span>            : #include &quot;npy_math_internal.h&quot;</a>
+<a name="586"><span class="lineNum">     586 </span>            : #endif</a>
+<a name="587"><span class="lineNum">     587 </span>            : </a>
+<a name="588"><span class="lineNum">     588 </span>            : #endif</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.out - umath/reduction.c</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">umath</a> - reduction.c<span style="font-size: 80%;"> (source / <a href="reduction.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.out</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">114</td>
+            <td class="headerCovTableEntry">120</td>
+            <td class="headerCovTableEntryHi">95.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<a name="2"><span class="lineNum">       2 </span>            :  * This file implements generic methods for computing reductions on arrays.</a>
+<a name="3"><span class="lineNum">       3 </span>            :  *</a>
+<a name="4"><span class="lineNum">       4 </span>            :  * Written by Mark Wiebe (mwwiebe@gmail.com)</a>
+<a name="5"><span class="lineNum">       5 </span>            :  * Copyright (c) 2011 by Enthought, Inc.</a>
+<a name="6"><span class="lineNum">       6 </span>            :  *</a>
+<a name="7"><span class="lineNum">       7 </span>            :  * See LICENSE.txt for the license.</a>
+<a name="8"><span class="lineNum">       8 </span>            :  */</a>
+<a name="9"><span class="lineNum">       9 </span>            : #define _UMATHMODULE</a>
+<a name="10"><span class="lineNum">      10 </span>            : #define _MULTIARRAYMODULE</a>
+<a name="11"><span class="lineNum">      11 </span>            : #define NPY_NO_DEPRECATED_API NPY_API_VERSION</a>
+<a name="12"><span class="lineNum">      12 </span>            : </a>
+<a name="13"><span class="lineNum">      13 </span>            : #define PY_SSIZE_T_CLEAN</a>
+<a name="14"><span class="lineNum">      14 </span>            : #include &lt;Python.h&gt;</a>
+<a name="15"><span class="lineNum">      15 </span>            : </a>
+<a name="16"><span class="lineNum">      16 </span>            : #include &quot;npy_config.h&quot;</a>
+<a name="17"><span class="lineNum">      17 </span>            : #include &lt;numpy/arrayobject.h&gt;</a>
+<a name="18"><span class="lineNum">      18 </span>            : </a>
+<a name="19"><span class="lineNum">      19 </span>            : #include &quot;npy_pycompat.h&quot;</a>
+<a name="20"><span class="lineNum">      20 </span>            : #include &quot;ctors.h&quot;</a>
+<a name="21"><span class="lineNum">      21 </span>            : </a>
+<a name="22"><span class="lineNum">      22 </span>            : #include &quot;numpy/ufuncobject.h&quot;</a>
+<a name="23"><span class="lineNum">      23 </span>            : #include &quot;lowlevel_strided_loops.h&quot;</a>
+<a name="24"><span class="lineNum">      24 </span>            : #include &quot;reduction.h&quot;</a>
+<a name="25"><span class="lineNum">      25 </span>            : #include &quot;extobj.h&quot;  /* for _check_ufunc_fperr */</a>
+<a name="26"><span class="lineNum">      26 </span>            : </a>
+<a name="27"><span class="lineNum">      27 </span>            : </a>
+<a name="28"><span class="lineNum">      28 </span>            : /*</a>
+<a name="29"><span class="lineNum">      29 </span>            :  * Count the number of dimensions selected in 'axis_flags'</a>
+<a name="30"><span class="lineNum">      30 </span>            :  */</a>
+<a name="31"><span class="lineNum">      31 </span>            : static int</a>
+<a name="32"><span class="lineNum">      32 </span><span class="lineCov">         94 : count_axes(int ndim, const npy_bool *axis_flags)</span></a>
+<a name="33"><span class="lineNum">      33 </span>            : {</a>
+<a name="34"><span class="lineNum">      34 </span>            :     int idim;</a>
+<a name="35"><span class="lineNum">      35 </span>            :     int naxes = 0;</a>
+<a name="36"><span class="lineNum">      36 </span>            : </a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">        192 :     for (idim = 0; idim &lt; ndim; ++idim) {</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">         98 :         if (axis_flags[idim]) {</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">         94 :             naxes++;</span></a>
+<a name="40"><span class="lineNum">      40 </span>            :         }</a>
+<a name="41"><span class="lineNum">      41 </span>            :     }</a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">         94 :     return naxes;</span></a>
+<a name="43"><span class="lineNum">      43 </span>            : }</a>
+<a name="44"><span class="lineNum">      44 </span>            : </a>
+<a name="45"><span class="lineNum">      45 </span>            : /*</a>
+<a name="46"><span class="lineNum">      46 </span>            :  * This function initializes a result array for a reduction operation</a>
+<a name="47"><span class="lineNum">      47 </span>            :  * which has no identity. This means it needs to copy the first element</a>
+<a name="48"><span class="lineNum">      48 </span>            :  * it sees along the reduction axes to result.</a>
+<a name="49"><span class="lineNum">      49 </span>            :  *</a>
+<a name="50"><span class="lineNum">      50 </span>            :  * If a reduction has an identity, such as 0 or 1, the result should be</a>
+<a name="51"><span class="lineNum">      51 </span>            :  * fully initialized to the identity, because this function raises an</a>
+<a name="52"><span class="lineNum">      52 </span>            :  * exception when there are no elements to reduce (which is appropriate if,</a>
+<a name="53"><span class="lineNum">      53 </span>            :  * and only if, the reduction operation has no identity).</a>
+<a name="54"><span class="lineNum">      54 </span>            :  *</a>
+<a name="55"><span class="lineNum">      55 </span>            :  * This means it copies the subarray indexed at zero along each reduction axis</a>
+<a name="56"><span class="lineNum">      56 </span>            :  * into 'result'.</a>
+<a name="57"><span class="lineNum">      57 </span>            :  *</a>
+<a name="58"><span class="lineNum">      58 </span>            :  * result  : The array into which the result is computed. This must have</a>
+<a name="59"><span class="lineNum">      59 </span>            :  *           the same number of dimensions as 'operand', but for each</a>
+<a name="60"><span class="lineNum">      60 </span>            :  *           axis i where 'axis_flags[i]' is True, it has a single element.</a>
+<a name="61"><span class="lineNum">      61 </span>            :  * operand : The array being reduced.</a>
+<a name="62"><span class="lineNum">      62 </span>            :  * axis_flags : An array of boolean flags, one for each axis of 'operand'.</a>
+<a name="63"><span class="lineNum">      63 </span>            :  *              When a flag is True, it indicates to reduce along that axis.</a>
+<a name="64"><span class="lineNum">      64 </span>            :  * funcname : The name of the reduction operation, for the purpose of</a>
+<a name="65"><span class="lineNum">      65 </span>            :  *            better quality error messages. For example, &quot;numpy.max&quot;</a>
+<a name="66"><span class="lineNum">      66 </span>            :  *            would be a good name for NumPy's max function.</a>
+<a name="67"><span class="lineNum">      67 </span>            :  *</a>
+<a name="68"><span class="lineNum">      68 </span>            :  * Returns -1 if an error occurred, and otherwise the reduce arrays size,</a>
+<a name="69"><span class="lineNum">      69 </span>            :  * which is the number of elements already initialized.</a>
+<a name="70"><span class="lineNum">      70 </span>            :  */</a>
+<a name="71"><span class="lineNum">      71 </span>            : NPY_NO_EXPORT int</a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">      26799 : PyArray_CopyInitialReduceValues(</span></a>
+<a name="73"><span class="lineNum">      73 </span>            :                     PyArrayObject *result, PyArrayObject *operand,</a>
+<a name="74"><span class="lineNum">      74 </span>            :                     const npy_bool *axis_flags, const char *funcname,</a>
+<a name="75"><span class="lineNum">      75 </span>            :                     int keepdims)</a>
+<a name="76"><span class="lineNum">      76 </span>            : {</a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">      26799 :     npy_intp shape[NPY_MAXDIMS], strides[NPY_MAXDIMS];</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">      26799 :     npy_intp *shape_orig = PyArray_SHAPE(operand);</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">      26799 :     npy_intp *strides_orig = PyArray_STRIDES(operand);</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">      26799 :     PyArrayObject *op_view = NULL;</span></a>
+<a name="81"><span class="lineNum">      81 </span>            : </a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">      26799 :     int ndim = PyArray_NDIM(operand);</span></a>
+<a name="83"><span class="lineNum">      83 </span>            : </a>
+<a name="84"><span class="lineNum">      84 </span>            :     /*</a>
+<a name="85"><span class="lineNum">      85 </span>            :      * Copy the subarray of the first element along each reduction axis.</a>
+<a name="86"><span class="lineNum">      86 </span>            :      *</a>
+<a name="87"><span class="lineNum">      87 </span>            :      * Adjust the shape to only look at the first element along</a>
+<a name="88"><span class="lineNum">      88 </span>            :      * any of the reduction axes. If keepdims is False remove the axes</a>
+<a name="89"><span class="lineNum">      89 </span>            :      * entirely.</a>
+<a name="90"><span class="lineNum">      90 </span>            :      */</a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">      26799 :     int idim_out = 0;</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">      26799 :     npy_intp size = 1;</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">      55683 :     for (int idim = 0; idim &lt; ndim; idim++) {</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">      28917 :         if (axis_flags[idim]) {</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">      27630 :             if (NPY_UNLIKELY(shape_orig[idim] == 0)) {</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">         33 :                 PyErr_Format(PyExc_ValueError,</span></a>
+<a name="97"><span class="lineNum">      97 </span>            :                         &quot;zero-size array to reduction operation %s &quot;</a>
+<a name="98"><span class="lineNum">      98 </span>            :                         &quot;which has no identity&quot;, funcname);</a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">         33 :                 return -1;</span></a>
+<a name="100"><span class="lineNum">     100 </span>            :             }</a>
+<a name="101"><span class="lineNum">     101 </span><span class="lineCov">      27597 :             if (keepdims) {</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">       1602 :                 shape[idim_out] = 1;</span></a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">       1602 :                 strides[idim_out] = 0;</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineCov">       1602 :                 idim_out++;</span></a>
+<a name="105"><span class="lineNum">     105 </span>            :             }</a>
+<a name="106"><span class="lineNum">     106 </span>            :         }</a>
+<a name="107"><span class="lineNum">     107 </span>            :         else {</a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">       1287 :             size *= shape_orig[idim];</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">       1287 :             shape[idim_out] = shape_orig[idim];</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">       1287 :             strides[idim_out] = strides_orig[idim];</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">       1287 :             idim_out++;</span></a>
+<a name="112"><span class="lineNum">     112 </span>            :         }</a>
+<a name="113"><span class="lineNum">     113 </span>            :     }</a>
+<a name="114"><span class="lineNum">     114 </span>            : </a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">      26766 :     PyArray_Descr *descr = PyArray_DESCR(operand);</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">      26766 :     Py_INCREF(descr);</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">      26766 :     op_view = (PyArrayObject *)PyArray_NewFromDescr(</span></a>
+<a name="118"><span class="lineNum">     118 </span>            :             &amp;PyArray_Type, descr, idim_out, shape, strides,</a>
+<a name="119"><span class="lineNum">     119 </span>            :             PyArray_DATA(operand), 0, NULL);</a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">      26766 :     if (op_view == NULL) {</span></a>
+<a name="121"><span class="lineNum">     121 </span>            :         return -1;</a>
+<a name="122"><span class="lineNum">     122 </span>            :     }</a>
+<a name="123"><span class="lineNum">     123 </span>            : </a>
+<a name="124"><span class="lineNum">     124 </span>            :     /*</a>
+<a name="125"><span class="lineNum">     125 </span>            :      * Copy the elements into the result to start.</a>
+<a name="126"><span class="lineNum">     126 </span>            :      */</a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">      26766 :     int res = PyArray_CopyInto(result, op_view);</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      26766 :     Py_DECREF(op_view);</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">      26766 :     if (res &lt; 0) {</span></a>
+<a name="130"><span class="lineNum">     130 </span>            :         return -1;</a>
+<a name="131"><span class="lineNum">     131 </span>            :     }</a>
+<a name="132"><span class="lineNum">     132 </span>            : </a>
+<a name="133"><span class="lineNum">     133 </span>            :     /*</a>
+<a name="134"><span class="lineNum">     134 </span>            :      * If there were no reduction axes, we would already be done here.</a>
+<a name="135"><span class="lineNum">     135 </span>            :      * Note that if there is only a single reduction axis, in principle the</a>
+<a name="136"><span class="lineNum">     136 </span>            :      * iteration could be set up more efficiently here by removing that</a>
+<a name="137"><span class="lineNum">     137 </span>            :      * axis before setting up the iterator (simplifying the iteration since</a>
+<a name="138"><span class="lineNum">     138 </span>            :      * `skip_first_count` (the returned size) can be set to 0).</a>
+<a name="139"><span class="lineNum">     139 </span>            :      */</a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">      26765 :     return size;</span></a>
+<a name="141"><span class="lineNum">     141 </span>            : }</a>
+<a name="142"><span class="lineNum">     142 </span>            : </a>
+<a name="143"><span class="lineNum">     143 </span>            : /*</a>
+<a name="144"><span class="lineNum">     144 </span>            :  * This function executes all the standard NumPy reduction function</a>
+<a name="145"><span class="lineNum">     145 </span>            :  * boilerplate code, just calling the appropriate inner loop function where</a>
+<a name="146"><span class="lineNum">     146 </span>            :  * necessary.</a>
+<a name="147"><span class="lineNum">     147 </span>            :  *</a>
+<a name="148"><span class="lineNum">     148 </span>            :  * operand     : The array to be reduced.</a>
+<a name="149"><span class="lineNum">     149 </span>            :  * out         : NULL, or the array into which to place the result.</a>
+<a name="150"><span class="lineNum">     150 </span>            :  * wheremask   : NOT YET SUPPORTED, but this parameter is placed here</a>
+<a name="151"><span class="lineNum">     151 </span>            :  *               so that support can be added in the future without breaking</a>
+<a name="152"><span class="lineNum">     152 </span>            :  *               API compatibility. Pass in NULL.</a>
+<a name="153"><span class="lineNum">     153 </span>            :  * operand_dtype : The dtype the inner loop expects for the operand.</a>
+<a name="154"><span class="lineNum">     154 </span>            :  * result_dtype : The dtype the inner loop expects for the result.</a>
+<a name="155"><span class="lineNum">     155 </span>            :  * casting     : The casting rule to apply to the operands.</a>
+<a name="156"><span class="lineNum">     156 </span>            :  * axis_flags  : Flags indicating the reduction axes of 'operand'.</a>
+<a name="157"><span class="lineNum">     157 </span>            :  * reorderable : If True, the reduction being done is reorderable, which</a>
+<a name="158"><span class="lineNum">     158 </span>            :  *               means specifying multiple axes of reduction at once is ok,</a>
+<a name="159"><span class="lineNum">     159 </span>            :  *               and the reduction code may calculate the reduction in an</a>
+<a name="160"><span class="lineNum">     160 </span>            :  *               arbitrary order. The calculation may be reordered because</a>
+<a name="161"><span class="lineNum">     161 </span>            :  *               of cache behavior or multithreading requirements.</a>
+<a name="162"><span class="lineNum">     162 </span>            :  * keepdims    : If true, leaves the reduction dimensions in the result</a>
+<a name="163"><span class="lineNum">     163 </span>            :  *               with size one.</a>
+<a name="164"><span class="lineNum">     164 </span>            :  * subok       : If true, the result uses the subclass of operand, otherwise</a>
+<a name="165"><span class="lineNum">     165 </span>            :  *               it is always a base class ndarray.</a>
+<a name="166"><span class="lineNum">     166 </span>            :  * identity    : If Py_None, PyArray_CopyInitialReduceValues is used, otherwise</a>
+<a name="167"><span class="lineNum">     167 </span>            :  *               this value is used to initialize the result to</a>
+<a name="168"><span class="lineNum">     168 </span>            :  *               the reduction's unit.</a>
+<a name="169"><span class="lineNum">     169 </span>            :  * loop        : The loop which does the reduction.</a>
+<a name="170"><span class="lineNum">     170 </span>            :  * data        : Data which is passed to the inner loop.</a>
+<a name="171"><span class="lineNum">     171 </span>            :  * buffersize  : Buffer size for the iterator. For the default, pass in 0.</a>
+<a name="172"><span class="lineNum">     172 </span>            :  * funcname    : The name of the reduction function, for error messages.</a>
+<a name="173"><span class="lineNum">     173 </span>            :  * errormask   : forwarded from _get_bufsize_errmask</a>
+<a name="174"><span class="lineNum">     174 </span>            :  *</a>
+<a name="175"><span class="lineNum">     175 </span>            :  * TODO FIXME: if you squint, this is essentially an second independent</a>
+<a name="176"><span class="lineNum">     176 </span>            :  * implementation of generalized ufuncs with signature (i)-&gt;(), plus a few</a>
+<a name="177"><span class="lineNum">     177 </span>            :  * extra bells and whistles. (Indeed, as far as I can tell, it was originally</a>
+<a name="178"><span class="lineNum">     178 </span>            :  * split out to support a fancy version of count_nonzero... which is not</a>
+<a name="179"><span class="lineNum">     179 </span>            :  * actually a reduction function at all, it's just a (i)-&gt;() function!) So</a>
+<a name="180"><span class="lineNum">     180 </span>            :  * probably these two implementation should be merged into one. (In fact it</a>
+<a name="181"><span class="lineNum">     181 </span>            :  * would be quite nice to support axis= and keepdims etc. for arbitrary</a>
+<a name="182"><span class="lineNum">     182 </span>            :  * generalized ufuncs!)</a>
+<a name="183"><span class="lineNum">     183 </span>            :  */</a>
+<a name="184"><span class="lineNum">     184 </span>            : NPY_NO_EXPORT PyArrayObject *</a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">     657378 : PyUFunc_ReduceWrapper(PyArrayObject *operand, PyArrayObject *out,</span></a>
+<a name="186"><span class="lineNum">     186 </span>            :                       PyArrayObject *wheremask,</a>
+<a name="187"><span class="lineNum">     187 </span>            :                       PyArray_Descr *operand_dtype,</a>
+<a name="188"><span class="lineNum">     188 </span>            :                       PyArray_Descr *result_dtype,</a>
+<a name="189"><span class="lineNum">     189 </span>            :                       NPY_CASTING casting,</a>
+<a name="190"><span class="lineNum">     190 </span>            :                       npy_bool *axis_flags, int reorderable,</a>
+<a name="191"><span class="lineNum">     191 </span>            :                       int keepdims,</a>
+<a name="192"><span class="lineNum">     192 </span>            :                       PyObject *identity,</a>
+<a name="193"><span class="lineNum">     193 </span>            :                       PyArray_ReduceLoopFunc *loop,</a>
+<a name="194"><span class="lineNum">     194 </span>            :                       void *data, npy_intp buffersize, const char *funcname,</a>
+<a name="195"><span class="lineNum">     195 </span>            :                       int errormask)</a>
+<a name="196"><span class="lineNum">     196 </span>            : {</a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">     657378 :     PyArrayObject *result = NULL;</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">     657378 :     npy_intp skip_first_count = 0;</span></a>
+<a name="199"><span class="lineNum">     199 </span>            : </a>
+<a name="200"><span class="lineNum">     200 </span>            :     /* Iterator parameters */</a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">     657378 :     NpyIter *iter = NULL;</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">     657378 :     PyArrayObject *op[3];</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">     657378 :     PyArray_Descr *op_dtypes[3];</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">     657378 :     npy_uint32 flags, op_flags[3];</span></a>
+<a name="205"><span class="lineNum">     205 </span>            : </a>
+<a name="206"><span class="lineNum">     206 </span>            :     /* More than one axis means multiple orders are possible */</a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">     657472 :     if (!reorderable &amp;&amp; count_axes(PyArray_NDIM(operand), axis_flags) &gt; 1) {</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">          2 :         PyErr_Format(PyExc_ValueError,</span></a>
+<a name="209"><span class="lineNum">     209 </span>            :                      &quot;reduction operation '%s' is not reorderable, &quot;</a>
+<a name="210"><span class="lineNum">     210 </span>            :                      &quot;so at most one axis may be specified&quot;,</a>
+<a name="211"><span class="lineNum">     211 </span>            :                      funcname);</a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">          2 :         return NULL;</span></a>
+<a name="213"><span class="lineNum">     213 </span>            :     }</a>
+<a name="214"><span class="lineNum">     214 </span>            :     /* Can only use where with an initial ( from identity or argument) */</a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">     657376 :     if (wheremask != NULL &amp;&amp; identity == Py_None) {</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">          1 :         PyErr_Format(PyExc_ValueError,</span></a>
+<a name="217"><span class="lineNum">     217 </span>            :                      &quot;reduction operation '%s' does not have an identity, &quot;</a>
+<a name="218"><span class="lineNum">     218 </span>            :                      &quot;so to use a where mask one has to specify 'initial'&quot;,</a>
+<a name="219"><span class="lineNum">     219 </span>            :                      funcname);</a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">          1 :         return NULL;</span></a>
+<a name="221"><span class="lineNum">     221 </span>            :     }</a>
+<a name="222"><span class="lineNum">     222 </span>            : </a>
+<a name="223"><span class="lineNum">     223 </span>            : </a>
+<a name="224"><span class="lineNum">     224 </span>            :     /* Set up the iterator */</a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">     657375 :     op[0] = out;</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineCov">     657375 :     op[1] = operand;</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">     657375 :     op_dtypes[0] = result_dtype;</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">     657375 :     op_dtypes[1] = operand_dtype;</span></a>
+<a name="229"><span class="lineNum">     229 </span>            : </a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">     657375 :     flags = NPY_ITER_BUFFERED |</span></a>
+<a name="231"><span class="lineNum">     231 </span>            :             NPY_ITER_EXTERNAL_LOOP |</a>
+<a name="232"><span class="lineNum">     232 </span>            :             NPY_ITER_GROWINNER |</a>
+<a name="233"><span class="lineNum">     233 </span>            :             NPY_ITER_DONT_NEGATE_STRIDES |</a>
+<a name="234"><span class="lineNum">     234 </span>            :             NPY_ITER_ZEROSIZE_OK |</a>
+<a name="235"><span class="lineNum">     235 </span>            :             NPY_ITER_REFS_OK |</a>
+<a name="236"><span class="lineNum">     236 </span>            :             NPY_ITER_DELAY_BUFALLOC |</a>
+<a name="237"><span class="lineNum">     237 </span>            :             NPY_ITER_COPY_IF_OVERLAP;</a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">     657375 :     op_flags[0] = NPY_ITER_READWRITE |</span></a>
+<a name="239"><span class="lineNum">     239 </span>            :                   NPY_ITER_ALIGNED |</a>
+<a name="240"><span class="lineNum">     240 </span>            :                   NPY_ITER_ALLOCATE |</a>
+<a name="241"><span class="lineNum">     241 </span>            :                   NPY_ITER_NO_SUBTYPE;</a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">     657375 :     op_flags[1] = NPY_ITER_READONLY |</span></a>
+<a name="243"><span class="lineNum">     243 </span>            :                   NPY_ITER_ALIGNED |</a>
+<a name="244"><span class="lineNum">     244 </span>            :                   NPY_ITER_NO_BROADCAST;</a>
+<a name="245"><span class="lineNum">     245 </span>            : </a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">     657375 :     if (wheremask != NULL) {</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">         79 :         op[2] = wheremask;</span></a>
+<a name="248"><span class="lineNum">     248 </span>            :         /* wheremask is guaranteed to be NPY_BOOL, so borrow its reference */</a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">         79 :         op_dtypes[2] = PyArray_DESCR(wheremask);</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">         79 :         assert(op_dtypes[2]-&gt;type_num == NPY_BOOL);</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">         79 :         if (op_dtypes[2] == NULL) {</span></a>
+<a name="252"><span class="lineNum">     252 </span>            :             goto fail;</a>
+<a name="253"><span class="lineNum">     253 </span>            :         }</a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineCov">         79 :         op_flags[2] = NPY_ITER_READONLY;</span></a>
+<a name="255"><span class="lineNum">     255 </span>            :     }</a>
+<a name="256"><span class="lineNum">     256 </span>            :     /* Set up result array axes mapping, operand and wheremask use default */</a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">     657375 :     int result_axes[NPY_MAXDIMS];</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">     657375 :     int *op_axes[3] = {result_axes, NULL, NULL};</span></a>
+<a name="259"><span class="lineNum">     259 </span>            : </a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">     657375 :     int curr_axis = 0;</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">    1469654 :     for (int i = 0; i &lt; PyArray_NDIM(operand); i++) {</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">     812279 :         if (axis_flags[i]) {</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">     783533 :             if (keepdims) {</span></a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineCov">       9094 :                 result_axes[i] = NPY_ITER_REDUCTION_AXIS(curr_axis);</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">       9094 :                 curr_axis++;</span></a>
+<a name="266"><span class="lineNum">     266 </span>            :             }</a>
+<a name="267"><span class="lineNum">     267 </span>            :             else {</a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineCov">     774439 :                 result_axes[i] = NPY_ITER_REDUCTION_AXIS(-1);</span></a>
+<a name="269"><span class="lineNum">     269 </span>            :             }</a>
+<a name="270"><span class="lineNum">     270 </span>            :         }</a>
+<a name="271"><span class="lineNum">     271 </span>            :         else {</a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineCov">      28746 :             result_axes[i] = curr_axis;</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">      28746 :             curr_axis++;</span></a>
+<a name="274"><span class="lineNum">     274 </span>            :         }</a>
+<a name="275"><span class="lineNum">     275 </span>            :     }</a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineCov">     657375 :     if (out != NULL) {</span></a>
+<a name="277"><span class="lineNum">     277 </span>            :         /* NpyIter does not raise a good error message in this common case. */</a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineCov">       1540 :         if (NPY_UNLIKELY(curr_axis != PyArray_NDIM(out))) {</span></a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineCov">         15 :             if (keepdims) {</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineCov">          6 :                 PyErr_Format(PyExc_ValueError,</span></a>
+<a name="281"><span class="lineNum">     281 </span>            :                         &quot;output parameter for reduction operation %s has the &quot;</a>
+<a name="282"><span class="lineNum">     282 </span>            :                         &quot;wrong number of dimensions: Found %d but expected %d &quot;</a>
+<a name="283"><span class="lineNum">     283 </span>            :                         &quot;(must match the operand's when keepdims=True)&quot;,</a>
+<a name="284"><span class="lineNum">     284 </span>            :                         funcname, PyArray_NDIM(out), curr_axis);</a>
+<a name="285"><span class="lineNum">     285 </span>            :             }</a>
+<a name="286"><span class="lineNum">     286 </span>            :             else {</a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">          9 :                 PyErr_Format(PyExc_ValueError,</span></a>
+<a name="288"><span class="lineNum">     288 </span>            :                         &quot;output parameter for reduction operation %s has the &quot;</a>
+<a name="289"><span class="lineNum">     289 </span>            :                         &quot;wrong number of dimensions: Found %d but expected %d&quot;,</a>
+<a name="290"><span class="lineNum">     290 </span>            :                         funcname, PyArray_NDIM(out), curr_axis);</a>
+<a name="291"><span class="lineNum">     291 </span>            :             }</a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineCov">         15 :             goto fail;</span></a>
+<a name="293"><span class="lineNum">     293 </span>            :         }</a>
+<a name="294"><span class="lineNum">     294 </span>            :     }</a>
+<a name="295"><span class="lineNum">     295 </span>            : </a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineCov">     657439 :     iter = NpyIter_AdvancedNew(wheremask == NULL ? 2 : 3, op, flags,</span></a>
+<a name="297"><span class="lineNum">     297 </span>            :                                NPY_KEEPORDER, casting,</a>
+<a name="298"><span class="lineNum">     298 </span>            :                                op_flags,</a>
+<a name="299"><span class="lineNum">     299 </span>            :                                op_dtypes,</a>
+<a name="300"><span class="lineNum">     300 </span>            :                                PyArray_NDIM(operand), op_axes, NULL, buffersize);</a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineCov">     657360 :     if (iter == NULL) {</span></a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineCov">          9 :         goto fail;</span></a>
+<a name="303"><span class="lineNum">     303 </span>            :     }</a>
+<a name="304"><span class="lineNum">     304 </span>            : </a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineCov">     657351 :     result = NpyIter_GetOperandArray(iter)[0];</span></a>
+<a name="306"><span class="lineNum">     306 </span>            : </a>
+<a name="307"><span class="lineNum">     307 </span>            :     /*</a>
+<a name="308"><span class="lineNum">     308 </span>            :      * Initialize the result to the reduction unit if possible,</a>
+<a name="309"><span class="lineNum">     309 </span>            :      * otherwise copy the initial values and get a view to the rest.</a>
+<a name="310"><span class="lineNum">     310 </span>            :      */</a>
+<a name="311"><span class="lineNum">     311 </span>            : </a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineCov">     657351 :     if (identity != Py_None) {</span></a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineCov">     630552 :         if (PyArray_FillWithScalar(result, identity) &lt; 0) {</span></a>
+<a name="314"><span class="lineNum">     314 </span><span class="lineNoCov">          0 :             goto fail;</span></a>
+<a name="315"><span class="lineNum">     315 </span>            :         }</a>
+<a name="316"><span class="lineNum">     316 </span>            :     }</a>
+<a name="317"><span class="lineNum">     317 </span>            :     else {</a>
+<a name="318"><span class="lineNum">     318 </span>            :         /*</a>
+<a name="319"><span class="lineNum">     319 </span>            :          * For 1-D skip_first_count could be optimized to 0, but no-identity</a>
+<a name="320"><span class="lineNum">     320 </span>            :          * reductions are not super common.</a>
+<a name="321"><span class="lineNum">     321 </span>            :          * (see also comment in CopyInitialReduceValues)</a>
+<a name="322"><span class="lineNum">     322 </span>            :          */</a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineCov">      26799 :         skip_first_count = PyArray_CopyInitialReduceValues(</span></a>
+<a name="324"><span class="lineNum">     324 </span>            :                 result, operand, axis_flags, funcname, keepdims);</a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineCov">      26799 :         if (skip_first_count &lt; 0) {</span></a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineCov">         34 :             goto fail;</span></a>
+<a name="327"><span class="lineNum">     327 </span>            :         }</a>
+<a name="328"><span class="lineNum">     328 </span>            :     }</a>
+<a name="329"><span class="lineNum">     329 </span>            : </a>
+<a name="330"><span class="lineNum">     330 </span><span class="lineCov">     657317 :     if (!NpyIter_Reset(iter, NULL)) {</span></a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineCov">          1 :         goto fail;</span></a>
+<a name="332"><span class="lineNum">     332 </span>            :     }</a>
+<a name="333"><span class="lineNum">     333 </span>            : </a>
+<a name="334"><span class="lineNum">     334 </span>            :     /* Start with the floating-point exception flags cleared */</a>
+<a name="335"><span class="lineNum">     335 </span><span class="lineCov">     657316 :     npy_clear_floatstatus_barrier((char*)&amp;iter);</span></a>
+<a name="336"><span class="lineNum">     336 </span>            : </a>
+<a name="337"><span class="lineNum">     337 </span><span class="lineCov">     657316 :     if (NpyIter_GetIterSize(iter) != 0) {</span></a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineCov">     640699 :         NpyIter_IterNextFunc *iternext;</span></a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineCov">     640699 :         char **dataptr;</span></a>
+<a name="340"><span class="lineNum">     340 </span><span class="lineCov">     640699 :         npy_intp *strideptr;</span></a>
+<a name="341"><span class="lineNum">     341 </span><span class="lineCov">     640699 :         npy_intp *countptr;</span></a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineCov">     640699 :         int needs_api;</span></a>
+<a name="343"><span class="lineNum">     343 </span>            : </a>
+<a name="344"><span class="lineNum">     344 </span><span class="lineCov">     640699 :         iternext = NpyIter_GetIterNext(iter, NULL);</span></a>
+<a name="345"><span class="lineNum">     345 </span><span class="lineCov">     640699 :         if (iternext == NULL) {</span></a>
+<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :             goto fail;</span></a>
+<a name="347"><span class="lineNum">     347 </span>            :         }</a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineCov">     640699 :         dataptr = NpyIter_GetDataPtrArray(iter);</span></a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineCov">     640699 :         strideptr = NpyIter_GetInnerStrideArray(iter);</span></a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineCov">     640699 :         countptr = NpyIter_GetInnerLoopSizePtr(iter);</span></a>
+<a name="351"><span class="lineNum">     351 </span>            : </a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineCov">     640699 :         needs_api = NpyIter_IterationNeedsAPI(iter);</span></a>
+<a name="353"><span class="lineNum">     353 </span>            : </a>
+<a name="354"><span class="lineNum">     354 </span>            :         /* Straightforward reduction */</a>
+<a name="355"><span class="lineNum">     355 </span><span class="lineCov">     640699 :         if (loop == NULL) {</span></a>
+<a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 :             PyErr_Format(PyExc_RuntimeError,</span></a>
+<a name="357"><span class="lineNum">     357 </span>            :                     &quot;reduction operation %s did not supply an &quot;</a>
+<a name="358"><span class="lineNum">     358 </span>            :                     &quot;inner loop function&quot;, funcname);</a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 :             goto fail;</span></a>
+<a name="360"><span class="lineNum">     360 </span>            :         }</a>
+<a name="361"><span class="lineNum">     361 </span>            : </a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">     640699 :         if (loop(iter, dataptr, strideptr, countptr,</span></a>
+<a name="363"><span class="lineNum">     363 </span>            :                         iternext, needs_api, skip_first_count, data) &lt; 0) {</a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineCov">          9 :             goto fail;</span></a>
+<a name="365"><span class="lineNum">     365 </span>            :         }</a>
+<a name="366"><span class="lineNum">     366 </span>            :     }</a>
+<a name="367"><span class="lineNum">     367 </span>            : </a>
+<a name="368"><span class="lineNum">     368 </span>            :     /* Check whether any errors occurred during the loop */</a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineCov">    1314614 :     if (PyErr_Occurred() ||</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">     657307 :             _check_ufunc_fperr(errormask, NULL, &quot;reduce&quot;) &lt; 0) {</span></a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineCov">         48 :         goto fail;</span></a>
+<a name="372"><span class="lineNum">     372 </span>            :     }</a>
+<a name="373"><span class="lineNum">     373 </span>            : </a>
+<a name="374"><span class="lineNum">     374 </span><span class="lineCov">     657259 :     if (out != NULL) {</span></a>
+<a name="375"><span class="lineNum">     375 </span><span class="lineCov">       1513 :         result = out;</span></a>
+<a name="376"><span class="lineNum">     376 </span>            :     }</a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineCov">     657259 :     Py_INCREF(result);</span></a>
+<a name="378"><span class="lineNum">     378 </span>            : </a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineCov">     657259 :     if (!NpyIter_Deallocate(iter)) {</span></a>
+<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :         Py_DECREF(result);</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :         return NULL;</span></a>
+<a name="382"><span class="lineNum">     382 </span>            :     }</a>
+<a name="383"><span class="lineNum">     383 </span>            :     return result;</a>
+<a name="384"><span class="lineNum">     384 </span>            : </a>
+<a name="385"><span class="lineNum">     385 </span><span class="lineCov">        116 : fail:</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineCov">        116 :     if (iter != NULL) {</span></a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineCov">         92 :         NpyIter_Deallocate(iter);</span></a>
+<a name="388"><span class="lineNum">     388 </span>            :     }</a>
+<a name="389"><span class="lineNum">     389 </span>            : </a>
+<a name="390"><span class="lineNum">     390 </span>            :     return NULL;</a>
+<a name="391"><span class="lineNum">     391 </span>            : }</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

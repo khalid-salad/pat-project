@@ -1,0 +1,1389 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.out - umath/loops_exponent_log.dispatch.c.src</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">umath</a> - loops_exponent_log.dispatch.c.src<span style="font-size: 80%;"> (source / <a href="loops_exponent_log.dispatch.c.src.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.out</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">220</td>
+            <td class="headerCovTableEntry">539</td>
+            <td class="headerCovTableEntryLo">40.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">44</td>
+            <td class="headerCovTableEntryLo">29.5 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*@targets</a>
+<a name="2"><span class="lineNum">       2 </span>            :  ** $maxopt baseline</a>
+<a name="3"><span class="lineNum">       3 </span>            :  ** (avx2 fma3) avx512f avx512_skx</a>
+<a name="4"><span class="lineNum">       4 </span>            :  **/</a>
+<a name="5"><span class="lineNum">       5 </span>            : </a>
+<a name="6"><span class="lineNum">       6 </span>            : #define _UMATHMODULE</a>
+<a name="7"><span class="lineNum">       7 </span>            : #define _MULTIARRAYMODULE</a>
+<a name="8"><span class="lineNum">       8 </span>            : #define NPY_NO_DEPRECATED_API NPY_API_VERSION</a>
+<a name="9"><span class="lineNum">       9 </span>            : </a>
+<a name="10"><span class="lineNum">      10 </span>            : #include &lt;float.h&gt;</a>
+<a name="11"><span class="lineNum">      11 </span>            : </a>
+<a name="12"><span class="lineNum">      12 </span>            : #include &quot;numpy/npy_math.h&quot;</a>
+<a name="13"><span class="lineNum">      13 </span>            : #include &quot;simd/simd.h&quot;</a>
+<a name="14"><span class="lineNum">      14 </span>            : #include &quot;loops_utils.h&quot;</a>
+<a name="15"><span class="lineNum">      15 </span>            : #include &quot;loops.h&quot;</a>
+<a name="16"><span class="lineNum">      16 </span>            : #include &quot;lowlevel_strided_loops.h&quot;</a>
+<a name="17"><span class="lineNum">      17 </span>            : // Provides the various *_LOOP macros</a>
+<a name="18"><span class="lineNum">      18 </span>            : #include &quot;fast_loop_macros.h&quot;</a>
+<a name="19"><span class="lineNum">      19 </span>            : #include &quot;npy_simd_data.h&quot;</a>
+<a name="20"><span class="lineNum">      20 </span>            : </a>
+<a name="21"><span class="lineNum">      21 </span>            : // TODO: tweak &amp; replace raw SIMD with NPYV</a>
+<a name="22"><span class="lineNum">      22 </span>            : </a>
+<a name="23"><span class="lineNum">      23 </span>            : /********************************************************************************</a>
+<a name="24"><span class="lineNum">      24 </span>            :  ** bunch of helper functions used in ISA_exp/log_FLOAT</a>
+<a name="25"><span class="lineNum">      25 </span>            :  ********************************************************************************/</a>
+<a name="26"><span class="lineNum">      26 </span>            : #if !defined(_MSC_VER) &amp;&amp; defined(NPY_HAVE_AVX512F)</a>
+<a name="27"><span class="lineNum">      27 </span>            :     /**</a>
+<a name="28"><span class="lineNum">      28 </span>            :      * For somehow MSVC commit aggressive optimization lead</a>
+<a name="29"><span class="lineNum">      29 </span>            :      * to raises 'RuntimeWarning: RuntimeWarning: overflow encountered in exp'</a>
+<a name="30"><span class="lineNum">      30 </span>            :      *</a>
+<a name="31"><span class="lineNum">      31 </span>            :      * the issue mainly caused by '_mm512_maskz_loadu_ps', we need to</a>
+<a name="32"><span class="lineNum">      32 </span>            :      * investigate about it while moving to NPYV.</a>
+<a name="33"><span class="lineNum">      33 </span>            :      */</a>
+<a name="34"><span class="lineNum">      34 </span>            :     #define SIMD_AVX512F</a>
+<a name="35"><span class="lineNum">      35 </span>            : #elif defined(NPY_HAVE_AVX2) &amp;&amp; defined(NPY_HAVE_FMA3)</a>
+<a name="36"><span class="lineNum">      36 </span>            :     #define SIMD_AVX2_FMA3</a>
+<a name="37"><span class="lineNum">      37 </span>            : #endif</a>
+<a name="38"><span class="lineNum">      38 </span>            : #if !defined(_MSC_VER) &amp;&amp; defined(NPY_HAVE_AVX512_SKX)</a>
+<a name="39"><span class="lineNum">      39 </span>            :     #define SIMD_AVX512_SKX</a>
+<a name="40"><span class="lineNum">      40 </span>            : #endif</a>
+<a name="41"><span class="lineNum">      41 </span>            : #if defined(SIMD_AVX512F) &amp;&amp; !(defined(__clang__) &amp;&amp; (__clang_major__ &lt; 10 || \</a>
+<a name="42"><span class="lineNum">      42 </span>            :                               (__clang_major__ == 10 &amp;&amp; __clang_minor__ &lt; 1)))</a>
+<a name="43"><span class="lineNum">      43 </span>            :     #define SIMD_AVX512F_NOCLANG_BUG</a>
+<a name="44"><span class="lineNum">      44 </span>            : #endif</a>
+<a name="45"><span class="lineNum">      45 </span>            : </a>
+<a name="46"><span class="lineNum">      46 </span>            : #ifdef SIMD_AVX2_FMA3</a>
+<a name="47"><span class="lineNum">      47 </span>            : </a>
+<a name="48"><span class="lineNum">      48 </span>            : static NPY_INLINE __m256</a>
+<a name="49"><span class="lineNum">      49 </span>            : fma_get_full_load_mask_ps(void)</a>
+<a name="50"><span class="lineNum">      50 </span>            : {</a>
+<a name="51"><span class="lineNum">      51 </span>            :     return _mm256_set1_ps(-1.0);</a>
+<a name="52"><span class="lineNum">      52 </span>            : }</a>
+<a name="53"><span class="lineNum">      53 </span>            : </a>
+<a name="54"><span class="lineNum">      54 </span>            : static NPY_INLINE __m256i</a>
+<a name="55"><span class="lineNum">      55 </span>            : fma_get_full_load_mask_pd(void)</a>
+<a name="56"><span class="lineNum">      56 </span>            : {</a>
+<a name="57"><span class="lineNum">      57 </span>            :     return _mm256_castpd_si256(_mm256_set1_pd(-1.0));</a>
+<a name="58"><span class="lineNum">      58 </span>            : }</a>
+<a name="59"><span class="lineNum">      59 </span>            : </a>
+<a name="60"><span class="lineNum">      60 </span>            : static NPY_INLINE __m256</a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">       3486 : fma_get_partial_load_mask_ps(const npy_int num_elem, const npy_int num_lanes)</span></a>
+<a name="62"><span class="lineNum">      62 </span>            : {</a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">       3486 :     float maskint[16] = {-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,</span></a>
+<a name="64"><span class="lineNum">      64 </span>            :                             1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};</a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">       3486 :     float* addr = maskint + num_lanes - num_elem;</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">       3486 :     return _mm256_loadu_ps(addr);</span></a>
+<a name="67"><span class="lineNum">      67 </span>            : }</a>
+<a name="68"><span class="lineNum">      68 </span>            : </a>
+<a name="69"><span class="lineNum">      69 </span>            : static NPY_INLINE __m256i</a>
+<a name="70"><span class="lineNum">      70 </span>            : fma_get_partial_load_mask_pd(const npy_int num_elem, const npy_int num_lanes)</a>
+<a name="71"><span class="lineNum">      71 </span>            : {</a>
+<a name="72"><span class="lineNum">      72 </span>            :     npy_int maskint[16] = {-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1};</a>
+<a name="73"><span class="lineNum">      73 </span>            :     npy_int* addr = maskint + 2*num_lanes - 2*num_elem;</a>
+<a name="74"><span class="lineNum">      74 </span>            :     return _mm256_loadu_si256((__m256i*) addr);</a>
+<a name="75"><span class="lineNum">      75 </span>            : }</a>
+<a name="76"><span class="lineNum">      76 </span>            : </a>
+<a name="77"><span class="lineNum">      77 </span>            : static NPY_INLINE __m256</a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       4644 : fma_masked_gather_ps(__m256 src,</span></a>
+<a name="79"><span class="lineNum">      79 </span>            :                      npy_float* addr,</a>
+<a name="80"><span class="lineNum">      80 </span>            :                      __m256i vindex,</a>
+<a name="81"><span class="lineNum">      81 </span>            :                      __m256 mask)</a>
+<a name="82"><span class="lineNum">      82 </span>            : {</a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">     261991 :     return _mm256_mask_i32gather_ps(src, addr, vindex, mask, 4);</span></a>
+<a name="84"><span class="lineNum">      84 </span>            : }</a>
+<a name="85"><span class="lineNum">      85 </span>            : </a>
+<a name="86"><span class="lineNum">      86 </span>            : static NPY_INLINE __m256d</a>
+<a name="87"><span class="lineNum">      87 </span>            : fma_masked_gather_pd(__m256d src,</a>
+<a name="88"><span class="lineNum">      88 </span>            :                      npy_double* addr,</a>
+<a name="89"><span class="lineNum">      89 </span>            :                      __m128i vindex,</a>
+<a name="90"><span class="lineNum">      90 </span>            :                      __m256d mask)</a>
+<a name="91"><span class="lineNum">      91 </span>            : {</a>
+<a name="92"><span class="lineNum">      92 </span>            :     return _mm256_mask_i32gather_pd(src, addr, vindex, mask, 8);</a>
+<a name="93"><span class="lineNum">      93 </span>            : }</a>
+<a name="94"><span class="lineNum">      94 </span>            : </a>
+<a name="95"><span class="lineNum">      95 </span>            : static NPY_INLINE __m256</a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">     252703 : fma_masked_load_ps(__m256 mask, npy_float* addr)</span></a>
+<a name="97"><span class="lineNum">      97 </span>            : {</a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">     252703 :     return _mm256_maskload_ps(addr, _mm256_cvtps_epi32(mask));</span></a>
+<a name="99"><span class="lineNum">      99 </span>            : }</a>
+<a name="100"><span class="lineNum">     100 </span>            : </a>
+<a name="101"><span class="lineNum">     101 </span>            : static NPY_INLINE __m256d</a>
+<a name="102"><span class="lineNum">     102 </span>            : fma_masked_load_pd(__m256i mask, npy_double* addr)</a>
+<a name="103"><span class="lineNum">     103 </span>            : {</a>
+<a name="104"><span class="lineNum">     104 </span>            :     return _mm256_maskload_pd(addr, mask);</a>
+<a name="105"><span class="lineNum">     105 </span>            : }</a>
+<a name="106"><span class="lineNum">     106 </span>            : </a>
+<a name="107"><span class="lineNum">     107 </span>            : static NPY_INLINE __m256</a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">    1286735 : fma_set_masked_lanes_ps(__m256 x, __m256 val, __m256 mask)</span></a>
+<a name="109"><span class="lineNum">     109 </span>            : {</a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">     128702 :     return _mm256_blendv_ps(x, val, mask);</span></a>
+<a name="111"><span class="lineNum">     111 </span>            : }</a>
+<a name="112"><span class="lineNum">     112 </span>            : </a>
+<a name="113"><span class="lineNum">     113 </span>            : static NPY_INLINE __m256d</a>
+<a name="114"><span class="lineNum">     114 </span>            : fma_set_masked_lanes_pd(__m256d x, __m256d val, __m256d mask)</a>
+<a name="115"><span class="lineNum">     115 </span>            : {</a>
+<a name="116"><span class="lineNum">     116 </span>            :     return _mm256_blendv_pd(x, val, mask);</a>
+<a name="117"><span class="lineNum">     117 </span>            : }</a>
+<a name="118"><span class="lineNum">     118 </span>            : </a>
+<a name="119"><span class="lineNum">     119 </span>            : static NPY_INLINE __m256</a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">     128645 : fma_blend(__m256 x, __m256 y, __m256 ymask)</span></a>
+<a name="121"><span class="lineNum">     121 </span>            : {</a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">     128645 :     return _mm256_blendv_ps(x, y, ymask);</span></a>
+<a name="123"><span class="lineNum">     123 </span>            : }</a>
+<a name="124"><span class="lineNum">     124 </span>            : </a>
+<a name="125"><span class="lineNum">     125 </span>            : static NPY_INLINE __m256</a>
+<a name="126"><span class="lineNum">     126 </span>            : fma_invert_mask_ps(__m256 ymask)</a>
+<a name="127"><span class="lineNum">     127 </span>            : {</a>
+<a name="128"><span class="lineNum">     128 </span>            :     return _mm256_andnot_ps(ymask, _mm256_set1_ps(-1.0));</a>
+<a name="129"><span class="lineNum">     129 </span>            : }</a>
+<a name="130"><span class="lineNum">     130 </span>            : </a>
+<a name="131"><span class="lineNum">     131 </span>            : static NPY_INLINE __m256i</a>
+<a name="132"><span class="lineNum">     132 </span>            : fma_invert_mask_pd(__m256i ymask)</a>
+<a name="133"><span class="lineNum">     133 </span>            : {</a>
+<a name="134"><span class="lineNum">     134 </span>            :     return _mm256_andnot_si256(ymask, _mm256_set1_epi32(0xFFFFFFFF));</a>
+<a name="135"><span class="lineNum">     135 </span>            : }</a>
+<a name="136"><span class="lineNum">     136 </span>            : </a>
+<a name="137"><span class="lineNum">     137 </span>            : static NPY_INLINE __m256</a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">     128645 : fma_get_exponent(__m256 x)</span></a>
+<a name="139"><span class="lineNum">     139 </span>            : {</a>
+<a name="140"><span class="lineNum">     140 </span>            :     /*</a>
+<a name="141"><span class="lineNum">     141 </span>            :      * Special handling of denormals:</a>
+<a name="142"><span class="lineNum">     142 </span>            :      * 1) Multiply denormal elements with 2**100 (0x71800000)</a>
+<a name="143"><span class="lineNum">     143 </span>            :      * 2) Get the 8 bits of unbiased exponent</a>
+<a name="144"><span class="lineNum">     144 </span>            :      * 3) Subtract 100 from exponent of denormals</a>
+<a name="145"><span class="lineNum">     145 </span>            :      */</a>
+<a name="146"><span class="lineNum">     146 </span>            : </a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     128645 :     __m256 two_power_100 = _mm256_castsi256_ps(_mm256_set1_epi32(0x71800000));</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">     128645 :     __m256 denormal_mask = _mm256_cmp_ps(x, _mm256_set1_ps(FLT_MIN), _CMP_LT_OQ);</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">     128645 :     __m256 normal_mask = _mm256_cmp_ps(x, _mm256_set1_ps(FLT_MIN), _CMP_GE_OQ);</span></a>
+<a name="150"><span class="lineNum">     150 </span>            : </a>
+<a name="151"><span class="lineNum">     151 </span>            :     /*</a>
+<a name="152"><span class="lineNum">     152 </span>            :      * It is necessary for temp1 to be volatile, a bug in clang optimizes it out which leads</a>
+<a name="153"><span class="lineNum">     153 </span>            :      * to an overflow warning in some cases. See https://github.com/numpy/numpy/issues/18005</a>
+<a name="154"><span class="lineNum">     154 </span>            :      */</a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">     128645 :     volatile __m256 temp1 = _mm256_blendv_ps(x, _mm256_set1_ps(0.0f), normal_mask);</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">     128645 :     __m256 temp = _mm256_mul_ps(temp1, two_power_100);</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">     128645 :     x = _mm256_blendv_ps(x, temp, denormal_mask);</span></a>
+<a name="158"><span class="lineNum">     158 </span>            : </a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">     128645 :     __m256 exp = _mm256_cvtepi32_ps(</span></a>
+<a name="160"><span class="lineNum">     160 </span>            :                     _mm256_sub_epi32(</a>
+<a name="161"><span class="lineNum">     161 </span>            :                         _mm256_srli_epi32(</a>
+<a name="162"><span class="lineNum">     162 </span>            :                             _mm256_castps_si256(x), 23),_mm256_set1_epi32(0x7E)));</a>
+<a name="163"><span class="lineNum">     163 </span>            : </a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">     128645 :     __m256 denorm_exp = _mm256_sub_ps(exp, _mm256_set1_ps(100.0f));</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">     128645 :     return _mm256_blendv_ps(exp, denorm_exp, denormal_mask);</span></a>
+<a name="166"><span class="lineNum">     166 </span>            : }</a>
+<a name="167"><span class="lineNum">     167 </span>            : </a>
+<a name="168"><span class="lineNum">     168 </span>            : static NPY_INLINE __m256</a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">     128645 : fma_get_mantissa(__m256 x)</span></a>
+<a name="170"><span class="lineNum">     170 </span>            : {</a>
+<a name="171"><span class="lineNum">     171 </span>            :     /*</a>
+<a name="172"><span class="lineNum">     172 </span>            :      * Special handling of denormals:</a>
+<a name="173"><span class="lineNum">     173 </span>            :      * 1) Multiply denormal elements with 2**100 (0x71800000)</a>
+<a name="174"><span class="lineNum">     174 </span>            :      * 2) Get the 23 bits of mantissa</a>
+<a name="175"><span class="lineNum">     175 </span>            :      * 3) Mantissa for denormals is not affected by the multiplication</a>
+<a name="176"><span class="lineNum">     176 </span>            :      */</a>
+<a name="177"><span class="lineNum">     177 </span>            : </a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">     128645 :     __m256 two_power_100 = _mm256_castsi256_ps(_mm256_set1_epi32(0x71800000));</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">     257290 :     __m256 denormal_mask = _mm256_cmp_ps(x, _mm256_set1_ps(FLT_MIN), _CMP_LT_OQ);</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">     128645 :     __m256 normal_mask = _mm256_cmp_ps(x, _mm256_set1_ps(FLT_MIN), _CMP_GE_OQ);</span></a>
+<a name="181"><span class="lineNum">     181 </span>            : </a>
+<a name="182"><span class="lineNum">     182 </span>            :     /*</a>
+<a name="183"><span class="lineNum">     183 </span>            :      * It is necessary for temp1 to be volatile, a bug in clang optimizes it out which leads</a>
+<a name="184"><span class="lineNum">     184 </span>            :      * to an overflow warning in some cases. See https://github.com/numpy/numpy/issues/18005</a>
+<a name="185"><span class="lineNum">     185 </span>            :      */</a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineCov">     128645 :     volatile __m256 temp1 = _mm256_blendv_ps(x, _mm256_set1_ps(0.0f), normal_mask);</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">     128645 :     __m256 temp = _mm256_mul_ps(temp1, two_power_100);</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">     128645 :     x = _mm256_blendv_ps(x, temp, denormal_mask);</span></a>
+<a name="189"><span class="lineNum">     189 </span>            : </a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">     128645 :     __m256i mantissa_bits = _mm256_set1_epi32(0x7fffff);</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">     128645 :     __m256i exp_126_bits  = _mm256_set1_epi32(126 &lt;&lt; 23);</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">     128645 :     return _mm256_castsi256_ps(</span></a>
+<a name="193"><span class="lineNum">     193 </span>            :                 _mm256_or_si256(</a>
+<a name="194"><span class="lineNum">     194 </span>            :                     _mm256_and_si256(</a>
+<a name="195"><span class="lineNum">     195 </span>            :                         _mm256_castps_si256(x), mantissa_bits), exp_126_bits));</a>
+<a name="196"><span class="lineNum">     196 </span>            : }</a>
+<a name="197"><span class="lineNum">     197 </span>            : </a>
+<a name="198"><span class="lineNum">     198 </span>            : static NPY_INLINE __m256</a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">     128702 : fma_scalef_ps(__m256 poly, __m256 quadrant)</span></a>
+<a name="200"><span class="lineNum">     200 </span>            : {</a>
+<a name="201"><span class="lineNum">     201 </span>            :     /*</a>
+<a name="202"><span class="lineNum">     202 </span>            :      * Handle denormals (which occur when quadrant &lt;= -125):</a>
+<a name="203"><span class="lineNum">     203 </span>            :      * 1) This function computes poly*(2^quad) by adding the exponent of</a>
+<a name="204"><span class="lineNum">     204 </span>            :      poly to quad</a>
+<a name="205"><span class="lineNum">     205 </span>            :      * 2) When quad &lt;= -125, the output is a denormal and the above logic</a>
+<a name="206"><span class="lineNum">     206 </span>            :      breaks down</a>
+<a name="207"><span class="lineNum">     207 </span>            :      * 3) To handle such cases, we split quadrant: -125 + (quadrant + 125)</a>
+<a name="208"><span class="lineNum">     208 </span>            :      * 4) poly*(2^-125) is computed the usual way</a>
+<a name="209"><span class="lineNum">     209 </span>            :      * 5) 2^(quad-125) can be computed by: 2 &lt;&lt; abs(quad-125)</a>
+<a name="210"><span class="lineNum">     210 </span>            :      * 6) The final div operation generates the denormal</a>
+<a name="211"><span class="lineNum">     211 </span>            :      */</a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">     128702 :      __m256 minquadrant = _mm256_set1_ps(-125.0f);</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">     128702 :      __m256 denormal_mask = _mm256_cmp_ps(quadrant, minquadrant, _CMP_LE_OQ);</span></a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineCov">     128702 :      if (_mm256_movemask_ps(denormal_mask) != 0x0000) {</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">         12 :         __m256 quad_diff = _mm256_sub_ps(quadrant, minquadrant);</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">         12 :         quad_diff = _mm256_sub_ps(_mm256_setzero_ps(), quad_diff);</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">         12 :         quad_diff = _mm256_blendv_ps(_mm256_setzero_ps(), quad_diff, denormal_mask);</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">         12 :         __m256i two_power_diff = _mm256_sllv_epi32(</span></a>
+<a name="219"><span class="lineNum">     219 </span>            :                                    _mm256_set1_epi32(1), _mm256_cvtps_epi32(quad_diff));</a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">         12 :         quadrant = _mm256_max_ps(quadrant, minquadrant); //keep quadrant &gt;= -126</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">         12 :         __m256i exponent = _mm256_slli_epi32(_mm256_cvtps_epi32(quadrant), 23);</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">         12 :         poly = _mm256_castsi256_ps(</span></a>
+<a name="223"><span class="lineNum">     223 </span>            :                    _mm256_add_epi32(</a>
+<a name="224"><span class="lineNum">     224 </span>            :                        _mm256_castps_si256(poly), exponent));</a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">         12 :         __m256 denorm_poly = _mm256_div_ps(poly, _mm256_cvtepi32_ps(two_power_diff));</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineCov">         12 :         return _mm256_blendv_ps(poly, denorm_poly, denormal_mask);</span></a>
+<a name="227"><span class="lineNum">     227 </span>            :      }</a>
+<a name="228"><span class="lineNum">     228 </span>            :      else {</a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">     128690 :         __m256i exponent = _mm256_slli_epi32(_mm256_cvtps_epi32(quadrant), 23);</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">     128690 :         poly = _mm256_castsi256_ps(</span></a>
+<a name="231"><span class="lineNum">     231 </span>            :                    _mm256_add_epi32(</a>
+<a name="232"><span class="lineNum">     232 </span>            :                        _mm256_castps_si256(poly), exponent));</a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">     128690 :         return poly;</span></a>
+<a name="234"><span class="lineNum">     234 </span>            :      }</a>
+<a name="235"><span class="lineNum">     235 </span>            : }</a>
+<a name="236"><span class="lineNum">     236 </span>            : </a>
+<a name="237"><span class="lineNum">     237 </span>            : #endif // SIMD_AVX2_FMA3</a>
+<a name="238"><span class="lineNum">     238 </span>            : </a>
+<a name="239"><span class="lineNum">     239 </span>            : #ifdef SIMD_AVX512F</a>
+<a name="240"><span class="lineNum">     240 </span>            : </a>
+<a name="241"><span class="lineNum">     241 </span>            : static NPY_INLINE NPY_GCC_OPT_3 NPY_GCC_TARGET_AVX512F __mmask16</a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 : avx512_get_full_load_mask_ps(void)</span></a>
+<a name="243"><span class="lineNum">     243 </span>            : {</a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :     return 0xFFFF;</span></a>
+<a name="245"><span class="lineNum">     245 </span>            : }</a>
+<a name="246"><span class="lineNum">     246 </span>            : </a>
+<a name="247"><span class="lineNum">     247 </span>            : static NPY_INLINE __mmask8</a>
+<a name="248"><span class="lineNum">     248 </span>            : avx512_get_full_load_mask_pd(void)</a>
+<a name="249"><span class="lineNum">     249 </span>            : {</a>
+<a name="250"><span class="lineNum">     250 </span>            :     return 0xFF;</a>
+<a name="251"><span class="lineNum">     251 </span>            : }</a>
+<a name="252"><span class="lineNum">     252 </span>            : </a>
+<a name="253"><span class="lineNum">     253 </span>            : static NPY_INLINE __mmask16</a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineNoCov">          0 : avx512_get_partial_load_mask_ps(const npy_int num_elem, const npy_int total_elem)</span></a>
+<a name="255"><span class="lineNum">     255 </span>            : {</a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineNoCov">          0 :     return (0x0001 &lt;&lt; num_elem) - 0x0001;</span></a>
+<a name="257"><span class="lineNum">     257 </span>            : }</a>
+<a name="258"><span class="lineNum">     258 </span>            : </a>
+<a name="259"><span class="lineNum">     259 </span>            : static NPY_INLINE __mmask8</a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineNoCov">          0 : avx512_get_partial_load_mask_pd(const npy_int num_elem, const npy_int total_elem)</span></a>
+<a name="261"><span class="lineNum">     261 </span>            : {</a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :     return (0x01 &lt;&lt; num_elem) - 0x01;</span></a>
+<a name="263"><span class="lineNum">     263 </span>            : }</a>
+<a name="264"><span class="lineNum">     264 </span>            : </a>
+<a name="265"><span class="lineNum">     265 </span>            : static NPY_INLINE __m512</a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 : avx512_masked_gather_ps(__m512 src,</span></a>
+<a name="267"><span class="lineNum">     267 </span>            :                         npy_float* addr,</a>
+<a name="268"><span class="lineNum">     268 </span>            :                         __m512i vindex,</a>
+<a name="269"><span class="lineNum">     269 </span>            :                         __mmask16 kmask)</a>
+<a name="270"><span class="lineNum">     270 </span>            : {</a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :     return _mm512_mask_i32gather_ps(src, kmask, vindex, addr, 4);</span></a>
+<a name="272"><span class="lineNum">     272 </span>            : }</a>
+<a name="273"><span class="lineNum">     273 </span>            : </a>
+<a name="274"><span class="lineNum">     274 </span>            : static NPY_INLINE __m512d</a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineNoCov">          0 : avx512_masked_gather_pd(__m512d src,</span></a>
+<a name="276"><span class="lineNum">     276 </span>            :                         npy_double* addr,</a>
+<a name="277"><span class="lineNum">     277 </span>            :                         __m256i vindex,</a>
+<a name="278"><span class="lineNum">     278 </span>            :                         __mmask8 kmask)</a>
+<a name="279"><span class="lineNum">     279 </span>            : {</a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :     return _mm512_mask_i32gather_pd(src, kmask, vindex, addr, 8);</span></a>
+<a name="281"><span class="lineNum">     281 </span>            : }</a>
+<a name="282"><span class="lineNum">     282 </span>            : </a>
+<a name="283"><span class="lineNum">     283 </span>            : static NPY_INLINE __m512</a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 : avx512_masked_load_ps(__mmask16 mask, npy_float* addr)</span></a>
+<a name="285"><span class="lineNum">     285 </span>            : {</a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :     return _mm512_maskz_loadu_ps(mask, (__m512 *)addr);</span></a>
+<a name="287"><span class="lineNum">     287 </span>            : }</a>
+<a name="288"><span class="lineNum">     288 </span>            : </a>
+<a name="289"><span class="lineNum">     289 </span>            : static NPY_INLINE __m512d</a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 : avx512_masked_load_pd(__mmask8 mask, npy_double* addr)</span></a>
+<a name="291"><span class="lineNum">     291 </span>            : {</a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :     return _mm512_maskz_loadu_pd(mask, (__m512d *)addr);</span></a>
+<a name="293"><span class="lineNum">     293 </span>            : }</a>
+<a name="294"><span class="lineNum">     294 </span>            : </a>
+<a name="295"><span class="lineNum">     295 </span>            : static NPY_INLINE __m512</a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 : avx512_set_masked_lanes_ps(__m512 x, __m512 val, __mmask16 mask)</span></a>
+<a name="297"><span class="lineNum">     297 </span>            : {</a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :     return _mm512_mask_blend_ps(mask, x, val);</span></a>
+<a name="299"><span class="lineNum">     299 </span>            : }</a>
+<a name="300"><span class="lineNum">     300 </span>            : </a>
+<a name="301"><span class="lineNum">     301 </span>            : static NPY_INLINE __m512d</a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 : avx512_set_masked_lanes_pd(__m512d x, __m512d val, __mmask8 mask)</span></a>
+<a name="303"><span class="lineNum">     303 </span>            : {</a>
+<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 :     return _mm512_mask_blend_pd(mask, x, val);</span></a>
+<a name="305"><span class="lineNum">     305 </span>            : }</a>
+<a name="306"><span class="lineNum">     306 </span>            : </a>
+<a name="307"><span class="lineNum">     307 </span>            : static NPY_INLINE __m512</a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 : avx512_blend(__m512 x, __m512 y, __mmask16 ymask)</span></a>
+<a name="309"><span class="lineNum">     309 </span>            : {</a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :     return _mm512_mask_mov_ps(x, ymask, y);</span></a>
+<a name="311"><span class="lineNum">     311 </span>            : }</a>
+<a name="312"><span class="lineNum">     312 </span>            : </a>
+<a name="313"><span class="lineNum">     313 </span>            : static NPY_INLINE __mmask16</a>
+<a name="314"><span class="lineNum">     314 </span>            : avx512_invert_mask_ps(__mmask16 ymask)</a>
+<a name="315"><span class="lineNum">     315 </span>            : {</a>
+<a name="316"><span class="lineNum">     316 </span>            :     return _mm512_knot(ymask);</a>
+<a name="317"><span class="lineNum">     317 </span>            : }</a>
+<a name="318"><span class="lineNum">     318 </span>            : </a>
+<a name="319"><span class="lineNum">     319 </span>            : static NPY_INLINE __mmask8</a>
+<a name="320"><span class="lineNum">     320 </span>            : avx512_invert_mask_pd(__mmask8 ymask)</a>
+<a name="321"><span class="lineNum">     321 </span>            : {</a>
+<a name="322"><span class="lineNum">     322 </span>            :     return _mm512_knot(ymask);</a>
+<a name="323"><span class="lineNum">     323 </span>            : }</a>
+<a name="324"><span class="lineNum">     324 </span>            : </a>
+<a name="325"><span class="lineNum">     325 </span>            : static NPY_INLINE __m512</a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 : avx512_get_exponent(__m512 x)</span></a>
+<a name="327"><span class="lineNum">     327 </span>            : {</a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :     return _mm512_add_ps(_mm512_getexp_ps(x), _mm512_set1_ps(1.0f));</span></a>
+<a name="329"><span class="lineNum">     329 </span>            : }</a>
+<a name="330"><span class="lineNum">     330 </span>            : </a>
+<a name="331"><span class="lineNum">     331 </span>            : static NPY_INLINE __m512</a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 : avx512_get_mantissa(__m512 x)</span></a>
+<a name="333"><span class="lineNum">     333 </span>            : {</a>
+<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 :     return _mm512_getmant_ps(x, _MM_MANT_NORM_p5_1, _MM_MANT_SIGN_src);</span></a>
+<a name="335"><span class="lineNum">     335 </span>            : }</a>
+<a name="336"><span class="lineNum">     336 </span>            : </a>
+<a name="337"><span class="lineNum">     337 </span>            : static NPY_INLINE __m512</a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineNoCov">          0 : avx512_scalef_ps(__m512 poly, __m512 quadrant)</span></a>
+<a name="339"><span class="lineNum">     339 </span>            : {</a>
+<a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 :     return _mm512_scalef_ps(poly, quadrant);</span></a>
+<a name="341"><span class="lineNum">     341 </span>            : }</a>
+<a name="342"><span class="lineNum">     342 </span>            : </a>
+<a name="343"><span class="lineNum">     343 </span>            : static NPY_INLINE __m512d</a>
+<a name="344"><span class="lineNum">     344 </span><span class="lineNoCov">          0 : avx512_permute_x4var_pd(__m512d t0,</span></a>
+<a name="345"><span class="lineNum">     345 </span>            :                         __m512d t1,</a>
+<a name="346"><span class="lineNum">     346 </span>            :                         __m512d t2,</a>
+<a name="347"><span class="lineNum">     347 </span>            :                         __m512d t3,</a>
+<a name="348"><span class="lineNum">     348 </span>            :                         __m512i index)</a>
+<a name="349"><span class="lineNum">     349 </span>            : {</a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :     __mmask8 lut_mask = _mm512_cmp_epi64_mask(</span></a>
+<a name="351"><span class="lineNum">     351 </span>            :                           _mm512_and_epi64(_mm512_set1_epi64(0x10ULL), index),</a>
+<a name="352"><span class="lineNum">     352 </span>            :                           _mm512_set1_epi64(0), _MM_CMPINT_GT);</a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :     __m512d res1 = _mm512_permutex2var_pd(t0, index, t1);</span></a>
+<a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 :     __m512d res2 = _mm512_permutex2var_pd(t2, index, t3);</span></a>
+<a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :     return _mm512_mask_blend_pd(lut_mask, res1, res2);</span></a>
+<a name="356"><span class="lineNum">     356 </span>            : }</a>
+<a name="357"><span class="lineNum">     357 </span>            : </a>
+<a name="358"><span class="lineNum">     358 </span>            : static NPY_INLINE __m512d</a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 : avx512_permute_x8var_pd(__m512d t0, __m512d t1, __m512d t2, __m512d t3,</span></a>
+<a name="360"><span class="lineNum">     360 </span>            :                         __m512d t4, __m512d t5, __m512d t6, __m512d t7,</a>
+<a name="361"><span class="lineNum">     361 </span>            :                         __m512i index)</a>
+<a name="362"><span class="lineNum">     362 </span>            : {</a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 :     __mmask8 lut_mask = _mm512_cmp_epi64_mask(</span></a>
+<a name="364"><span class="lineNum">     364 </span>            :                           _mm512_and_epi64(_mm512_set1_epi64(0x20ULL), index),</a>
+<a name="365"><span class="lineNum">     365 </span>            :                           _mm512_set1_epi64(0), _MM_CMPINT_GT);</a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineNoCov">          0 :     __m512d res1 = avx512_permute_x4var_pd(t0, t1, t2, t3, index);</span></a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :     __m512d res2 = avx512_permute_x4var_pd(t4, t5, t6, t7, index);</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :     return _mm512_mask_blend_pd(lut_mask, res1, res2);</span></a>
+<a name="369"><span class="lineNum">     369 </span>            : }</a>
+<a name="370"><span class="lineNum">     370 </span>            : </a>
+<a name="371"><span class="lineNum">     371 </span>            : #endif // SIMD_AVX512F</a>
+<a name="372"><span class="lineNum">     372 </span>            : </a>
+<a name="373"><span class="lineNum">     373 </span>            : /********************************************************************************</a>
+<a name="374"><span class="lineNum">     374 </span>            :  ** Defining the SIMD kernels</a>
+<a name="375"><span class="lineNum">     375 </span>            :  ********************************************************************************/</a>
+<a name="376"><span class="lineNum">     376 </span>            : /**begin repeat</a>
+<a name="377"><span class="lineNum">     377 </span>            :  * #ISA = FMA, AVX512F#</a>
+<a name="378"><span class="lineNum">     378 </span>            :  * #isa = fma, avx512#</a>
+<a name="379"><span class="lineNum">     379 </span>            :  * #vtype = __m256, __m512#</a>
+<a name="380"><span class="lineNum">     380 </span>            :  * #vsize = 256, 512#</a>
+<a name="381"><span class="lineNum">     381 </span>            :  * #BYTES = 32, 64#</a>
+<a name="382"><span class="lineNum">     382 </span>            :  * #NUM_LANES = 8, 16#</a>
+<a name="383"><span class="lineNum">     383 </span>            :  * #mask = __m256, __mmask16#</a>
+<a name="384"><span class="lineNum">     384 </span>            :  * #vsub = , _mask#</a>
+<a name="385"><span class="lineNum">     385 </span>            :  * #or_masks =_mm256_or_ps, _mm512_kor#</a>
+<a name="386"><span class="lineNum">     386 </span>            :  * #and_masks =_mm256_and_ps, _mm512_kand#</a>
+<a name="387"><span class="lineNum">     387 </span>            :  * #xor_masks =_mm256_xor_ps, _mm512_kxor#</a>
+<a name="388"><span class="lineNum">     388 </span>            :  * #fmadd = _mm256_fmadd_ps, _mm512_fmadd_ps#</a>
+<a name="389"><span class="lineNum">     389 </span>            :  * #mask_to_int = _mm256_movemask_ps, #</a>
+<a name="390"><span class="lineNum">     390 </span>            :  * #full_mask= 0xFF, 0xFFFF#</a>
+<a name="391"><span class="lineNum">     391 </span>            :  * #masked_store = _mm256_maskstore_ps, _mm512_mask_storeu_ps#</a>
+<a name="392"><span class="lineNum">     392 </span>            :  * #cvtps_epi32 = _mm256_cvtps_epi32, #</a>
+<a name="393"><span class="lineNum">     393 </span>            :  * #CHK = SIMD_AVX2_FMA3, SIMD_AVX512F#</a>
+<a name="394"><span class="lineNum">     394 </span>            :  */</a>
+<a name="395"><span class="lineNum">     395 </span>            : #ifdef @CHK@</a>
+<a name="396"><span class="lineNum">     396 </span>            : /*</a>
+<a name="397"><span class="lineNum">     397 </span>            :  * Vectorized Cody-Waite range reduction technique</a>
+<a name="398"><span class="lineNum">     398 </span>            :  * Performs the reduction step x* = x - y*C in three steps:</a>
+<a name="399"><span class="lineNum">     399 </span>            :  * 1) x* = x - y*c1</a>
+<a name="400"><span class="lineNum">     400 </span>            :  * 2) x* = x - y*c2</a>
+<a name="401"><span class="lineNum">     401 </span>            :  * 3) x* = x - y*c3</a>
+<a name="402"><span class="lineNum">     402 </span>            :  * c1, c2 are exact floating points, c3 = C - c1 - c2 simulates higher precision</a>
+<a name="403"><span class="lineNum">     403 </span>            :  */</a>
+<a name="404"><span class="lineNum">     404 </span>            : static NPY_INLINE @vtype@</a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineCov">     128702 : simd_range_reduction(@vtype@ x, @vtype@ y, @vtype@ c1, @vtype@ c2, @vtype@ c3)</span></a>
+<a name="406"><span class="lineNum">     406 </span>            : {</a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineCov">     257404 :     @vtype@ reduced_x = @fmadd@(y, c1, x);</span></a>
+<a name="408"><span class="lineNum">     408 </span><span class="lineCov">     128702 :     reduced_x = @fmadd@(y, c2, reduced_x);</span></a>
+<a name="409"><span class="lineNum">     409 </span><span class="lineCov">     128702 :     reduced_x = @fmadd@(y, c3, reduced_x);</span></a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineCov">     128702 :     return reduced_x;</span></a>
+<a name="411"><span class="lineNum">     411 </span>            : }</a>
+<a name="412"><span class="lineNum">     412 </span>            : /*</a>
+<a name="413"><span class="lineNum">     413 </span>            :  * Vectorized implementation of exp using AVX2 and AVX512:</a>
+<a name="414"><span class="lineNum">     414 </span>            :  * 1) if x &gt;= xmax; return INF (overflow)</a>
+<a name="415"><span class="lineNum">     415 </span>            :  * 2) if x &lt;= xmin; return 0.0f (underflow)</a>
+<a name="416"><span class="lineNum">     416 </span>            :  * 3) Range reduction (using Coyd-Waite):</a>
+<a name="417"><span class="lineNum">     417 </span>            :  *      a) y = x - k*ln(2); k = rint(x/ln(2)); y \in [0, ln(2)]</a>
+<a name="418"><span class="lineNum">     418 </span>            :  * 4) Compute exp(y) = P/Q, ratio of 2 polynomials P and Q</a>
+<a name="419"><span class="lineNum">     419 </span>            :  *      b) P = 5th order and Q = 2nd order polynomials obtained from Remez's</a>
+<a name="420"><span class="lineNum">     420 </span>            :  *      algorithm (mini-max polynomial approximation)</a>
+<a name="421"><span class="lineNum">     421 </span>            :  * 5) Compute exp(x) = exp(y) * 2^k</a>
+<a name="422"><span class="lineNum">     422 </span>            :  * 6) Max ULP error measured across all 32-bit FP's = 2.52 (x = 0xc2781e37)</a>
+<a name="423"><span class="lineNum">     423 </span>            :  * 7) Max relative error measured across all 32-bit FP's= 2.1264E-07 (for the</a>
+<a name="424"><span class="lineNum">     424 </span>            :  * same x = 0xc2781e37)</a>
+<a name="425"><span class="lineNum">     425 </span>            :  */</a>
+<a name="426"><span class="lineNum">     426 </span>            : static void</a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineCov">        953 : simd_exp_FLOAT(npy_float * op,</span></a>
+<a name="428"><span class="lineNum">     428 </span>            :                 npy_float * ip,</a>
+<a name="429"><span class="lineNum">     429 </span>            :                 const npy_intp array_size,</a>
+<a name="430"><span class="lineNum">     430 </span>            :                 const npy_intp steps)</a>
+<a name="431"><span class="lineNum">     431 </span>            : {</a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineCov">        953 :     const npy_intp stride = steps/(npy_intp)sizeof(npy_float);</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineCov">        953 :     const npy_int num_lanes = @BYTES@/(npy_intp)sizeof(npy_float);</span></a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineCov">        953 :     npy_float xmax = 88.72283935546875f;</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineCov">        953 :     npy_float xmin = -103.97208404541015625f;</span></a>
+<a name="436"><span class="lineNum">     436 </span>            : </a>
+<a name="437"><span class="lineNum">     437 </span>            :     /*</a>
+<a name="438"><span class="lineNum">     438 </span>            :      * Note: while generally indices are npy_intp, we ensure that our maximum index</a>
+<a name="439"><span class="lineNum">     439 </span>            :      * will fit in an int32 as a precondition for this function via</a>
+<a name="440"><span class="lineNum">     440 </span>            :      * IS_OUTPUT_BLOCKABLE_UNARY</a>
+<a name="441"><span class="lineNum">     441 </span>            :      */</a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineCov">        953 :     npy_int32 indexarr[16];</span></a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineCov">      16201 :     for (npy_int32 ii = 0; ii &lt; 16; ii++) {</span></a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineCov">      15248 :         indexarr[ii] = ii*stride;</span></a>
+<a name="445"><span class="lineNum">     445 </span>            :     }</a>
+<a name="446"><span class="lineNum">     446 </span>            : </a>
+<a name="447"><span class="lineNum">     447 </span>            :     /* Load up frequently used constants */</a>
+<a name="448"><span class="lineNum">     448 </span><span class="lineCov">        953 :     @vtype@ codyw_c1 = _mm@vsize@_set1_ps(NPY_CODY_WAITE_LOGE_2_HIGHf);</span></a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineCov">        953 :     @vtype@ codyw_c2 = _mm@vsize@_set1_ps(NPY_CODY_WAITE_LOGE_2_LOWf);</span></a>
+<a name="450"><span class="lineNum">     450 </span><span class="lineCov">        953 :     @vtype@ exp_p0 = _mm@vsize@_set1_ps(NPY_COEFF_P0_EXPf);</span></a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineCov">        953 :     @vtype@ exp_p1 = _mm@vsize@_set1_ps(NPY_COEFF_P1_EXPf);</span></a>
+<a name="452"><span class="lineNum">     452 </span><span class="lineCov">        953 :     @vtype@ exp_p2 = _mm@vsize@_set1_ps(NPY_COEFF_P2_EXPf);</span></a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineCov">        953 :     @vtype@ exp_p3 = _mm@vsize@_set1_ps(NPY_COEFF_P3_EXPf);</span></a>
+<a name="454"><span class="lineNum">     454 </span><span class="lineCov">        953 :     @vtype@ exp_p4 = _mm@vsize@_set1_ps(NPY_COEFF_P4_EXPf);</span></a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineCov">        953 :     @vtype@ exp_p5 = _mm@vsize@_set1_ps(NPY_COEFF_P5_EXPf);</span></a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineCov">        953 :     @vtype@ exp_q0 = _mm@vsize@_set1_ps(NPY_COEFF_Q0_EXPf);</span></a>
+<a name="457"><span class="lineNum">     457 </span><span class="lineCov">        953 :     @vtype@ exp_q1 = _mm@vsize@_set1_ps(NPY_COEFF_Q1_EXPf);</span></a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineCov">        953 :     @vtype@ exp_q2 = _mm@vsize@_set1_ps(NPY_COEFF_Q2_EXPf);</span></a>
+<a name="459"><span class="lineNum">     459 </span><span class="lineCov">        953 :     @vtype@ cvt_magic = _mm@vsize@_set1_ps(NPY_RINT_CVT_MAGICf);</span></a>
+<a name="460"><span class="lineNum">     460 </span><span class="lineCov">        953 :     @vtype@ log2e = _mm@vsize@_set1_ps(NPY_LOG2Ef);</span></a>
+<a name="461"><span class="lineNum">     461 </span><span class="lineCov">        953 :     @vtype@ inf = _mm@vsize@_set1_ps(NPY_INFINITYF);</span></a>
+<a name="462"><span class="lineNum">     462 </span><span class="lineCov">        953 :     @vtype@ zeros_f = _mm@vsize@_set1_ps(0.0f);</span></a>
+<a name="463"><span class="lineNum">     463 </span><span class="lineCov">        953 :     @vtype@ poly, num_poly, denom_poly, quadrant;</span></a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineCov">        953 :     @vtype@i vindex = _mm@vsize@_loadu_si@vsize@((@vtype@i*)&amp;indexarr[0]);</span></a>
+<a name="465"><span class="lineNum">     465 </span>            : </a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineCov">        953 :     @mask@ xmax_mask, xmin_mask, nan_mask, inf_mask;</span></a>
+<a name="467"><span class="lineNum">     467 </span><span class="lineCov">        953 :     @mask@ overflow_mask = @isa@_get_partial_load_mask_ps(0, num_lanes);</span></a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineCov">        953 :     @mask@ underflow_mask = @isa@_get_partial_load_mask_ps(0, num_lanes);</span></a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineCov">        953 :     @mask@ load_mask = @isa@_get_full_load_mask_ps();</span></a>
+<a name="470"><span class="lineNum">     470 </span><span class="lineCov">        953 :     npy_intp num_remaining_elements = array_size;</span></a>
+<a name="471"><span class="lineNum">     471 </span>            : </a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineCov">     129655 :     while (num_remaining_elements &gt; 0) {</span></a>
+<a name="473"><span class="lineNum">     473 </span>            : </a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineCov">     128702 :         if (num_remaining_elements &lt; num_lanes) {</span></a>
+<a name="475"><span class="lineNum">     475 </span><span class="lineCov">        844 :             load_mask = @isa@_get_partial_load_mask_ps(num_remaining_elements,</span></a>
+<a name="476"><span class="lineNum">     476 </span>            :                                                        num_lanes);</a>
+<a name="477"><span class="lineNum">     477 </span>            :         }</a>
+<a name="478"><span class="lineNum">     478 </span>            : </a>
+<a name="479"><span class="lineNum">     479 </span><span class="lineCov">     128702 :         @vtype@ x;</span></a>
+<a name="480"><span class="lineNum">     480 </span><span class="lineCov">     128702 :         if (stride == 1) {</span></a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineCov">     126352 :             x = @isa@_masked_load_ps(load_mask, ip);</span></a>
+<a name="482"><span class="lineNum">     482 </span>            :         }</a>
+<a name="483"><span class="lineNum">     483 </span>            :         else {</a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineCov">       2350 :             x = @isa@_masked_gather_ps(zeros_f, ip, vindex, load_mask);</span></a>
+<a name="485"><span class="lineNum">     485 </span>            :         }</a>
+<a name="486"><span class="lineNum">     486 </span>            : </a>
+<a name="487"><span class="lineNum">     487 </span><span class="lineCov">     128702 :         nan_mask = _mm@vsize@_cmp_ps@vsub@(x, x, _CMP_NEQ_UQ);</span></a>
+<a name="488"><span class="lineNum">     488 </span><span class="lineCov">     128702 :         x = @isa@_set_masked_lanes_ps(x, zeros_f, nan_mask);</span></a>
+<a name="489"><span class="lineNum">     489 </span>            : </a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineCov">     128702 :         xmax_mask = _mm@vsize@_cmp_ps@vsub@(x, _mm@vsize@_set1_ps(xmax), _CMP_GE_OQ);</span></a>
+<a name="491"><span class="lineNum">     491 </span><span class="lineCov">     128702 :         xmin_mask = _mm@vsize@_cmp_ps@vsub@(x, _mm@vsize@_set1_ps(xmin), _CMP_LE_OQ);</span></a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineCov">     128702 :         inf_mask = _mm@vsize@_cmp_ps@vsub@(x, inf, _CMP_EQ_OQ);</span></a>
+<a name="493"><span class="lineNum">     493 </span><span class="lineCov">     128702 :         overflow_mask = @or_masks@(overflow_mask,</span></a>
+<a name="494"><span class="lineNum">     494 </span><span class="lineNoCov">          0 :                                     @xor_masks@(xmax_mask, inf_mask));</span></a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineCov">     128702 :         underflow_mask = @or_masks@(underflow_mask, xmin_mask);</span></a>
+<a name="496"><span class="lineNum">     496 </span>            : </a>
+<a name="497"><span class="lineNum">     497 </span><span class="lineCov">     128702 :         x = @isa@_set_masked_lanes_ps(x, zeros_f, @or_masks@(</span></a>
+<a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 :                                     @or_masks@(nan_mask, xmin_mask), xmax_mask));</span></a>
+<a name="499"><span class="lineNum">     499 </span>            : </a>
+<a name="500"><span class="lineNum">     500 </span><span class="lineCov">     128702 :         quadrant = _mm@vsize@_mul_ps(x, log2e);</span></a>
+<a name="501"><span class="lineNum">     501 </span>            : </a>
+<a name="502"><span class="lineNum">     502 </span>            :         /* round to nearest */</a>
+<a name="503"><span class="lineNum">     503 </span><span class="lineCov">     128702 :         quadrant = _mm@vsize@_add_ps(quadrant, cvt_magic);</span></a>
+<a name="504"><span class="lineNum">     504 </span><span class="lineCov">     128702 :         quadrant = _mm@vsize@_sub_ps(quadrant, cvt_magic);</span></a>
+<a name="505"><span class="lineNum">     505 </span>            : </a>
+<a name="506"><span class="lineNum">     506 </span>            :         /* Cody-Waite's range reduction algorithm */</a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineCov">     128702 :         x = simd_range_reduction(x, quadrant, codyw_c1, codyw_c2, zeros_f);</span></a>
+<a name="508"><span class="lineNum">     508 </span>            : </a>
+<a name="509"><span class="lineNum">     509 </span><span class="lineCov">     128702 :         num_poly = @fmadd@(exp_p5, x, exp_p4);</span></a>
+<a name="510"><span class="lineNum">     510 </span><span class="lineCov">     128702 :         num_poly = @fmadd@(num_poly, x, exp_p3);</span></a>
+<a name="511"><span class="lineNum">     511 </span><span class="lineCov">     128702 :         num_poly = @fmadd@(num_poly, x, exp_p2);</span></a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineCov">     128702 :         num_poly = @fmadd@(num_poly, x, exp_p1);</span></a>
+<a name="513"><span class="lineNum">     513 </span><span class="lineCov">     128702 :         num_poly = @fmadd@(num_poly, x, exp_p0);</span></a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineCov">     128702 :         denom_poly = @fmadd@(exp_q2, x, exp_q1);</span></a>
+<a name="515"><span class="lineNum">     515 </span><span class="lineCov">     128702 :         denom_poly = @fmadd@(denom_poly, x, exp_q0);</span></a>
+<a name="516"><span class="lineNum">     516 </span><span class="lineCov">     128702 :         poly = _mm@vsize@_div_ps(num_poly, denom_poly);</span></a>
+<a name="517"><span class="lineNum">     517 </span>            : </a>
+<a name="518"><span class="lineNum">     518 </span>            :         /*</a>
+<a name="519"><span class="lineNum">     519 </span>            :          * compute val = poly * 2^quadrant; which is same as adding the</a>
+<a name="520"><span class="lineNum">     520 </span>            :          * exponent of quadrant to the exponent of poly. quadrant is an int,</a>
+<a name="521"><span class="lineNum">     521 </span>            :          * so extracting exponent is simply extracting 8 bits.</a>
+<a name="522"><span class="lineNum">     522 </span>            :          */</a>
+<a name="523"><span class="lineNum">     523 </span><span class="lineCov">     128702 :         poly = @isa@_scalef_ps(poly, quadrant);</span></a>
+<a name="524"><span class="lineNum">     524 </span>            : </a>
+<a name="525"><span class="lineNum">     525 </span>            :         /*</a>
+<a name="526"><span class="lineNum">     526 </span>            :          * elem &gt; xmax; return inf</a>
+<a name="527"><span class="lineNum">     527 </span>            :          * elem &lt; xmin; return 0.0f</a>
+<a name="528"><span class="lineNum">     528 </span>            :          * elem = +/- nan, return nan</a>
+<a name="529"><span class="lineNum">     529 </span>            :          */</a>
+<a name="530"><span class="lineNum">     530 </span><span class="lineCov">     128702 :         poly = @isa@_set_masked_lanes_ps(poly, _mm@vsize@_set1_ps(NPY_NANF), nan_mask);</span></a>
+<a name="531"><span class="lineNum">     531 </span><span class="lineCov">     128702 :         poly = @isa@_set_masked_lanes_ps(poly, inf, xmax_mask);</span></a>
+<a name="532"><span class="lineNum">     532 </span><span class="lineCov">     128702 :         poly = @isa@_set_masked_lanes_ps(poly, zeros_f, xmin_mask);</span></a>
+<a name="533"><span class="lineNum">     533 </span>            : </a>
+<a name="534"><span class="lineNum">     534 </span><span class="lineCov">     128702 :         @masked_store@(op, @cvtps_epi32@(load_mask), poly);</span></a>
+<a name="535"><span class="lineNum">     535 </span>            : </a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineCov">     128702 :         ip += num_lanes*stride;</span></a>
+<a name="537"><span class="lineNum">     537 </span><span class="lineCov">     128702 :         op += num_lanes;</span></a>
+<a name="538"><span class="lineNum">     538 </span><span class="lineCov">     128702 :         num_remaining_elements -= num_lanes;</span></a>
+<a name="539"><span class="lineNum">     539 </span>            :     }</a>
+<a name="540"><span class="lineNum">     540 </span>            : </a>
+<a name="541"><span class="lineNum">     541 </span><span class="lineCov">        953 :     if (@mask_to_int@(overflow_mask)) {</span></a>
+<a name="542"><span class="lineNum">     542 </span><span class="lineCov">          3 :         npy_set_floatstatus_overflow();</span></a>
+<a name="543"><span class="lineNum">     543 </span>            :     }</a>
+<a name="544"><span class="lineNum">     544 </span>            : </a>
+<a name="545"><span class="lineNum">     545 </span><span class="lineCov">        953 :     if (@mask_to_int@(underflow_mask)) {</span></a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineCov">          4 :         npy_set_floatstatus_underflow();</span></a>
+<a name="547"><span class="lineNum">     547 </span>            :     }</a>
+<a name="548"><span class="lineNum">     548 </span><span class="lineCov">        953 : }</span></a>
+<a name="549"><span class="lineNum">     549 </span>            : </a>
+<a name="550"><span class="lineNum">     550 </span>            : /*</a>
+<a name="551"><span class="lineNum">     551 </span>            :  * Vectorized implementation of log using AVX2 and AVX512</a>
+<a name="552"><span class="lineNum">     552 </span>            :  * 1) if x &lt; 0.0f; return -NAN (invalid input)</a>
+<a name="553"><span class="lineNum">     553 </span>            :  * 2) Range reduction: y = x/2^k;</a>
+<a name="554"><span class="lineNum">     554 </span>            :  *      a) y = normalized mantissa, k is the exponent (0.5 &lt;= y &lt; 1)</a>
+<a name="555"><span class="lineNum">     555 </span>            :  * 3) Compute log(y) = P/Q, ratio of 2 polynomials P and Q</a>
+<a name="556"><span class="lineNum">     556 </span>            :  *      b) P = 5th order and Q = 5th order polynomials obtained from Remez's</a>
+<a name="557"><span class="lineNum">     557 </span>            :  *      algorithm (mini-max polynomial approximation)</a>
+<a name="558"><span class="lineNum">     558 </span>            :  * 5) Compute log(x) = log(y) + k*ln(2)</a>
+<a name="559"><span class="lineNum">     559 </span>            :  * 6) Max ULP error measured across all 32-bit FP's = 3.83 (x = 0x3f486945)</a>
+<a name="560"><span class="lineNum">     560 </span>            :  * 7) Max relative error measured across all 32-bit FP's = 2.359E-07 (for same</a>
+<a name="561"><span class="lineNum">     561 </span>            :  * x = 0x3f486945)</a>
+<a name="562"><span class="lineNum">     562 </span>            :  */</a>
+<a name="563"><span class="lineNum">     563 </span>            : </a>
+<a name="564"><span class="lineNum">     564 </span>            : static void</a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineCov">        899 : simd_log_FLOAT(npy_float * op,</span></a>
+<a name="566"><span class="lineNum">     566 </span>            :                 npy_float * ip,</a>
+<a name="567"><span class="lineNum">     567 </span>            :                 const npy_intp array_size,</a>
+<a name="568"><span class="lineNum">     568 </span>            :                 const npy_intp steps)</a>
+<a name="569"><span class="lineNum">     569 </span>            : {</a>
+<a name="570"><span class="lineNum">     570 </span><span class="lineCov">        899 :     const npy_intp stride = steps/(npy_intp)sizeof(npy_float);</span></a>
+<a name="571"><span class="lineNum">     571 </span><span class="lineCov">        899 :     const npy_int num_lanes = @BYTES@/(npy_intp)sizeof(npy_float);</span></a>
+<a name="572"><span class="lineNum">     572 </span>            : </a>
+<a name="573"><span class="lineNum">     573 </span>            :     /*</a>
+<a name="574"><span class="lineNum">     574 </span>            :      * Note: while generally indices are npy_intp, we ensure that our maximum index</a>
+<a name="575"><span class="lineNum">     575 </span>            :      * will fit in an int32 as a precondition for this function via</a>
+<a name="576"><span class="lineNum">     576 </span>            :      * IS_OUTPUT_BLOCKABLE_UNARY</a>
+<a name="577"><span class="lineNum">     577 </span>            :      */</a>
+<a name="578"><span class="lineNum">     578 </span><span class="lineCov">        899 :     npy_int32 indexarr[16];</span></a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineCov">      15283 :     for (npy_int32 ii = 0; ii &lt; 16; ii++) {</span></a>
+<a name="580"><span class="lineNum">     580 </span><span class="lineCov">      14384 :         indexarr[ii] = ii*stride;</span></a>
+<a name="581"><span class="lineNum">     581 </span>            :     }</a>
+<a name="582"><span class="lineNum">     582 </span>            : </a>
+<a name="583"><span class="lineNum">     583 </span>            :     /* Load up frequently used constants */</a>
+<a name="584"><span class="lineNum">     584 </span><span class="lineCov">        899 :     @vtype@ log_p0 = _mm@vsize@_set1_ps(NPY_COEFF_P0_LOGf);</span></a>
+<a name="585"><span class="lineNum">     585 </span><span class="lineCov">        899 :     @vtype@ log_p1 = _mm@vsize@_set1_ps(NPY_COEFF_P1_LOGf);</span></a>
+<a name="586"><span class="lineNum">     586 </span><span class="lineCov">        899 :     @vtype@ log_p2 = _mm@vsize@_set1_ps(NPY_COEFF_P2_LOGf);</span></a>
+<a name="587"><span class="lineNum">     587 </span><span class="lineCov">        899 :     @vtype@ log_p3 = _mm@vsize@_set1_ps(NPY_COEFF_P3_LOGf);</span></a>
+<a name="588"><span class="lineNum">     588 </span><span class="lineCov">        899 :     @vtype@ log_p4 = _mm@vsize@_set1_ps(NPY_COEFF_P4_LOGf);</span></a>
+<a name="589"><span class="lineNum">     589 </span><span class="lineCov">        899 :     @vtype@ log_p5 = _mm@vsize@_set1_ps(NPY_COEFF_P5_LOGf);</span></a>
+<a name="590"><span class="lineNum">     590 </span><span class="lineCov">        899 :     @vtype@ log_q0 = _mm@vsize@_set1_ps(NPY_COEFF_Q0_LOGf);</span></a>
+<a name="591"><span class="lineNum">     591 </span><span class="lineCov">        899 :     @vtype@ log_q1 = _mm@vsize@_set1_ps(NPY_COEFF_Q1_LOGf);</span></a>
+<a name="592"><span class="lineNum">     592 </span><span class="lineCov">        899 :     @vtype@ log_q2 = _mm@vsize@_set1_ps(NPY_COEFF_Q2_LOGf);</span></a>
+<a name="593"><span class="lineNum">     593 </span><span class="lineCov">        899 :     @vtype@ log_q3 = _mm@vsize@_set1_ps(NPY_COEFF_Q3_LOGf);</span></a>
+<a name="594"><span class="lineNum">     594 </span><span class="lineCov">        899 :     @vtype@ log_q4 = _mm@vsize@_set1_ps(NPY_COEFF_Q4_LOGf);</span></a>
+<a name="595"><span class="lineNum">     595 </span><span class="lineCov">        899 :     @vtype@ log_q5 = _mm@vsize@_set1_ps(NPY_COEFF_Q5_LOGf);</span></a>
+<a name="596"><span class="lineNum">     596 </span><span class="lineCov">        899 :     @vtype@ loge2 = _mm@vsize@_set1_ps(NPY_LOGE2f);</span></a>
+<a name="597"><span class="lineNum">     597 </span><span class="lineCov">        899 :     @vtype@ nan = _mm@vsize@_set1_ps(NPY_NANF);</span></a>
+<a name="598"><span class="lineNum">     598 </span><span class="lineCov">        899 :     @vtype@ neg_nan = _mm@vsize@_set1_ps(-NPY_NANF);</span></a>
+<a name="599"><span class="lineNum">     599 </span><span class="lineCov">        899 :     @vtype@ neg_inf = _mm@vsize@_set1_ps(-NPY_INFINITYF);</span></a>
+<a name="600"><span class="lineNum">     600 </span><span class="lineCov">        899 :     @vtype@ inf = _mm@vsize@_set1_ps(NPY_INFINITYF);</span></a>
+<a name="601"><span class="lineNum">     601 </span><span class="lineCov">        899 :     @vtype@ zeros_f = _mm@vsize@_set1_ps(0.0f);</span></a>
+<a name="602"><span class="lineNum">     602 </span><span class="lineCov">        899 :     @vtype@ ones_f = _mm@vsize@_set1_ps(1.0f);</span></a>
+<a name="603"><span class="lineNum">     603 </span><span class="lineCov">        899 :     @vtype@i vindex = _mm@vsize@_loadu_si@vsize@((@vtype@i*)indexarr);</span></a>
+<a name="604"><span class="lineNum">     604 </span><span class="lineCov">        899 :     @vtype@ poly, num_poly, denom_poly, exponent;</span></a>
+<a name="605"><span class="lineNum">     605 </span>            : </a>
+<a name="606"><span class="lineNum">     606 </span><span class="lineCov">        899 :     @mask@ inf_mask, nan_mask, sqrt2_mask, zero_mask, negx_mask;</span></a>
+<a name="607"><span class="lineNum">     607 </span><span class="lineCov">        899 :     @mask@ invalid_mask = @isa@_get_partial_load_mask_ps(0, num_lanes);</span></a>
+<a name="608"><span class="lineNum">     608 </span><span class="lineCov">        899 :     @mask@ divide_by_zero_mask = invalid_mask;</span></a>
+<a name="609"><span class="lineNum">     609 </span><span class="lineCov">        899 :     @mask@ load_mask = @isa@_get_full_load_mask_ps();</span></a>
+<a name="610"><span class="lineNum">     610 </span><span class="lineCov">        899 :     npy_intp num_remaining_elements = array_size;</span></a>
+<a name="611"><span class="lineNum">     611 </span>            : </a>
+<a name="612"><span class="lineNum">     612 </span><span class="lineCov">     129544 :     while (num_remaining_elements &gt; 0) {</span></a>
+<a name="613"><span class="lineNum">     613 </span>            : </a>
+<a name="614"><span class="lineNum">     614 </span><span class="lineCov">     128645 :         if (num_remaining_elements &lt; num_lanes) {</span></a>
+<a name="615"><span class="lineNum">     615 </span><span class="lineCov">        790 :             load_mask = @isa@_get_partial_load_mask_ps(num_remaining_elements,</span></a>
+<a name="616"><span class="lineNum">     616 </span>            :                                                        num_lanes);</a>
+<a name="617"><span class="lineNum">     617 </span>            :         }</a>
+<a name="618"><span class="lineNum">     618 </span>            : </a>
+<a name="619"><span class="lineNum">     619 </span><span class="lineCov">     128645 :         @vtype@ x_in;</span></a>
+<a name="620"><span class="lineNum">     620 </span><span class="lineCov">     128645 :         if (stride == 1) {</span></a>
+<a name="621"><span class="lineNum">     621 </span><span class="lineCov">     126351 :             x_in = @isa@_masked_load_ps(load_mask, ip);</span></a>
+<a name="622"><span class="lineNum">     622 </span>            :         }</a>
+<a name="623"><span class="lineNum">     623 </span>            :         else {</a>
+<a name="624"><span class="lineNum">     624 </span><span class="lineCov">       2294 :             x_in  = @isa@_masked_gather_ps(zeros_f, ip, vindex, load_mask);</span></a>
+<a name="625"><span class="lineNum">     625 </span>            :         }</a>
+<a name="626"><span class="lineNum">     626 </span>            : </a>
+<a name="627"><span class="lineNum">     627 </span><span class="lineCov">     128645 :         negx_mask = _mm@vsize@_cmp_ps@vsub@(x_in, zeros_f, _CMP_LT_OQ);</span></a>
+<a name="628"><span class="lineNum">     628 </span><span class="lineCov">     128645 :         zero_mask = _mm@vsize@_cmp_ps@vsub@(x_in, zeros_f, _CMP_EQ_OQ);</span></a>
+<a name="629"><span class="lineNum">     629 </span><span class="lineCov">     128645 :         inf_mask = _mm@vsize@_cmp_ps@vsub@(x_in, inf, _CMP_EQ_OQ);</span></a>
+<a name="630"><span class="lineNum">     630 </span><span class="lineCov">     128645 :         nan_mask = _mm@vsize@_cmp_ps@vsub@(x_in, x_in, _CMP_NEQ_UQ);</span></a>
+<a name="631"><span class="lineNum">     631 </span><span class="lineCov">     128645 :         divide_by_zero_mask = @or_masks@(divide_by_zero_mask,</span></a>
+<a name="632"><span class="lineNum">     632 </span><span class="lineNoCov">          0 :                                         @and_masks@(zero_mask, load_mask));</span></a>
+<a name="633"><span class="lineNum">     633 </span><span class="lineCov">     128645 :         invalid_mask = @or_masks@(invalid_mask, negx_mask);</span></a>
+<a name="634"><span class="lineNum">     634 </span>            : </a>
+<a name="635"><span class="lineNum">     635 </span><span class="lineCov">     128645 :         @vtype@ x = @isa@_set_masked_lanes_ps(x_in, zeros_f, negx_mask);</span></a>
+<a name="636"><span class="lineNum">     636 </span>            : </a>
+<a name="637"><span class="lineNum">     637 </span>            :         /* set x = normalized mantissa */</a>
+<a name="638"><span class="lineNum">     638 </span><span class="lineCov">     128645 :         exponent = @isa@_get_exponent(x);</span></a>
+<a name="639"><span class="lineNum">     639 </span><span class="lineCov">     128645 :         x = @isa@_get_mantissa(x);</span></a>
+<a name="640"><span class="lineNum">     640 </span>            : </a>
+<a name="641"><span class="lineNum">     641 </span>            :         /* if x &lt; sqrt(2) {exp = exp-1; x = 2*x} */</a>
+<a name="642"><span class="lineNum">     642 </span><span class="lineCov">     128645 :         sqrt2_mask = _mm@vsize@_cmp_ps@vsub@(x, _mm@vsize@_set1_ps(NPY_SQRT1_2f), _CMP_LE_OQ);</span></a>
+<a name="643"><span class="lineNum">     643 </span><span class="lineCov">     128645 :         x = @isa@_blend(x, _mm@vsize@_add_ps(x,x), sqrt2_mask);</span></a>
+<a name="644"><span class="lineNum">     644 </span><span class="lineCov">     128645 :         exponent = @isa@_blend(exponent,</span></a>
+<a name="645"><span class="lineNum">     645 </span>            :                                _mm@vsize@_sub_ps(exponent,ones_f), sqrt2_mask);</a>
+<a name="646"><span class="lineNum">     646 </span>            : </a>
+<a name="647"><span class="lineNum">     647 </span>            :         /* x = x - 1 */</a>
+<a name="648"><span class="lineNum">     648 </span><span class="lineCov">     128645 :         x = _mm@vsize@_sub_ps(x, ones_f);</span></a>
+<a name="649"><span class="lineNum">     649 </span>            : </a>
+<a name="650"><span class="lineNum">     650 </span>            :         /* Polynomial approximation for log(1+x) */</a>
+<a name="651"><span class="lineNum">     651 </span><span class="lineCov">     128645 :         num_poly = @fmadd@(log_p5, x, log_p4);</span></a>
+<a name="652"><span class="lineNum">     652 </span><span class="lineCov">     128645 :         num_poly = @fmadd@(num_poly, x, log_p3);</span></a>
+<a name="653"><span class="lineNum">     653 </span><span class="lineCov">     128645 :         num_poly = @fmadd@(num_poly, x, log_p2);</span></a>
+<a name="654"><span class="lineNum">     654 </span><span class="lineCov">     128645 :         num_poly = @fmadd@(num_poly, x, log_p1);</span></a>
+<a name="655"><span class="lineNum">     655 </span><span class="lineCov">     128645 :         num_poly = @fmadd@(num_poly, x, log_p0);</span></a>
+<a name="656"><span class="lineNum">     656 </span><span class="lineCov">     128645 :         denom_poly = @fmadd@(log_q5, x, log_q4);</span></a>
+<a name="657"><span class="lineNum">     657 </span><span class="lineCov">     128645 :         denom_poly = @fmadd@(denom_poly, x, log_q3);</span></a>
+<a name="658"><span class="lineNum">     658 </span><span class="lineCov">     128645 :         denom_poly = @fmadd@(denom_poly, x, log_q2);</span></a>
+<a name="659"><span class="lineNum">     659 </span><span class="lineCov">     128645 :         denom_poly = @fmadd@(denom_poly, x, log_q1);</span></a>
+<a name="660"><span class="lineNum">     660 </span><span class="lineCov">     128645 :         denom_poly = @fmadd@(denom_poly, x, log_q0);</span></a>
+<a name="661"><span class="lineNum">     661 </span><span class="lineCov">     128645 :         poly = _mm@vsize@_div_ps(num_poly, denom_poly);</span></a>
+<a name="662"><span class="lineNum">     662 </span><span class="lineCov">     128645 :         poly = @fmadd@(exponent, loge2, poly);</span></a>
+<a name="663"><span class="lineNum">     663 </span>            : </a>
+<a name="664"><span class="lineNum">     664 </span>            :         /*</a>
+<a name="665"><span class="lineNum">     665 </span>            :          * x &lt; 0.0f; return -NAN</a>
+<a name="666"><span class="lineNum">     666 </span>            :          * x = +/- NAN; return NAN</a>
+<a name="667"><span class="lineNum">     667 </span>            :          * x = 0.0f; return -INF</a>
+<a name="668"><span class="lineNum">     668 </span>            :          */</a>
+<a name="669"><span class="lineNum">     669 </span><span class="lineCov">     128645 :         poly = @isa@_set_masked_lanes_ps(poly, nan, nan_mask);</span></a>
+<a name="670"><span class="lineNum">     670 </span><span class="lineCov">     128645 :         poly = @isa@_set_masked_lanes_ps(poly, neg_nan, negx_mask);</span></a>
+<a name="671"><span class="lineNum">     671 </span><span class="lineCov">     128645 :         poly = @isa@_set_masked_lanes_ps(poly, neg_inf, zero_mask);</span></a>
+<a name="672"><span class="lineNum">     672 </span><span class="lineCov">     128645 :         poly = @isa@_set_masked_lanes_ps(poly, inf, inf_mask);</span></a>
+<a name="673"><span class="lineNum">     673 </span>            : </a>
+<a name="674"><span class="lineNum">     674 </span><span class="lineCov">     128645 :         @masked_store@(op, @cvtps_epi32@(load_mask), poly);</span></a>
+<a name="675"><span class="lineNum">     675 </span>            : </a>
+<a name="676"><span class="lineNum">     676 </span><span class="lineCov">     128645 :         ip += num_lanes*stride;</span></a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineCov">     128645 :         op += num_lanes;</span></a>
+<a name="678"><span class="lineNum">     678 </span><span class="lineCov">     128645 :         num_remaining_elements -= num_lanes;</span></a>
+<a name="679"><span class="lineNum">     679 </span>            :     }</a>
+<a name="680"><span class="lineNum">     680 </span>            : </a>
+<a name="681"><span class="lineNum">     681 </span><span class="lineCov">        899 :     if (@mask_to_int@(invalid_mask)) {</span></a>
+<a name="682"><span class="lineNum">     682 </span><span class="lineCov">          4 :         npy_set_floatstatus_invalid();</span></a>
+<a name="683"><span class="lineNum">     683 </span>            :     }</a>
+<a name="684"><span class="lineNum">     684 </span><span class="lineCov">        899 :     if (@mask_to_int@(divide_by_zero_mask)) {</span></a>
+<a name="685"><span class="lineNum">     685 </span><span class="lineCov">          3 :         npy_set_floatstatus_divbyzero();</span></a>
+<a name="686"><span class="lineNum">     686 </span>            :     }</a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineCov">        899 : }</span></a>
+<a name="688"><span class="lineNum">     688 </span>            : #endif // @CHK@</a>
+<a name="689"><span class="lineNum">     689 </span>            : /**end repeat**/</a>
+<a name="690"><span class="lineNum">     690 </span>            : </a>
+<a name="691"><span class="lineNum">     691 </span>            : #ifdef SIMD_AVX512F_NOCLANG_BUG</a>
+<a name="692"><span class="lineNum">     692 </span>            : /*</a>
+<a name="693"><span class="lineNum">     693 </span>            :  * Vectorized implementation of exp double using AVX512</a>
+<a name="694"><span class="lineNum">     694 </span>            :  * Reference: Tang, P.T.P., &quot;Table-driven implementation of the</a>
+<a name="695"><span class="lineNum">     695 </span>            :  *  exponential function in IEEE floating-point</a>
+<a name="696"><span class="lineNum">     696 </span>            :  *  arithmetic,&quot; ACM Transactions on Mathematical</a>
+<a name="697"><span class="lineNum">     697 </span>            :  *  Software, vol. 15, pp. 144-157, 1989.</a>
+<a name="698"><span class="lineNum">     698 </span>            :  * 1) if x &gt; mTH_max or x is INF; return INF (overflow)</a>
+<a name="699"><span class="lineNum">     699 </span>            :  * 2) if x &lt; mTH_min; return 0.0f (underflow)</a>
+<a name="700"><span class="lineNum">     700 </span>            :  * 3) if abs(x) &lt; mTH_nearzero; return 1.0f + x</a>
+<a name="701"><span class="lineNum">     701 </span>            :  * 4) if x is Nan; return Nan</a>
+<a name="702"><span class="lineNum">     702 </span>            :  * 5) Range reduction:</a>
+<a name="703"><span class="lineNum">     703 </span>            :  *    x = (32m + j)ln2 / 32 + r; r in [-ln2/64, ln2/64]</a>
+<a name="704"><span class="lineNum">     704 </span>            :  * 6) exp(r) - 1 is approximated by a polynomial function p(r)</a>
+<a name="705"><span class="lineNum">     705 </span>            :  *    exp(x) = 2^m(2^(j/32) + 2^(j/32)p(r));</a>
+<a name="706"><span class="lineNum">     706 </span>            :  */</a>
+<a name="707"><span class="lineNum">     707 </span>            : static void</a>
+<a name="708"><span class="lineNum">     708 </span><span class="lineNoCov">          0 : AVX512F_exp_DOUBLE(npy_double * op,</span></a>
+<a name="709"><span class="lineNum">     709 </span>            :                 npy_double * ip,</a>
+<a name="710"><span class="lineNum">     710 </span>            :                 const npy_intp array_size,</a>
+<a name="711"><span class="lineNum">     711 </span>            :                 const npy_intp steps)</a>
+<a name="712"><span class="lineNum">     712 </span>            : {</a>
+<a name="713"><span class="lineNum">     713 </span><span class="lineNoCov">          0 :     npy_intp num_remaining_elements = array_size;</span></a>
+<a name="714"><span class="lineNum">     714 </span><span class="lineNoCov">          0 :     const npy_intp stride = steps / (npy_intp)sizeof(npy_double);</span></a>
+<a name="715"><span class="lineNum">     715 </span><span class="lineNoCov">          0 :     const npy_int num_lanes = 64 / (npy_intp)sizeof(npy_double);</span></a>
+<a name="716"><span class="lineNum">     716 </span><span class="lineNoCov">          0 :     npy_int32 indexarr[8];</span></a>
+<a name="717"><span class="lineNum">     717 </span><span class="lineNoCov">          0 :     for (npy_int32 ii = 0; ii &lt; 8; ii++) {</span></a>
+<a name="718"><span class="lineNum">     718 </span><span class="lineNoCov">          0 :         indexarr[ii] = ii*stride;</span></a>
+<a name="719"><span class="lineNum">     719 </span>            :     }</a>
+<a name="720"><span class="lineNum">     720 </span>            : </a>
+<a name="721"><span class="lineNum">     721 </span><span class="lineNoCov">          0 :     __m512d InvLn2N = _mm512_set1_pd(NPY_INV_LN2_MUL_32);</span></a>
+<a name="722"><span class="lineNum">     722 </span><span class="lineNoCov">          0 :     __m512d mShift = _mm512_set1_pd(NPY_RINT_CVT_MAGIC);</span></a>
+<a name="723"><span class="lineNum">     723 </span><span class="lineNoCov">          0 :     __m512d mNegL1 = _mm512_set1_pd(NPY_TANG_NEG_L1);</span></a>
+<a name="724"><span class="lineNum">     724 </span><span class="lineNoCov">          0 :     __m512d mNegL2 = _mm512_set1_pd(NPY_TANG_NEG_L2);</span></a>
+<a name="725"><span class="lineNum">     725 </span><span class="lineNoCov">          0 :     __m512i mMod = _mm512_set1_epi64(0x1f);</span></a>
+<a name="726"><span class="lineNum">     726 </span><span class="lineNoCov">          0 :     __m512d mA1 = _mm512_set1_pd(NPY_TANG_A1);</span></a>
+<a name="727"><span class="lineNum">     727 </span><span class="lineNoCov">          0 :     __m512d mA2 = _mm512_set1_pd(NPY_TANG_A2);</span></a>
+<a name="728"><span class="lineNum">     728 </span><span class="lineNoCov">          0 :     __m512d mA3 = _mm512_set1_pd(NPY_TANG_A3);</span></a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 :     __m512d mA4 = _mm512_set1_pd(NPY_TANG_A4);</span></a>
+<a name="730"><span class="lineNum">     730 </span><span class="lineNoCov">          0 :     __m512d mA5 = _mm512_set1_pd(NPY_TANG_A5);</span></a>
+<a name="731"><span class="lineNum">     731 </span><span class="lineNoCov">          0 :     __m512d mTH_nearzero = _mm512_set1_pd(0x1p-54);</span></a>
+<a name="732"><span class="lineNum">     732 </span><span class="lineNoCov">          0 :     __m512d mTH_max = _mm512_set1_pd(0x1.62e42fefa39efp+9);</span></a>
+<a name="733"><span class="lineNum">     733 </span><span class="lineNoCov">          0 :     __m512d mTH_min = _mm512_set1_pd(-0x1.74910d52d3053p+9);</span></a>
+<a name="734"><span class="lineNum">     734 </span><span class="lineNoCov">          0 :     __m512d mTH_inf = _mm512_set1_pd(NPY_INFINITY);</span></a>
+<a name="735"><span class="lineNum">     735 </span><span class="lineNoCov">          0 :     __m512d zeros_d = _mm512_set1_pd(0.0f);</span></a>
+<a name="736"><span class="lineNum">     736 </span><span class="lineNoCov">          0 :     __m512d ones_d = _mm512_set1_pd(1.0f);</span></a>
+<a name="737"><span class="lineNum">     737 </span><span class="lineNoCov">          0 :     __m256i vindex = _mm256_loadu_si256((__m256i*)&amp;indexarr[0]);</span></a>
+<a name="738"><span class="lineNum">     738 </span>            : </a>
+<a name="739"><span class="lineNum">     739 </span><span class="lineNoCov">          0 :     __m512d mTable_top_0 = _mm512_loadu_pd(&amp;(EXP_Table_top[8*0]));</span></a>
+<a name="740"><span class="lineNum">     740 </span><span class="lineNoCov">          0 :     __m512d mTable_top_1 = _mm512_loadu_pd(&amp;(EXP_Table_top[8*1]));</span></a>
+<a name="741"><span class="lineNum">     741 </span><span class="lineNoCov">          0 :     __m512d mTable_top_2 = _mm512_loadu_pd(&amp;(EXP_Table_top[8*2]));</span></a>
+<a name="742"><span class="lineNum">     742 </span><span class="lineNoCov">          0 :     __m512d mTable_top_3 = _mm512_loadu_pd(&amp;(EXP_Table_top[8*3]));</span></a>
+<a name="743"><span class="lineNum">     743 </span><span class="lineNoCov">          0 :     __m512d mTable_tail_0 = _mm512_loadu_pd(&amp;(EXP_Table_tail[8*0]));</span></a>
+<a name="744"><span class="lineNum">     744 </span><span class="lineNoCov">          0 :     __m512d mTable_tail_1 = _mm512_loadu_pd(&amp;(EXP_Table_tail[8*1]));</span></a>
+<a name="745"><span class="lineNum">     745 </span><span class="lineNoCov">          0 :     __m512d mTable_tail_2 = _mm512_loadu_pd(&amp;(EXP_Table_tail[8*2]));</span></a>
+<a name="746"><span class="lineNum">     746 </span><span class="lineNoCov">          0 :     __m512d mTable_tail_3 = _mm512_loadu_pd(&amp;(EXP_Table_tail[8*3]));</span></a>
+<a name="747"><span class="lineNum">     747 </span>            : </a>
+<a name="748"><span class="lineNum">     748 </span><span class="lineNoCov">          0 :     __mmask8 overflow_mask = avx512_get_partial_load_mask_pd(0, num_lanes);</span></a>
+<a name="749"><span class="lineNum">     749 </span><span class="lineNoCov">          0 :     __mmask8 underflow_mask = avx512_get_partial_load_mask_pd(0, num_lanes);</span></a>
+<a name="750"><span class="lineNum">     750 </span><span class="lineNoCov">          0 :     __mmask8 load_mask = avx512_get_full_load_mask_pd();</span></a>
+<a name="751"><span class="lineNum">     751 </span><span class="lineNoCov">          0 :     __mmask8 xmin_mask, xmax_mask, inf_mask, nan_mask, nearzero_mask;</span></a>
+<a name="752"><span class="lineNum">     752 </span>            : </a>
+<a name="753"><span class="lineNum">     753 </span><span class="lineNoCov">          0 :     while (num_remaining_elements &gt; 0) {</span></a>
+<a name="754"><span class="lineNum">     754 </span><span class="lineNoCov">          0 :         if (num_remaining_elements &lt; num_lanes) {</span></a>
+<a name="755"><span class="lineNum">     755 </span><span class="lineNoCov">          0 :             load_mask = avx512_get_partial_load_mask_pd(num_remaining_elements,</span></a>
+<a name="756"><span class="lineNum">     756 </span>            :                                                       num_lanes);</a>
+<a name="757"><span class="lineNum">     757 </span>            :         }</a>
+<a name="758"><span class="lineNum">     758 </span>            : </a>
+<a name="759"><span class="lineNum">     759 </span><span class="lineNoCov">          0 :         __m512d x;</span></a>
+<a name="760"><span class="lineNum">     760 </span><span class="lineNoCov">          0 :         if (1 == stride) {</span></a>
+<a name="761"><span class="lineNum">     761 </span><span class="lineNoCov">          0 :             x = avx512_masked_load_pd(load_mask, ip);</span></a>
+<a name="762"><span class="lineNum">     762 </span>            :         }</a>
+<a name="763"><span class="lineNum">     763 </span>            :         else {</a>
+<a name="764"><span class="lineNum">     764 </span><span class="lineNoCov">          0 :             x = avx512_masked_gather_pd(zeros_d, ip, vindex, load_mask);</span></a>
+<a name="765"><span class="lineNum">     765 </span>            :         }</a>
+<a name="766"><span class="lineNum">     766 </span>            : </a>
+<a name="767"><span class="lineNum">     767 </span><span class="lineNoCov">          0 :         nan_mask = _mm512_cmp_pd_mask(x, x, _CMP_NEQ_UQ);</span></a>
+<a name="768"><span class="lineNum">     768 </span><span class="lineNoCov">          0 :         x = avx512_set_masked_lanes_pd(x, zeros_d, nan_mask);</span></a>
+<a name="769"><span class="lineNum">     769 </span><span class="lineNoCov">          0 :         xmax_mask = _mm512_cmp_pd_mask(x, mTH_max, _CMP_GT_OQ);</span></a>
+<a name="770"><span class="lineNum">     770 </span><span class="lineNoCov">          0 :         xmin_mask = _mm512_cmp_pd_mask(x, mTH_min, _CMP_LT_OQ);</span></a>
+<a name="771"><span class="lineNum">     771 </span><span class="lineNoCov">          0 :         inf_mask = _mm512_cmp_pd_mask(x, mTH_inf, _CMP_EQ_OQ);</span></a>
+<a name="772"><span class="lineNum">     772 </span><span class="lineNoCov">          0 :         __m512i x_abs = _mm512_and_epi64(_mm512_castpd_si512(x),</span></a>
+<a name="773"><span class="lineNum">     773 </span>            :                                 _mm512_set1_epi64(0x7FFFFFFFFFFFFFFF));</a>
+<a name="774"><span class="lineNum">     774 </span><span class="lineNoCov">          0 :         nearzero_mask = _mm512_cmp_pd_mask(_mm512_castsi512_pd(x_abs),</span></a>
+<a name="775"><span class="lineNum">     775 </span>            :                                     mTH_nearzero, _CMP_LT_OQ);</a>
+<a name="776"><span class="lineNum">     776 </span><span class="lineNoCov">          0 :         nearzero_mask = _mm512_kxor(nearzero_mask, nan_mask);</span></a>
+<a name="777"><span class="lineNum">     777 </span><span class="lineNoCov">          0 :         overflow_mask = _mm512_kor(overflow_mask,</span></a>
+<a name="778"><span class="lineNum">     778 </span><span class="lineNoCov">          0 :                                 _mm512_kxor(xmax_mask, inf_mask));</span></a>
+<a name="779"><span class="lineNum">     779 </span><span class="lineNoCov">          0 :         underflow_mask = _mm512_kor(underflow_mask, xmin_mask);</span></a>
+<a name="780"><span class="lineNum">     780 </span><span class="lineNoCov">          0 :         x = avx512_set_masked_lanes_pd(x, zeros_d,</span></a>
+<a name="781"><span class="lineNum">     781 </span><span class="lineNoCov">          0 :                         _mm512_kor(_mm512_kor(nan_mask, xmin_mask),</span></a>
+<a name="782"><span class="lineNum">     782 </span><span class="lineNoCov">          0 :                             _mm512_kor(xmax_mask, nearzero_mask)));</span></a>
+<a name="783"><span class="lineNum">     783 </span>            : </a>
+<a name="784"><span class="lineNum">     784 </span>            :         /* z = x * 32/ln2 */</a>
+<a name="785"><span class="lineNum">     785 </span><span class="lineNoCov">          0 :         __m512d z = _mm512_mul_pd(x, InvLn2N);</span></a>
+<a name="786"><span class="lineNum">     786 </span>            : </a>
+<a name="787"><span class="lineNum">     787 </span>            :         /* round to nearest */</a>
+<a name="788"><span class="lineNum">     788 </span><span class="lineNoCov">          0 :         __m512d kd = _mm512_add_pd(z, mShift);</span></a>
+<a name="789"><span class="lineNum">     789 </span><span class="lineNoCov">          0 :         __m512i ki = _mm512_castpd_si512(kd);</span></a>
+<a name="790"><span class="lineNum">     790 </span><span class="lineNoCov">          0 :         kd = _mm512_sub_pd(kd, mShift);</span></a>
+<a name="791"><span class="lineNum">     791 </span>            : </a>
+<a name="792"><span class="lineNum">     792 </span>            :         /* r = (x + kd*mNegL1) + kd*mNegL2 */</a>
+<a name="793"><span class="lineNum">     793 </span><span class="lineNoCov">          0 :         __m512d r1 = _mm512_fmadd_pd(kd, mNegL1, x);</span></a>
+<a name="794"><span class="lineNum">     794 </span><span class="lineNoCov">          0 :         __m512d r2 = _mm512_mul_pd(kd, mNegL2);</span></a>
+<a name="795"><span class="lineNum">     795 </span><span class="lineNoCov">          0 :         __m512d r = _mm512_add_pd(r1,r2);</span></a>
+<a name="796"><span class="lineNum">     796 </span>            : </a>
+<a name="797"><span class="lineNum">     797 </span>            :         /* Polynomial approximation for exp(r) - 1 */</a>
+<a name="798"><span class="lineNum">     798 </span><span class="lineNoCov">          0 :         __m512d q = _mm512_fmadd_pd(mA5, r, mA4);</span></a>
+<a name="799"><span class="lineNum">     799 </span><span class="lineNoCov">          0 :         q = _mm512_fmadd_pd(q, r, mA3);</span></a>
+<a name="800"><span class="lineNum">     800 </span><span class="lineNoCov">          0 :         q = _mm512_fmadd_pd(q, r, mA2);</span></a>
+<a name="801"><span class="lineNum">     801 </span><span class="lineNoCov">          0 :         q = _mm512_fmadd_pd(q, r, mA1);</span></a>
+<a name="802"><span class="lineNum">     802 </span><span class="lineNoCov">          0 :         q = _mm512_mul_pd(q, r);</span></a>
+<a name="803"><span class="lineNum">     803 </span><span class="lineNoCov">          0 :         __m512d p = _mm512_fmadd_pd(r, q, r2);;</span></a>
+<a name="804"><span class="lineNum">     804 </span><span class="lineNoCov">          0 :         p = _mm512_add_pd(r1, p);</span></a>
+<a name="805"><span class="lineNum">     805 </span>            : </a>
+<a name="806"><span class="lineNum">     806 </span>            :         /* Get 2^(j/32) from lookup table */</a>
+<a name="807"><span class="lineNum">     807 </span><span class="lineNoCov">          0 :         __m512i j = _mm512_and_epi64(ki, mMod);</span></a>
+<a name="808"><span class="lineNum">     808 </span><span class="lineNoCov">          0 :         __m512d top = avx512_permute_x4var_pd(mTable_top_0, mTable_top_1,</span></a>
+<a name="809"><span class="lineNum">     809 </span>            :                                   mTable_top_2, mTable_top_3, j);</a>
+<a name="810"><span class="lineNum">     810 </span><span class="lineNoCov">          0 :         __m512d tail = avx512_permute_x4var_pd(mTable_tail_0, mTable_tail_1,</span></a>
+<a name="811"><span class="lineNum">     811 </span>            :                                   mTable_tail_2, mTable_tail_3, j);</a>
+<a name="812"><span class="lineNum">     812 </span>            : </a>
+<a name="813"><span class="lineNum">     813 </span>            :         /*</a>
+<a name="814"><span class="lineNum">     814 </span>            :          * s = top + tail;</a>
+<a name="815"><span class="lineNum">     815 </span>            :          * exp(x) = 2^m * (top + (tail + s * p));</a>
+<a name="816"><span class="lineNum">     816 </span>            :          */</a>
+<a name="817"><span class="lineNum">     817 </span><span class="lineNoCov">          0 :         __m512d s = _mm512_add_pd(top, tail);</span></a>
+<a name="818"><span class="lineNum">     818 </span><span class="lineNoCov">          0 :         __m512d res = _mm512_fmadd_pd(s, p, tail);</span></a>
+<a name="819"><span class="lineNum">     819 </span><span class="lineNoCov">          0 :         res = _mm512_add_pd(res, top);</span></a>
+<a name="820"><span class="lineNum">     820 </span><span class="lineNoCov">          0 :         res= _mm512_scalef_pd(res, _mm512_div_pd(kd, _mm512_set1_pd(32)));</span></a>
+<a name="821"><span class="lineNum">     821 </span>            : </a>
+<a name="822"><span class="lineNum">     822 </span>            :         /* return special cases */</a>
+<a name="823"><span class="lineNum">     823 </span><span class="lineNoCov">          0 :         res = avx512_set_masked_lanes_pd(res, _mm512_add_pd(x, ones_d),</span></a>
+<a name="824"><span class="lineNum">     824 </span>            :                                         nearzero_mask);</a>
+<a name="825"><span class="lineNum">     825 </span><span class="lineNoCov">          0 :         res = avx512_set_masked_lanes_pd(res, _mm512_set1_pd(NPY_NAN),</span></a>
+<a name="826"><span class="lineNum">     826 </span>            :                                         nan_mask);</a>
+<a name="827"><span class="lineNum">     827 </span><span class="lineNoCov">          0 :         res = avx512_set_masked_lanes_pd(res, mTH_inf, xmax_mask);</span></a>
+<a name="828"><span class="lineNum">     828 </span><span class="lineNoCov">          0 :         res = avx512_set_masked_lanes_pd(res, zeros_d, xmin_mask);</span></a>
+<a name="829"><span class="lineNum">     829 </span>            : </a>
+<a name="830"><span class="lineNum">     830 </span><span class="lineNoCov">          0 :         _mm512_mask_storeu_pd(op, load_mask, res);</span></a>
+<a name="831"><span class="lineNum">     831 </span>            : </a>
+<a name="832"><span class="lineNum">     832 </span><span class="lineNoCov">          0 :         ip += num_lanes * stride;</span></a>
+<a name="833"><span class="lineNum">     833 </span><span class="lineNoCov">          0 :         op += num_lanes;</span></a>
+<a name="834"><span class="lineNum">     834 </span><span class="lineNoCov">          0 :         num_remaining_elements -= num_lanes;</span></a>
+<a name="835"><span class="lineNum">     835 </span>            :     }</a>
+<a name="836"><span class="lineNum">     836 </span><span class="lineNoCov">          0 :     if (overflow_mask) {</span></a>
+<a name="837"><span class="lineNum">     837 </span><span class="lineNoCov">          0 :         npy_set_floatstatus_overflow();</span></a>
+<a name="838"><span class="lineNum">     838 </span>            :     }</a>
+<a name="839"><span class="lineNum">     839 </span>            : </a>
+<a name="840"><span class="lineNum">     840 </span><span class="lineNoCov">          0 :     if (underflow_mask) {</span></a>
+<a name="841"><span class="lineNum">     841 </span><span class="lineNoCov">          0 :         npy_set_floatstatus_underflow();</span></a>
+<a name="842"><span class="lineNum">     842 </span>            :     }</a>
+<a name="843"><span class="lineNum">     843 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="844"><span class="lineNum">     844 </span>            : /*</a>
+<a name="845"><span class="lineNum">     845 </span>            :  * Vectorized implementation of log double using AVX512</a>
+<a name="846"><span class="lineNum">     846 </span>            :  * Reference:</a>
+<a name="847"><span class="lineNum">     847 </span>            :  * [1] Tang, Ping Tak Peter. Table-lookup algorithms for elementary functions</a>
+<a name="848"><span class="lineNum">     848 </span>            :  *     and their error analysis. No. CONF-9106103-1. Argonne National Lab.,</a>
+<a name="849"><span class="lineNum">     849 </span>            :  *     IL (USA), 1991.</a>
+<a name="850"><span class="lineNum">     850 </span>            :  * [2] Tang, Ping-Tak Peter. &quot;Table-driven implementation of the logarithm</a>
+<a name="851"><span class="lineNum">     851 </span>            :  *     function in IEEE floating-point arithmetic.&quot; ACM Transactions on</a>
+<a name="852"><span class="lineNum">     852 </span>            :  *     Mathematical Software (TOMS) 16.4 (1990): 378-400.</a>
+<a name="853"><span class="lineNum">     853 </span>            :  * [3] Muller, Jean-Michel. &quot;Elementary functions: algorithms and</a>
+<a name="854"><span class="lineNum">     854 </span>            :  *     implementation.&quot; (2016).</a>
+<a name="855"><span class="lineNum">     855 </span>            :  * 1) if x = 0; return -INF</a>
+<a name="856"><span class="lineNum">     856 </span>            :  * 2) if x &lt; 0; return NAN</a>
+<a name="857"><span class="lineNum">     857 </span>            :  * 3) if x is INF; return INF</a>
+<a name="858"><span class="lineNum">     858 </span>            :  * 4) if x is NAN; return NAN</a>
+<a name="859"><span class="lineNum">     859 </span>            :  * 5) if x on (1.0 - 0x1p-4, 1.0 + 0x1.09p-4), calling npy_log()</a>
+<a name="860"><span class="lineNum">     860 </span>            :  * 6) Range reduction:</a>
+<a name="861"><span class="lineNum">     861 </span>            :  *    log(x) = log(2^m * z)</a>
+<a name="862"><span class="lineNum">     862 </span>            :  *           = mln2 + log(z)</a>
+<a name="863"><span class="lineNum">     863 </span>            :  * 7) log(z) = log(z / c_k) + log(c_k);</a>
+<a name="864"><span class="lineNum">     864 </span>            :  *    where c_k = 1 + k/64, k = 0,1,...,64</a>
+<a name="865"><span class="lineNum">     865 </span>            :  *    s.t. |x - c_k| &lt;= 1/128 when x on[1,2].</a>
+<a name="866"><span class="lineNum">     866 </span>            :  * 8) r = 2(x - c_k)/(x + c_k)</a>
+<a name="867"><span class="lineNum">     867 </span>            :  *    log(x/c_k) = log((1 + r/2) / (1 - r/2))</a>
+<a name="868"><span class="lineNum">     868 </span>            :  *               = p(r)</a>
+<a name="869"><span class="lineNum">     869 </span>            :  *               = 2((r/2) + 1/3*(r/2)^3 + 1/5*(r/2)^5 + ...)</a>
+<a name="870"><span class="lineNum">     870 </span>            :  */</a>
+<a name="871"><span class="lineNum">     871 </span>            : static void</a>
+<a name="872"><span class="lineNum">     872 </span><span class="lineNoCov">          0 : AVX512F_log_DOUBLE(npy_double * op,</span></a>
+<a name="873"><span class="lineNum">     873 </span>            :                 npy_double * ip,</a>
+<a name="874"><span class="lineNum">     874 </span>            :                 const npy_intp array_size,</a>
+<a name="875"><span class="lineNum">     875 </span>            :                 const npy_intp steps)</a>
+<a name="876"><span class="lineNum">     876 </span>            : {</a>
+<a name="877"><span class="lineNum">     877 </span><span class="lineNoCov">          0 :     npy_intp num_remaining_elements = array_size;</span></a>
+<a name="878"><span class="lineNum">     878 </span><span class="lineNoCov">          0 :     const npy_intp stride = steps / (npy_intp)sizeof(npy_double);</span></a>
+<a name="879"><span class="lineNum">     879 </span><span class="lineNoCov">          0 :     const npy_int num_lanes = 64 / (npy_intp)sizeof(npy_double);</span></a>
+<a name="880"><span class="lineNum">     880 </span><span class="lineNoCov">          0 :     npy_int32 indexarr[8];</span></a>
+<a name="881"><span class="lineNum">     881 </span><span class="lineNoCov">          0 :     for (npy_int32 ii = 0; ii &lt; 8; ii++) {</span></a>
+<a name="882"><span class="lineNum">     882 </span><span class="lineNoCov">          0 :         indexarr[ii] = ii*stride;</span></a>
+<a name="883"><span class="lineNum">     883 </span>            :     }</a>
+<a name="884"><span class="lineNum">     884 </span>            : </a>
+<a name="885"><span class="lineNum">     885 </span><span class="lineNoCov">          0 :     __m512d zeros_d = _mm512_set1_pd(0.0f);</span></a>
+<a name="886"><span class="lineNum">     886 </span><span class="lineNoCov">          0 :     __m512d ones_d = _mm512_set1_pd(1.0f);</span></a>
+<a name="887"><span class="lineNum">     887 </span><span class="lineNoCov">          0 :     __m512d mInf = _mm512_set1_pd(NPY_INFINITY);</span></a>
+<a name="888"><span class="lineNum">     888 </span><span class="lineNoCov">          0 :     __m512d mInv64 = _mm512_castsi512_pd(_mm512_set1_epi64(0x3f90000000000000));</span></a>
+<a name="889"><span class="lineNum">     889 </span><span class="lineNoCov">          0 :     __m512d mNeg_nan = _mm512_set1_pd(-NPY_NAN);</span></a>
+<a name="890"><span class="lineNum">     890 </span><span class="lineNoCov">          0 :     __m512d mNan = _mm512_set1_pd(NPY_NAN);</span></a>
+<a name="891"><span class="lineNum">     891 </span><span class="lineNoCov">          0 :     __m512d mNeg_inf = _mm512_set1_pd(-NPY_INFINITY);</span></a>
+<a name="892"><span class="lineNum">     892 </span><span class="lineNoCov">          0 :     __m512d mA1 = _mm512_set1_pd(NPY_TANG_LOG_A1);</span></a>
+<a name="893"><span class="lineNum">     893 </span><span class="lineNoCov">          0 :     __m512d mA2 = _mm512_set1_pd(NPY_TANG_LOG_A2);</span></a>
+<a name="894"><span class="lineNum">     894 </span><span class="lineNoCov">          0 :     __m512d mA3 = _mm512_set1_pd(NPY_TANG_LOG_A3);</span></a>
+<a name="895"><span class="lineNum">     895 </span><span class="lineNoCov">          0 :     __m512d mA4 = _mm512_set1_pd(NPY_TANG_LOG_A4);</span></a>
+<a name="896"><span class="lineNum">     896 </span><span class="lineNoCov">          0 :     __m512d mLN2HI = _mm512_set1_pd(NPY_TANG_LOG_LN2HI);</span></a>
+<a name="897"><span class="lineNum">     897 </span><span class="lineNoCov">          0 :     __m512d mLN2LO = _mm512_set1_pd(NPY_TANG_LOG_LN2LO);</span></a>
+<a name="898"><span class="lineNum">     898 </span>            : </a>
+<a name="899"><span class="lineNum">     899 </span><span class="lineNoCov">          0 :     __m512d mTo_glibc_min = _mm512_set1_pd(1.0 - 0x1p-4);</span></a>
+<a name="900"><span class="lineNum">     900 </span><span class="lineNoCov">          0 :     __m512d mTo_glibc_max = _mm512_set1_pd(1.0 + 0x1.09p-4);</span></a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineNoCov">          0 :     __m256i vindex = _mm256_loadu_si256((__m256i*)&amp;indexarr[0]);</span></a>
+<a name="902"><span class="lineNum">     902 </span>            : </a>
+<a name="903"><span class="lineNum">     903 </span>            :     /* Load lookup table data */</a>
+<a name="904"><span class="lineNum">     904 </span>            :     /**begin repeat</a>
+<a name="905"><span class="lineNum">     905 </span>            :      * #i = 0, 1, 2, 3, 4, 5, 6, 7#</a>
+<a name="906"><span class="lineNum">     906 </span>            :      */</a>
+<a name="907"><span class="lineNum">     907 </span>            : </a>
+<a name="908"><span class="lineNum">     908 </span><span class="lineNoCov">          0 :     __m512d mLUT_TOP_@i@ = _mm512_loadu_pd(&amp;(LOG_TABLE_TOP[8*@i@]));</span></a>
+<a name="909"><span class="lineNum">     909 </span><span class="lineNoCov">          0 :     __m512d mLUT_TAIL_@i@ = _mm512_loadu_pd(&amp;(LOG_TABLE_TAIL[8*@i@]));</span></a>
+<a name="910"><span class="lineNum">     910 </span>            : </a>
+<a name="911"><span class="lineNum">     911 </span>            :     /**end repeat**/</a>
+<a name="912"><span class="lineNum">     912 </span>            : </a>
+<a name="913"><span class="lineNum">     913 </span><span class="lineNoCov">          0 :     __mmask8 load_mask = avx512_get_full_load_mask_pd();</span></a>
+<a name="914"><span class="lineNum">     914 </span><span class="lineNoCov">          0 :     __mmask8 invalid_mask = avx512_get_partial_load_mask_pd(0, num_lanes);</span></a>
+<a name="915"><span class="lineNum">     915 </span><span class="lineNoCov">          0 :     __mmask8 divide_by_zero_mask = invalid_mask;</span></a>
+<a name="916"><span class="lineNum">     916 </span>            : </a>
+<a name="917"><span class="lineNum">     917 </span><span class="lineNoCov">          0 :     __mmask8 inf_mask, nan_mask, zero_mask, negx_mask, denormal_mask,</span></a>
+<a name="918"><span class="lineNum">     918 </span>            :              glibc_mask;</a>
+<a name="919"><span class="lineNum">     919 </span>            : </a>
+<a name="920"><span class="lineNum">     920 </span><span class="lineNoCov">          0 :     __m512d x_in;</span></a>
+<a name="921"><span class="lineNum">     921 </span><span class="lineNoCov">          0 :     while (num_remaining_elements &gt; 0) {</span></a>
+<a name="922"><span class="lineNum">     922 </span><span class="lineNoCov">          0 :         if (num_remaining_elements &lt; num_lanes) {</span></a>
+<a name="923"><span class="lineNum">     923 </span><span class="lineNoCov">          0 :             load_mask = avx512_get_partial_load_mask_pd(num_remaining_elements,</span></a>
+<a name="924"><span class="lineNum">     924 </span>            :                                                       num_lanes);</a>
+<a name="925"><span class="lineNum">     925 </span>            :         }</a>
+<a name="926"><span class="lineNum">     926 </span>            : </a>
+<a name="927"><span class="lineNum">     927 </span><span class="lineNoCov">          0 :         if (1 == stride) {</span></a>
+<a name="928"><span class="lineNum">     928 </span><span class="lineNoCov">          0 :             x_in = avx512_masked_load_pd(load_mask, ip);</span></a>
+<a name="929"><span class="lineNum">     929 </span>            :         }</a>
+<a name="930"><span class="lineNum">     930 </span>            :         else {</a>
+<a name="931"><span class="lineNum">     931 </span><span class="lineNoCov">          0 :             x_in = avx512_masked_gather_pd(zeros_d, ip, vindex, load_mask);</span></a>
+<a name="932"><span class="lineNum">     932 </span>            :         }</a>
+<a name="933"><span class="lineNum">     933 </span>            : </a>
+<a name="934"><span class="lineNum">     934 </span>            :         /* call glibc when x on [1.0 - 0x1p-4, 1.0 + 0x1.09p-4] */</a>
+<a name="935"><span class="lineNum">     935 </span><span class="lineNoCov">          0 :         __mmask8 m1 = _mm512_cmp_pd_mask(x_in, mTo_glibc_max, _CMP_LT_OQ);</span></a>
+<a name="936"><span class="lineNum">     936 </span><span class="lineNoCov">          0 :         __mmask8 m2 = _mm512_cmp_pd_mask(x_in, mTo_glibc_min, _CMP_GT_OQ);</span></a>
+<a name="937"><span class="lineNum">     937 </span><span class="lineNoCov">          0 :         glibc_mask =  m1 &amp; m2;</span></a>
+<a name="938"><span class="lineNum">     938 </span>            : </a>
+<a name="939"><span class="lineNum">     939 </span><span class="lineNoCov">          0 :         if (glibc_mask != 0xFF) {</span></a>
+<a name="940"><span class="lineNum">     940 </span><span class="lineNoCov">          0 :             zero_mask = _mm512_cmp_pd_mask(x_in, zeros_d, _CMP_EQ_OQ);</span></a>
+<a name="941"><span class="lineNum">     941 </span><span class="lineNoCov">          0 :             inf_mask = _mm512_cmp_pd_mask(x_in, mInf, _CMP_EQ_OQ);</span></a>
+<a name="942"><span class="lineNum">     942 </span><span class="lineNoCov">          0 :             negx_mask = _mm512_cmp_pd_mask(x_in, zeros_d, _CMP_LT_OQ);</span></a>
+<a name="943"><span class="lineNum">     943 </span><span class="lineNoCov">          0 :             nan_mask = _mm512_cmp_pd_mask(x_in, x_in, _CMP_NEQ_UQ);</span></a>
+<a name="944"><span class="lineNum">     944 </span>            : </a>
+<a name="945"><span class="lineNum">     945 </span><span class="lineNoCov">          0 :             divide_by_zero_mask = divide_by_zero_mask | (zero_mask &amp; load_mask);</span></a>
+<a name="946"><span class="lineNum">     946 </span><span class="lineNoCov">          0 :             invalid_mask = invalid_mask | negx_mask;</span></a>
+<a name="947"><span class="lineNum">     947 </span>            : </a>
+<a name="948"><span class="lineNum">     948 </span><span class="lineNoCov">          0 :             __m512d x = avx512_set_masked_lanes_pd(x_in, zeros_d, negx_mask);</span></a>
+<a name="949"><span class="lineNum">     949 </span><span class="lineNoCov">          0 :             __m512i ix = _mm512_castpd_si512(x);</span></a>
+<a name="950"><span class="lineNum">     950 </span>            : </a>
+<a name="951"><span class="lineNum">     951 </span>            :             /* Normalize x when it is denormal */</a>
+<a name="952"><span class="lineNum">     952 </span><span class="lineNoCov">          0 :             __m512i top12 = _mm512_and_epi64(ix,</span></a>
+<a name="953"><span class="lineNum">     953 </span>            :                                 _mm512_set1_epi64(0xfff0000000000000));</a>
+<a name="954"><span class="lineNum">     954 </span><span class="lineNoCov">          0 :             denormal_mask = _mm512_cmp_epi64_mask(top12, _mm512_set1_epi64(0),</span></a>
+<a name="955"><span class="lineNum">     955 </span>            :                                 _CMP_EQ_OQ);</a>
+<a name="956"><span class="lineNum">     956 </span><span class="lineNoCov">          0 :             denormal_mask = (~zero_mask) &amp; denormal_mask;</span></a>
+<a name="957"><span class="lineNum">     957 </span><span class="lineNoCov">          0 :             ix = _mm512_castpd_si512(_mm512_mask_mul_pd(x, denormal_mask,</span></a>
+<a name="958"><span class="lineNum">     958 </span>            :                                     x, _mm512_set1_pd(0x1p52)));</a>
+<a name="959"><span class="lineNum">     959 </span><span class="lineNoCov">          0 :             ix = _mm512_mask_sub_epi64(ix, denormal_mask,</span></a>
+<a name="960"><span class="lineNum">     960 </span>            :                                     ix, _mm512_set1_epi64(52ULL &lt;&lt; 52));</a>
+<a name="961"><span class="lineNum">     961 </span>            : </a>
+<a name="962"><span class="lineNum">     962 </span>            :             /*</a>
+<a name="963"><span class="lineNum">     963 </span>            :              * x = 2^k * z; where z in range [1,2]</a>
+<a name="964"><span class="lineNum">     964 </span>            :              */</a>
+<a name="965"><span class="lineNum">     965 </span><span class="lineNoCov">          0 :             __m512i tmp = _mm512_sub_epi64(ix,</span></a>
+<a name="966"><span class="lineNum">     966 </span>            :                               _mm512_set1_epi64(0x3ff0000000000000));</a>
+<a name="967"><span class="lineNum">     967 </span><span class="lineNoCov">          0 :             __m512i i = _mm512_and_epi64(_mm512_srai_epi64(tmp, 52 - 6),</span></a>
+<a name="968"><span class="lineNum">     968 </span>            :                             _mm512_set1_epi64(0x3fULL));</a>
+<a name="969"><span class="lineNum">     969 </span><span class="lineNoCov">          0 :             __m512i ik = _mm512_srai_epi64(tmp, 52);</span></a>
+<a name="970"><span class="lineNum">     970 </span><span class="lineNoCov">          0 :             __m512d z = _mm512_castsi512_pd(_mm512_sub_epi64(ix, _mm512_and_epi64(tmp,</span></a>
+<a name="971"><span class="lineNum">     971 </span>            :                             _mm512_set1_epi64(0xfff0000000000000))));</a>
+<a name="972"><span class="lineNum">     972 </span>            :             /* c = i/64 + 1 */</a>
+<a name="973"><span class="lineNum">     973 </span><span class="lineNoCov">          0 :             __m256i i_32 = _mm512_cvtepi64_epi32(i);</span></a>
+<a name="974"><span class="lineNum">     974 </span><span class="lineNoCov">          0 :             __m512d c = _mm512_fmadd_pd(_mm512_cvtepi32_pd(i_32), mInv64, ones_d);</span></a>
+<a name="975"><span class="lineNum">     975 </span>            : </a>
+<a name="976"><span class="lineNum">     976 </span>            :             /* u = 2 * (z - c) / (z + c) */</a>
+<a name="977"><span class="lineNum">     977 </span><span class="lineNoCov">          0 :             __m512d u = _mm512_div_pd(_mm512_sub_pd(z, c), _mm512_add_pd(z, c));</span></a>
+<a name="978"><span class="lineNum">     978 </span><span class="lineNoCov">          0 :             u = _mm512_mul_pd(_mm512_set1_pd(2.0), u);</span></a>
+<a name="979"><span class="lineNum">     979 </span>            : </a>
+<a name="980"><span class="lineNum">     980 </span>            :             /* v = u * u */</a>
+<a name="981"><span class="lineNum">     981 </span><span class="lineNoCov">          0 :             __m512d v = _mm512_mul_pd(u,u);</span></a>
+<a name="982"><span class="lineNum">     982 </span>            : </a>
+<a name="983"><span class="lineNum">     983 </span>            :             /* log(z/c) = u + u*v*(A1 + v*(A2 + v*(A3 + v*A4))) */</a>
+<a name="984"><span class="lineNum">     984 </span><span class="lineNoCov">          0 :             __m512d res = _mm512_fmadd_pd(v, mA4, mA3);</span></a>
+<a name="985"><span class="lineNum">     985 </span><span class="lineNoCov">          0 :             res = _mm512_fmadd_pd(v, res, mA2);</span></a>
+<a name="986"><span class="lineNum">     986 </span><span class="lineNoCov">          0 :             res = _mm512_fmadd_pd(v, res, mA1);</span></a>
+<a name="987"><span class="lineNum">     987 </span><span class="lineNoCov">          0 :             res = _mm512_mul_pd(v, res);</span></a>
+<a name="988"><span class="lineNum">     988 </span><span class="lineNoCov">          0 :             res = _mm512_fmadd_pd(u, res, u);</span></a>
+<a name="989"><span class="lineNum">     989 </span>            : </a>
+<a name="990"><span class="lineNum">     990 </span>            :             /* Load lookup table data */</a>
+<a name="991"><span class="lineNum">     991 </span><span class="lineNoCov">          0 :             __m512d c_hi = avx512_permute_x8var_pd(mLUT_TOP_0, mLUT_TOP_1,</span></a>
+<a name="992"><span class="lineNum">     992 </span>            :                             mLUT_TOP_2, mLUT_TOP_3, mLUT_TOP_4, mLUT_TOP_5,</a>
+<a name="993"><span class="lineNum">     993 </span>            :                             mLUT_TOP_6, mLUT_TOP_7, i);</a>
+<a name="994"><span class="lineNum">     994 </span><span class="lineNoCov">          0 :             __m512d c_lo = avx512_permute_x8var_pd(mLUT_TAIL_0, mLUT_TAIL_1,</span></a>
+<a name="995"><span class="lineNum">     995 </span>            :                               mLUT_TAIL_2, mLUT_TAIL_3, mLUT_TAIL_4, mLUT_TAIL_5,</a>
+<a name="996"><span class="lineNum">     996 </span>            :                               mLUT_TAIL_6, mLUT_TAIL_7, i);</a>
+<a name="997"><span class="lineNum">     997 </span>            : </a>
+<a name="998"><span class="lineNum">     998 </span>            :             /*</a>
+<a name="999"><span class="lineNum">     999 </span>            :              * log(x) = k * ln2_hi + c_hi +</a>
+<a name="1000"><span class="lineNum">    1000 </span>            :              *          k * ln2_lo + c_lo +</a>
+<a name="1001"><span class="lineNum">    1001 </span>            :              *          log(z/c)</a>
+<a name="1002"><span class="lineNum">    1002 </span>            :              */</a>
+<a name="1003"><span class="lineNum">    1003 </span><span class="lineNoCov">          0 :             __m256i ik_32 = _mm512_cvtepi64_epi32(ik);</span></a>
+<a name="1004"><span class="lineNum">    1004 </span><span class="lineNoCov">          0 :             __m512d k = _mm512_cvtepi32_pd(ik_32);</span></a>
+<a name="1005"><span class="lineNum">    1005 </span><span class="lineNoCov">          0 :             __m512d tt = _mm512_fmadd_pd(k, mLN2HI, c_hi);</span></a>
+<a name="1006"><span class="lineNum">    1006 </span><span class="lineNoCov">          0 :             __m512d tt2 = _mm512_fmadd_pd(k, mLN2LO, c_lo);</span></a>
+<a name="1007"><span class="lineNum">    1007 </span><span class="lineNoCov">          0 :             tt = _mm512_add_pd(tt, tt2);</span></a>
+<a name="1008"><span class="lineNum">    1008 </span><span class="lineNoCov">          0 :             res = _mm512_add_pd(tt, res);</span></a>
+<a name="1009"><span class="lineNum">    1009 </span>            : </a>
+<a name="1010"><span class="lineNum">    1010 </span>            :             /* return special cases */</a>
+<a name="1011"><span class="lineNum">    1011 </span><span class="lineNoCov">          0 :             res = avx512_set_masked_lanes_pd(res, mNan, nan_mask);</span></a>
+<a name="1012"><span class="lineNum">    1012 </span><span class="lineNoCov">          0 :             res = avx512_set_masked_lanes_pd(res, mNeg_nan, negx_mask);</span></a>
+<a name="1013"><span class="lineNum">    1013 </span><span class="lineNoCov">          0 :             res = avx512_set_masked_lanes_pd(res, mNeg_inf, zero_mask);</span></a>
+<a name="1014"><span class="lineNum">    1014 </span><span class="lineNoCov">          0 :             res = avx512_set_masked_lanes_pd(res, mInf, inf_mask);</span></a>
+<a name="1015"><span class="lineNum">    1015 </span>            : </a>
+<a name="1016"><span class="lineNum">    1016 </span><span class="lineNoCov">          0 :             _mm512_mask_storeu_pd(op, load_mask, res);</span></a>
+<a name="1017"><span class="lineNum">    1017 </span>            :         }</a>
+<a name="1018"><span class="lineNum">    1018 </span>            : </a>
+<a name="1019"><span class="lineNum">    1019 </span>            :         /* call glibc's log func when x around 1.0f */</a>
+<a name="1020"><span class="lineNum">    1020 </span><span class="lineNoCov">          0 :         if (glibc_mask != 0) {</span></a>
+<a name="1021"><span class="lineNum">    1021 </span><span class="lineNoCov">          0 :             double NPY_DECL_ALIGNED(64) ip_fback[8];</span></a>
+<a name="1022"><span class="lineNum">    1022 </span><span class="lineNoCov">          0 :             _mm512_store_pd(ip_fback, x_in);</span></a>
+<a name="1023"><span class="lineNum">    1023 </span>            : </a>
+<a name="1024"><span class="lineNum">    1024 </span><span class="lineNoCov">          0 :             for (int ii = 0; ii &lt; 8; ++ii, glibc_mask &gt;&gt;= 1) {</span></a>
+<a name="1025"><span class="lineNum">    1025 </span><span class="lineNoCov">          0 :                 if (glibc_mask &amp; 0x01) {</span></a>
+<a name="1026"><span class="lineNum">    1026 </span><span class="lineNoCov">          0 :                     op[ii] = npy_log(ip_fback[ii]);</span></a>
+<a name="1027"><span class="lineNum">    1027 </span>            :                 }</a>
+<a name="1028"><span class="lineNum">    1028 </span>            :             }</a>
+<a name="1029"><span class="lineNum">    1029 </span>            :         }</a>
+<a name="1030"><span class="lineNum">    1030 </span><span class="lineNoCov">          0 :         ip += num_lanes * stride;</span></a>
+<a name="1031"><span class="lineNum">    1031 </span><span class="lineNoCov">          0 :         op += num_lanes;</span></a>
+<a name="1032"><span class="lineNum">    1032 </span><span class="lineNoCov">          0 :         num_remaining_elements -= num_lanes;</span></a>
+<a name="1033"><span class="lineNum">    1033 </span>            :     }</a>
+<a name="1034"><span class="lineNum">    1034 </span>            : </a>
+<a name="1035"><span class="lineNum">    1035 </span><span class="lineNoCov">          0 :     if (invalid_mask) {</span></a>
+<a name="1036"><span class="lineNum">    1036 </span><span class="lineNoCov">          0 :         npy_set_floatstatus_invalid();</span></a>
+<a name="1037"><span class="lineNum">    1037 </span>            :     }</a>
+<a name="1038"><span class="lineNum">    1038 </span><span class="lineNoCov">          0 :     if (divide_by_zero_mask) {</span></a>
+<a name="1039"><span class="lineNum">    1039 </span><span class="lineNoCov">          0 :         npy_set_floatstatus_divbyzero();</span></a>
+<a name="1040"><span class="lineNum">    1040 </span>            :     }</a>
+<a name="1041"><span class="lineNum">    1041 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1042"><span class="lineNum">    1042 </span>            : #endif // AVX512F_NOCLANG_BUG</a>
+<a name="1043"><span class="lineNum">    1043 </span>            : </a>
+<a name="1044"><span class="lineNum">    1044 </span>            : #ifdef SIMD_AVX512_SKX</a>
+<a name="1045"><span class="lineNum">    1045 </span>            : /**begin repeat</a>
+<a name="1046"><span class="lineNum">    1046 </span>            :  * #type = npy_float, npy_double#</a>
+<a name="1047"><span class="lineNum">    1047 </span>            :  * #TYPE = FLOAT, DOUBLE#</a>
+<a name="1048"><span class="lineNum">    1048 </span>            :  * #num_lanes = 16, 8#</a>
+<a name="1049"><span class="lineNum">    1049 </span>            :  * #vsuffix = ps, pd#</a>
+<a name="1050"><span class="lineNum">    1050 </span>            :  * #mask = __mmask16, __mmask8#</a>
+<a name="1051"><span class="lineNum">    1051 </span>            :  * #vtype1 = __m512, __m512d#</a>
+<a name="1052"><span class="lineNum">    1052 </span>            :  * #vtype2 = __m512i, __m256i#</a>
+<a name="1053"><span class="lineNum">    1053 </span>            :  * #scale = 4, 8#</a>
+<a name="1054"><span class="lineNum">    1054 </span>            :  * #vindextype = __m512i, __m256i#</a>
+<a name="1055"><span class="lineNum">    1055 </span>            :  * #vindexsize = 512, 256#</a>
+<a name="1056"><span class="lineNum">    1056 </span>            :  * #vindexload = _mm512_loadu_si512, _mm256_loadu_si256#</a>
+<a name="1057"><span class="lineNum">    1057 </span>            :  * #vtype2_load = _mm512_maskz_loadu_epi32, _mm256_maskz_loadu_epi32#</a>
+<a name="1058"><span class="lineNum">    1058 </span>            :  * #vtype2_gather = _mm512_mask_i32gather_epi32, _mm256_mmask_i32gather_epi32#</a>
+<a name="1059"><span class="lineNum">    1059 </span>            :  * #vtype2_store = _mm512_mask_storeu_epi32, _mm256_mask_storeu_epi32#</a>
+<a name="1060"><span class="lineNum">    1060 </span>            :  * #vtype2_scatter = _mm512_mask_i32scatter_epi32, _mm256_mask_i32scatter_epi32#</a>
+<a name="1061"><span class="lineNum">    1061 </span>            :  * #setzero = _mm512_setzero_epi32, _mm256_setzero_si256#</a>
+<a name="1062"><span class="lineNum">    1062 </span>            :  */</a>
+<a name="1063"><span class="lineNum">    1063 </span>            : static NPY_INLINE void</a>
+<a name="1064"><span class="lineNum">    1064 </span><span class="lineNoCov">          0 : AVX512_SKX_ldexp_@TYPE@(char **args, npy_intp const *dimensions, npy_intp const *steps)</span></a>
+<a name="1065"><span class="lineNum">    1065 </span>            : {</a>
+<a name="1066"><span class="lineNum">    1066 </span><span class="lineNoCov">          0 :     const npy_intp stride_ip1 = steps[0]/(npy_intp)sizeof(@type@);</span></a>
+<a name="1067"><span class="lineNum">    1067 </span><span class="lineNoCov">          0 :     const npy_intp stride_ip2 = steps[1]/(npy_intp)sizeof(int);</span></a>
+<a name="1068"><span class="lineNum">    1068 </span><span class="lineNoCov">          0 :     const npy_intp stride_op = steps[2]/(npy_intp)sizeof(@type@);</span></a>
+<a name="1069"><span class="lineNum">    1069 </span><span class="lineNoCov">          0 :     const npy_intp array_size = dimensions[0];</span></a>
+<a name="1070"><span class="lineNum">    1070 </span><span class="lineNoCov">          0 :     npy_intp num_remaining_elements = array_size;</span></a>
+<a name="1071"><span class="lineNum">    1071 </span><span class="lineNoCov">          0 :     @type@* ip1 = (@type@*) args[0];</span></a>
+<a name="1072"><span class="lineNum">    1072 </span><span class="lineNoCov">          0 :     int* ip2 = (int*) args[1];</span></a>
+<a name="1073"><span class="lineNum">    1073 </span><span class="lineNoCov">          0 :     @type@* op  = (@type@*) args[2];</span></a>
+<a name="1074"><span class="lineNum">    1074 </span>            : </a>
+<a name="1075"><span class="lineNum">    1075 </span><span class="lineNoCov">          0 :     @mask@ load_mask = avx512_get_full_load_mask_@vsuffix@();</span></a>
+<a name="1076"><span class="lineNum">    1076 </span>            : </a>
+<a name="1077"><span class="lineNum">    1077 </span>            :     /*</a>
+<a name="1078"><span class="lineNum">    1078 </span>            :      * Note: while generally indices are npy_intp, we ensure that our maximum index</a>
+<a name="1079"><span class="lineNum">    1079 </span>            :      * will fit in an int32 as a precondition for this function via</a>
+<a name="1080"><span class="lineNum">    1080 </span>            :      * IS_BINARY_SMALL_STEPS_AND_NOMEMOVERLAP</a>
+<a name="1081"><span class="lineNum">    1081 </span>            :      */</a>
+<a name="1082"><span class="lineNum">    1082 </span>            : </a>
+<a name="1083"><span class="lineNum">    1083 </span><span class="lineNoCov">          0 :     npy_int32 index_ip1[@num_lanes@], index_ip2[@num_lanes@], index_op[@num_lanes@];</span></a>
+<a name="1084"><span class="lineNum">    1084 </span><span class="lineNoCov">          0 :     for (npy_int32 ii = 0; ii &lt; @num_lanes@; ii++) {</span></a>
+<a name="1085"><span class="lineNum">    1085 </span><span class="lineNoCov">          0 :         index_ip1[ii] = ii*stride_ip1;</span></a>
+<a name="1086"><span class="lineNum">    1086 </span><span class="lineNoCov">          0 :         index_ip2[ii] = ii*stride_ip2;</span></a>
+<a name="1087"><span class="lineNum">    1087 </span><span class="lineNoCov">          0 :         index_op[ii] = ii*stride_op;</span></a>
+<a name="1088"><span class="lineNum">    1088 </span>            :     }</a>
+<a name="1089"><span class="lineNum">    1089 </span><span class="lineNoCov">          0 :     @vindextype@ vindex_ip1 = @vindexload@((@vindextype@*)&amp;index_ip1[0]);</span></a>
+<a name="1090"><span class="lineNum">    1090 </span><span class="lineNoCov">          0 :     @vindextype@ vindex_ip2 = @vindexload@((@vindextype@*)&amp;index_ip2[0]);</span></a>
+<a name="1091"><span class="lineNum">    1091 </span><span class="lineNoCov">          0 :     @vindextype@ vindex_op  = @vindexload@((@vindextype@*)&amp;index_op[0]);</span></a>
+<a name="1092"><span class="lineNum">    1092 </span><span class="lineNoCov">          0 :     @vtype1@ zeros_f = _mm512_setzero_@vsuffix@();</span></a>
+<a name="1093"><span class="lineNum">    1093 </span><span class="lineNoCov">          0 :     @vtype2@ zeros = @setzero@();</span></a>
+<a name="1094"><span class="lineNum">    1094 </span>            : </a>
+<a name="1095"><span class="lineNum">    1095 </span><span class="lineNoCov">          0 :     while (num_remaining_elements &gt; 0) {</span></a>
+<a name="1096"><span class="lineNum">    1096 </span><span class="lineNoCov">          0 :         if (num_remaining_elements &lt; @num_lanes@) {</span></a>
+<a name="1097"><span class="lineNum">    1097 </span><span class="lineNoCov">          0 :             load_mask = avx512_get_partial_load_mask_@vsuffix@(</span></a>
+<a name="1098"><span class="lineNum">    1098 </span>            :                                     num_remaining_elements, @num_lanes@);</a>
+<a name="1099"><span class="lineNum">    1099 </span>            :         }</a>
+<a name="1100"><span class="lineNum">    1100 </span><span class="lineNoCov">          0 :         @vtype1@ x1;</span></a>
+<a name="1101"><span class="lineNum">    1101 </span><span class="lineNoCov">          0 :         @vtype2@ x2;</span></a>
+<a name="1102"><span class="lineNum">    1102 </span><span class="lineNoCov">          0 :         if (stride_ip1 == 1) {</span></a>
+<a name="1103"><span class="lineNum">    1103 </span><span class="lineNoCov">          0 :             x1 = avx512_masked_load_@vsuffix@(load_mask, ip1);</span></a>
+<a name="1104"><span class="lineNum">    1104 </span>            :         }</a>
+<a name="1105"><span class="lineNum">    1105 </span>            :         else {</a>
+<a name="1106"><span class="lineNum">    1106 </span><span class="lineNoCov">          0 :             x1 = avx512_masked_gather_@vsuffix@(zeros_f, ip1, vindex_ip1, load_mask);</span></a>
+<a name="1107"><span class="lineNum">    1107 </span>            :         }</a>
+<a name="1108"><span class="lineNum">    1108 </span><span class="lineNoCov">          0 :         if (stride_ip2 == 1) {</span></a>
+<a name="1109"><span class="lineNum">    1109 </span><span class="lineNoCov">          0 :             x2 = @vtype2_load@(load_mask, ip2);</span></a>
+<a name="1110"><span class="lineNum">    1110 </span>            :         }</a>
+<a name="1111"><span class="lineNum">    1111 </span>            :         else {</a>
+<a name="1112"><span class="lineNum">    1112 </span><span class="lineNoCov">          0 :             x2 = @vtype2_gather@(zeros, load_mask, vindex_ip2, ip2, 4);</span></a>
+<a name="1113"><span class="lineNum">    1113 </span>            :         }</a>
+<a name="1114"><span class="lineNum">    1114 </span>            : </a>
+<a name="1115"><span class="lineNum">    1115 </span><span class="lineNoCov">          0 :         @vtype1@ out = _mm512_scalef_@vsuffix@(x1, _mm512_cvtepi32_@vsuffix@(x2));</span></a>
+<a name="1116"><span class="lineNum">    1116 </span>            : </a>
+<a name="1117"><span class="lineNum">    1117 </span><span class="lineNoCov">          0 :         if (stride_op == 1) {</span></a>
+<a name="1118"><span class="lineNum">    1118 </span><span class="lineNoCov">          0 :             _mm512_mask_storeu_@vsuffix@(op, load_mask, out);</span></a>
+<a name="1119"><span class="lineNum">    1119 </span>            :         }</a>
+<a name="1120"><span class="lineNum">    1120 </span>            :         else {</a>
+<a name="1121"><span class="lineNum">    1121 </span>            :             /* scatter! */</a>
+<a name="1122"><span class="lineNum">    1122 </span><span class="lineNoCov">          0 :             _mm512_mask_i32scatter_@vsuffix@(op, load_mask, vindex_op, out, @scale@);</span></a>
+<a name="1123"><span class="lineNum">    1123 </span>            :         }</a>
+<a name="1124"><span class="lineNum">    1124 </span>            : </a>
+<a name="1125"><span class="lineNum">    1125 </span><span class="lineNoCov">          0 :         ip1 += @num_lanes@*stride_ip1;</span></a>
+<a name="1126"><span class="lineNum">    1126 </span><span class="lineNoCov">          0 :         ip2 += @num_lanes@*stride_ip2;</span></a>
+<a name="1127"><span class="lineNum">    1127 </span><span class="lineNoCov">          0 :         op += @num_lanes@*stride_op;</span></a>
+<a name="1128"><span class="lineNum">    1128 </span><span class="lineNoCov">          0 :         num_remaining_elements -= @num_lanes@;</span></a>
+<a name="1129"><span class="lineNum">    1129 </span>            :     }</a>
+<a name="1130"><span class="lineNum">    1130 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1131"><span class="lineNum">    1131 </span>            : </a>
+<a name="1132"><span class="lineNum">    1132 </span>            : static NPY_INLINE void</a>
+<a name="1133"><span class="lineNum">    1133 </span><span class="lineNoCov">          0 : AVX512_SKX_frexp_@TYPE@(char **args, npy_intp const *dimensions, npy_intp const *steps)</span></a>
+<a name="1134"><span class="lineNum">    1134 </span>            : {</a>
+<a name="1135"><span class="lineNum">    1135 </span><span class="lineNoCov">          0 :     const npy_intp stride_ip1 = steps[0]/(npy_intp)sizeof(@type@);</span></a>
+<a name="1136"><span class="lineNum">    1136 </span><span class="lineNoCov">          0 :     const npy_intp stride_op1 = steps[1]/(npy_intp)sizeof(@type@);</span></a>
+<a name="1137"><span class="lineNum">    1137 </span><span class="lineNoCov">          0 :     const npy_intp stride_op2 = steps[2]/(npy_intp)sizeof(int);</span></a>
+<a name="1138"><span class="lineNum">    1138 </span><span class="lineNoCov">          0 :     const npy_intp array_size = dimensions[0];</span></a>
+<a name="1139"><span class="lineNum">    1139 </span><span class="lineNoCov">          0 :     npy_intp num_remaining_elements = array_size;</span></a>
+<a name="1140"><span class="lineNum">    1140 </span><span class="lineNoCov">          0 :     @type@* ip1 = (@type@*) args[0];</span></a>
+<a name="1141"><span class="lineNum">    1141 </span><span class="lineNoCov">          0 :     @type@* op1  = (@type@*) args[1];</span></a>
+<a name="1142"><span class="lineNum">    1142 </span><span class="lineNoCov">          0 :     int* op2 = (int*) args[2];</span></a>
+<a name="1143"><span class="lineNum">    1143 </span>            : </a>
+<a name="1144"><span class="lineNum">    1144 </span><span class="lineNoCov">          0 :     @mask@ load_mask = avx512_get_full_load_mask_@vsuffix@();</span></a>
+<a name="1145"><span class="lineNum">    1145 </span>            : </a>
+<a name="1146"><span class="lineNum">    1146 </span>            :     /*</a>
+<a name="1147"><span class="lineNum">    1147 </span>            :      * Note: while generally indices are npy_intp, we ensure that our maximum index</a>
+<a name="1148"><span class="lineNum">    1148 </span>            :      * will fit in an int32 as a precondition for this function via</a>
+<a name="1149"><span class="lineNum">    1149 </span>            :      * IS_BINARY_SMALL_STEPS_AND_NOMEMOVERLAP</a>
+<a name="1150"><span class="lineNum">    1150 </span>            :      */</a>
+<a name="1151"><span class="lineNum">    1151 </span>            : </a>
+<a name="1152"><span class="lineNum">    1152 </span><span class="lineNoCov">          0 :     npy_int32 index_ip1[@num_lanes@], index_op1[@num_lanes@], index_op2[@num_lanes@];</span></a>
+<a name="1153"><span class="lineNum">    1153 </span><span class="lineNoCov">          0 :     for (npy_int32 ii = 0; ii &lt; @num_lanes@; ii++) {</span></a>
+<a name="1154"><span class="lineNum">    1154 </span><span class="lineNoCov">          0 :         index_ip1[ii] = ii*stride_ip1;</span></a>
+<a name="1155"><span class="lineNum">    1155 </span><span class="lineNoCov">          0 :         index_op1[ii] = ii*stride_op1;</span></a>
+<a name="1156"><span class="lineNum">    1156 </span><span class="lineNoCov">          0 :         index_op2[ii] = ii*stride_op2;</span></a>
+<a name="1157"><span class="lineNum">    1157 </span>            :     }</a>
+<a name="1158"><span class="lineNum">    1158 </span><span class="lineNoCov">          0 :     @vindextype@ vindex_ip1 = @vindexload@((@vindextype@*)&amp;index_ip1[0]);</span></a>
+<a name="1159"><span class="lineNum">    1159 </span><span class="lineNoCov">          0 :     @vindextype@ vindex_op1 = @vindexload@((@vindextype@*)&amp;index_op1[0]);</span></a>
+<a name="1160"><span class="lineNum">    1160 </span><span class="lineNoCov">          0 :     @vindextype@ vindex_op2 = @vindexload@((@vindextype@*)&amp;index_op2[0]);</span></a>
+<a name="1161"><span class="lineNum">    1161 </span><span class="lineNoCov">          0 :     @vtype1@ zeros_f = _mm512_setzero_@vsuffix@();</span></a>
+<a name="1162"><span class="lineNum">    1162 </span>            : </a>
+<a name="1163"><span class="lineNum">    1163 </span><span class="lineNoCov">          0 :     while (num_remaining_elements &gt; 0) {</span></a>
+<a name="1164"><span class="lineNum">    1164 </span><span class="lineNoCov">          0 :         if (num_remaining_elements &lt; @num_lanes@) {</span></a>
+<a name="1165"><span class="lineNum">    1165 </span><span class="lineNoCov">          0 :             load_mask = avx512_get_partial_load_mask_@vsuffix@(</span></a>
+<a name="1166"><span class="lineNum">    1166 </span>            :                                     num_remaining_elements, @num_lanes@);</a>
+<a name="1167"><span class="lineNum">    1167 </span>            :         }</a>
+<a name="1168"><span class="lineNum">    1168 </span><span class="lineNoCov">          0 :         @vtype1@ x1;</span></a>
+<a name="1169"><span class="lineNum">    1169 </span><span class="lineNoCov">          0 :         if (stride_ip1 == 1) {</span></a>
+<a name="1170"><span class="lineNum">    1170 </span><span class="lineNoCov">          0 :             x1 = avx512_masked_load_@vsuffix@(load_mask, ip1);</span></a>
+<a name="1171"><span class="lineNum">    1171 </span>            :         }</a>
+<a name="1172"><span class="lineNum">    1172 </span>            :         else {</a>
+<a name="1173"><span class="lineNum">    1173 </span><span class="lineNoCov">          0 :             x1 = avx512_masked_gather_@vsuffix@(zeros_f, ip1, vindex_ip1, load_mask);</span></a>
+<a name="1174"><span class="lineNum">    1174 </span>            :         }</a>
+<a name="1175"><span class="lineNum">    1175 </span>            : </a>
+<a name="1176"><span class="lineNum">    1176 </span>            :         /*</a>
+<a name="1177"><span class="lineNum">    1177 </span>            :          * The x86 instructions vpgetmant and vpgetexp do not conform</a>
+<a name="1178"><span class="lineNum">    1178 </span>            :          * with NumPy's output for special floating points: NAN, +/-INF, +/-0.0</a>
+<a name="1179"><span class="lineNum">    1179 </span>            :          * We mask these values with spmask to avoid invalid exceptions.</a>
+<a name="1180"><span class="lineNum">    1180 </span>            :          */</a>
+<a name="1181"><span class="lineNum">    1181 </span><span class="lineNoCov">          0 :         @mask@ spmask =_mm512_knot(_mm512_fpclass_@vsuffix@_mask(</span></a>
+<a name="1182"><span class="lineNum">    1182 </span>            :                                                 x1, 0b10011111));</a>
+<a name="1183"><span class="lineNum">    1183 </span><span class="lineNoCov">          0 :         @vtype1@ out1 = _mm512_maskz_getmant_@vsuffix@(</span></a>
+<a name="1184"><span class="lineNum">    1184 </span>            :                                 spmask, x1, _MM_MANT_NORM_p5_1, _MM_MANT_SIGN_src);</a>
+<a name="1185"><span class="lineNum">    1185 </span><span class="lineNoCov">          0 :         out1 = _mm512_mask_mov_@vsuffix@(x1, spmask, out1);</span></a>
+<a name="1186"><span class="lineNum">    1186 </span><span class="lineNoCov">          0 :         @vtype2@ out2 = _mm512_cvt@vsuffix@_epi32(</span></a>
+<a name="1187"><span class="lineNum">    1187 </span>            :                             _mm512_maskz_add_@vsuffix@(spmask, _mm512_set1_@vsuffix@(1.0),</a>
+<a name="1188"><span class="lineNum">    1188 </span>            :                                 _mm512_maskz_getexp_@vsuffix@(spmask, x1)));</a>
+<a name="1189"><span class="lineNum">    1189 </span><span class="lineNoCov">          0 :         if (stride_op1 == 1) {</span></a>
+<a name="1190"><span class="lineNum">    1190 </span><span class="lineNoCov">          0 :             _mm512_mask_storeu_@vsuffix@(op1, load_mask, out1);</span></a>
+<a name="1191"><span class="lineNum">    1191 </span>            :         }</a>
+<a name="1192"><span class="lineNum">    1192 </span>            :         else {</a>
+<a name="1193"><span class="lineNum">    1193 </span><span class="lineNoCov">          0 :             _mm512_mask_i32scatter_@vsuffix@(op1, load_mask, vindex_op1, out1, @scale@);</span></a>
+<a name="1194"><span class="lineNum">    1194 </span>            :         }</a>
+<a name="1195"><span class="lineNum">    1195 </span><span class="lineNoCov">          0 :         if (stride_op2 == 1) {</span></a>
+<a name="1196"><span class="lineNum">    1196 </span><span class="lineNoCov">          0 :             @vtype2_store@(op2, load_mask, out2);</span></a>
+<a name="1197"><span class="lineNum">    1197 </span>            :         }</a>
+<a name="1198"><span class="lineNum">    1198 </span>            :         else {</a>
+<a name="1199"><span class="lineNum">    1199 </span><span class="lineNoCov">          0 :             @vtype2_scatter@(op2, load_mask, vindex_op2, out2, 4);</span></a>
+<a name="1200"><span class="lineNum">    1200 </span>            :         }</a>
+<a name="1201"><span class="lineNum">    1201 </span>            : </a>
+<a name="1202"><span class="lineNum">    1202 </span><span class="lineNoCov">          0 :         ip1 += @num_lanes@*stride_ip1;</span></a>
+<a name="1203"><span class="lineNum">    1203 </span><span class="lineNoCov">          0 :         op1 += @num_lanes@*stride_op1;</span></a>
+<a name="1204"><span class="lineNum">    1204 </span><span class="lineNoCov">          0 :         op2 += @num_lanes@*stride_op2;</span></a>
+<a name="1205"><span class="lineNum">    1205 </span><span class="lineNoCov">          0 :         num_remaining_elements -= @num_lanes@;</span></a>
+<a name="1206"><span class="lineNum">    1206 </span>            :     }</a>
+<a name="1207"><span class="lineNum">    1207 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1208"><span class="lineNum">    1208 </span>            : /**end repeat**/</a>
+<a name="1209"><span class="lineNum">    1209 </span>            : #endif // SIMD_AVX512_SKX</a>
+<a name="1210"><span class="lineNum">    1210 </span>            : </a>
+<a name="1211"><span class="lineNum">    1211 </span>            : </a>
+<a name="1212"><span class="lineNum">    1212 </span>            : /********************************************************************************</a>
+<a name="1213"><span class="lineNum">    1213 </span>            :  ** Defining ufunc inner functions</a>
+<a name="1214"><span class="lineNum">    1214 </span>            :  ********************************************************************************/</a>
+<a name="1215"><span class="lineNum">    1215 </span>            : /**begin repeat</a>
+<a name="1216"><span class="lineNum">    1216 </span>            :  * #func = exp, log#</a>
+<a name="1217"><span class="lineNum">    1217 </span>            :  * #scalarf = npy_expf, npy_logf#</a>
+<a name="1218"><span class="lineNum">    1218 </span>            :  */</a>
+<a name="1219"><span class="lineNum">    1219 </span><span class="lineCov">       1852 : NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(FLOAT_@func@)</span></a>
+<a name="1220"><span class="lineNum">    1220 </span>            : (char **args, npy_intp const *dimensions, npy_intp const *steps, void *NPY_UNUSED(data))</a>
+<a name="1221"><span class="lineNum">    1221 </span>            : {</a>
+<a name="1222"><span class="lineNum">    1222 </span>            : #if defined(SIMD_AVX2_FMA3) || defined(SIMD_AVX512F)</a>
+<a name="1223"><span class="lineNum">    1223 </span>            :     // third arg in `IS_OUTPUT_BLOCKABLE_UNARY` is dummy</a>
+<a name="1224"><span class="lineNum">    1224 </span>            :     // TODO: get ride of this macro during the move to NPYV</a>
+<a name="1225"><span class="lineNum">    1225 </span><span class="lineCov">       3704 :     if (IS_OUTPUT_BLOCKABLE_UNARY(sizeof(npy_float), sizeof(npy_float), 64)) {</span></a>
+<a name="1226"><span class="lineNum">    1226 </span><span class="lineCov">       1852 :         simd_@func@_FLOAT((npy_float*)args[1], (npy_float*)args[0], dimensions[0], steps[0]);</span></a>
+<a name="1227"><span class="lineNum">    1227 </span>            :     }</a>
+<a name="1228"><span class="lineNum">    1228 </span>            :     else {</a>
+<a name="1229"><span class="lineNum">    1229 </span><span class="lineNoCov">          0 :         UNARY_LOOP {</span></a>
+<a name="1230"><span class="lineNum">    1230 </span>            :             /*</a>
+<a name="1231"><span class="lineNum">    1231 </span>            :              * We use the AVX function to compute exp/log for scalar elements as well.</a>
+<a name="1232"><span class="lineNum">    1232 </span>            :              * This is needed to ensure the output of strided and non-strided</a>
+<a name="1233"><span class="lineNum">    1233 </span>            :              * cases match. SIMD code handles strided input cases, but not</a>
+<a name="1234"><span class="lineNum">    1234 </span>            :              * strided output.</a>
+<a name="1235"><span class="lineNum">    1235 </span>            :              */</a>
+<a name="1236"><span class="lineNum">    1236 </span><span class="lineNoCov">          0 :             simd_@func@_FLOAT((npy_float *)op1, (npy_float *)ip1, 1, steps[0]);</span></a>
+<a name="1237"><span class="lineNum">    1237 </span>            :         }</a>
+<a name="1238"><span class="lineNum">    1238 </span>            :     }</a>
+<a name="1239"><span class="lineNum">    1239 </span>            : #else</a>
+<a name="1240"><span class="lineNum">    1240 </span><span class="lineNoCov">          0 :     UNARY_LOOP {</span></a>
+<a name="1241"><span class="lineNum">    1241 </span><span class="lineNoCov">          0 :         const npy_float in1 = *(npy_float *)ip1;</span></a>
+<a name="1242"><span class="lineNum">    1242 </span><span class="lineNoCov">          0 :         *(npy_float *)op1 = @scalarf@(in1);</span></a>
+<a name="1243"><span class="lineNum">    1243 </span>            :     }</a>
+<a name="1244"><span class="lineNum">    1244 </span>            : #endif</a>
+<a name="1245"><span class="lineNum">    1245 </span><span class="lineCov">       1852 : }</span></a>
+<a name="1246"><span class="lineNum">    1246 </span>            : /**end repeat**/</a>
+<a name="1247"><span class="lineNum">    1247 </span>            : </a>
+<a name="1248"><span class="lineNum">    1248 </span>            : /**begin repeat</a>
+<a name="1249"><span class="lineNum">    1249 </span>            :  * #func = exp, log#</a>
+<a name="1250"><span class="lineNum">    1250 </span>            :  * #scalar = npy_exp, npy_log#</a>
+<a name="1251"><span class="lineNum">    1251 </span>            :  */</a>
+<a name="1252"><span class="lineNum">    1252 </span><span class="lineCov">       3371 : NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(DOUBLE_@func@)</span></a>
+<a name="1253"><span class="lineNum">    1253 </span>            : (char **args, npy_intp const *dimensions, npy_intp const *steps, void *NPY_UNUSED(data))</a>
+<a name="1254"><span class="lineNum">    1254 </span>            : {</a>
+<a name="1255"><span class="lineNum">    1255 </span>            : #ifdef SIMD_AVX512F_NOCLANG_BUG</a>
+<a name="1256"><span class="lineNum">    1256 </span><span class="lineNoCov">          0 :     if (IS_OUTPUT_BLOCKABLE_UNARY(sizeof(npy_double), sizeof(npy_double), 64)) {</span></a>
+<a name="1257"><span class="lineNum">    1257 </span><span class="lineNoCov">          0 :         AVX512F_@func@_DOUBLE((npy_double*)args[1], (npy_double*)args[0], dimensions[0], steps[0]);</span></a>
+<a name="1258"><span class="lineNum">    1258 </span><span class="lineNoCov">          0 :         return;</span></a>
+<a name="1259"><span class="lineNum">    1259 </span>            :     }</a>
+<a name="1260"><span class="lineNum">    1260 </span>            : #endif</a>
+<a name="1261"><span class="lineNum">    1261 </span><span class="lineCov">    2082359 :     UNARY_LOOP {</span></a>
+<a name="1262"><span class="lineNum">    1262 </span><span class="lineCov">    2078988 :         const npy_double in1 = *(npy_double *)ip1;</span></a>
+<a name="1263"><span class="lineNum">    1263 </span><span class="lineCov">    2078988 :         *(npy_double *)op1 = @scalar@(in1);</span></a>
+<a name="1264"><span class="lineNum">    1264 </span>            :     }</a>
+<a name="1265"><span class="lineNum">    1265 </span><span class="lineCov">       3371 : }</span></a>
+<a name="1266"><span class="lineNum">    1266 </span>            : /**end repeat**/</a>
+<a name="1267"><span class="lineNum">    1267 </span>            : </a>
+<a name="1268"><span class="lineNum">    1268 </span>            : /**begin repeat</a>
+<a name="1269"><span class="lineNum">    1269 </span>            :  * Float types</a>
+<a name="1270"><span class="lineNum">    1270 </span>            :  *  #type = npy_float, npy_double#</a>
+<a name="1271"><span class="lineNum">    1271 </span>            :  *  #TYPE = FLOAT, DOUBLE#</a>
+<a name="1272"><span class="lineNum">    1272 </span>            :  *  #c = f, #</a>
+<a name="1273"><span class="lineNum">    1273 </span>            :  *  #C = F, #</a>
+<a name="1274"><span class="lineNum">    1274 </span>            :  */</a>
+<a name="1275"><span class="lineNum">    1275 </span><span class="lineCov">         53 : NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(@TYPE@_frexp)</span></a>
+<a name="1276"><span class="lineNum">    1276 </span>            : (char **args, npy_intp const *dimensions, npy_intp const *steps, void *NPY_UNUSED(func))</a>
+<a name="1277"><span class="lineNum">    1277 </span>            : {</a>
+<a name="1278"><span class="lineNum">    1278 </span>            : #ifdef SIMD_AVX512_SKX</a>
+<a name="1279"><span class="lineNum">    1279 </span><span class="lineNoCov">          0 :     if (IS_UNARY_TWO_OUT_SMALL_STEPS_AND_NOMEMOVERLAP) {</span></a>
+<a name="1280"><span class="lineNum">    1280 </span><span class="lineNoCov">          0 :         AVX512_SKX_frexp_@TYPE@(args, dimensions, steps);</span></a>
+<a name="1281"><span class="lineNum">    1281 </span><span class="lineNoCov">          0 :         return;</span></a>
+<a name="1282"><span class="lineNum">    1282 </span>            :     }</a>
+<a name="1283"><span class="lineNum">    1283 </span>            : #endif</a>
+<a name="1284"><span class="lineNum">    1284 </span><span class="lineCov">        186 :     UNARY_LOOP_TWO_OUT {</span></a>
+<a name="1285"><span class="lineNum">    1285 </span><span class="lineCov">        133 :         const @type@ in1 = *(@type@ *)ip1;</span></a>
+<a name="1286"><span class="lineNum">    1286 </span><span class="lineCov">        133 :         *((@type@ *)op1) = npy_frexp@c@(in1, (int *)op2);</span></a>
+<a name="1287"><span class="lineNum">    1287 </span>            :     }</a>
+<a name="1288"><span class="lineNum">    1288 </span><span class="lineCov">         53 : }</span></a>
+<a name="1289"><span class="lineNum">    1289 </span>            : </a>
+<a name="1290"><span class="lineNum">    1290 </span><span class="lineCov">         26 : NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(@TYPE@_ldexp)</span></a>
+<a name="1291"><span class="lineNum">    1291 </span>            : (char **args, npy_intp const *dimensions, npy_intp const *steps, void *NPY_UNUSED(func))</a>
+<a name="1292"><span class="lineNum">    1292 </span>            : {</a>
+<a name="1293"><span class="lineNum">    1293 </span>            : #ifdef SIMD_AVX512_SKX</a>
+<a name="1294"><span class="lineNum">    1294 </span><span class="lineNoCov">          0 :     if (IS_BINARY_SMALL_STEPS_AND_NOMEMOVERLAP) {</span></a>
+<a name="1295"><span class="lineNum">    1295 </span><span class="lineNoCov">          0 :         AVX512_SKX_ldexp_@TYPE@(args, dimensions, steps);</span></a>
+<a name="1296"><span class="lineNum">    1296 </span><span class="lineNoCov">          0 :         return;</span></a>
+<a name="1297"><span class="lineNum">    1297 </span>            :     }</a>
+<a name="1298"><span class="lineNum">    1298 </span>            : #endif</a>
+<a name="1299"><span class="lineNum">    1299 </span><span class="lineCov">        132 :     BINARY_LOOP {</span></a>
+<a name="1300"><span class="lineNum">    1300 </span><span class="lineCov">        106 :         const @type@ in1 = *(@type@ *)ip1;</span></a>
+<a name="1301"><span class="lineNum">    1301 </span><span class="lineCov">        106 :         const int in2 = *(int *)ip2;</span></a>
+<a name="1302"><span class="lineNum">    1302 </span><span class="lineCov">        106 :         *((@type@ *)op1) = npy_ldexp@c@(in1, in2);</span></a>
+<a name="1303"><span class="lineNum">    1303 </span>            :     }</a>
+<a name="1304"><span class="lineNum">    1304 </span><span class="lineCov">         26 : }</span></a>
+<a name="1305"><span class="lineNum">    1305 </span>            : /**end repeat**/</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

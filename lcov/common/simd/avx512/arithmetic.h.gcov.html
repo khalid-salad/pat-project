@@ -1,0 +1,525 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.out - common/simd/avx512/arithmetic.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">common/simd/avx512</a> - arithmetic.h<span style="font-size: 80%;"> (source / <a href="arithmetic.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.out</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">165</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">-</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #ifndef NPY_SIMD</a>
+<a name="2"><span class="lineNum">       2 </span>            :     #error &quot;Not a standalone header&quot;</a>
+<a name="3"><span class="lineNum">       3 </span>            : #endif</a>
+<a name="4"><span class="lineNum">       4 </span>            : </a>
+<a name="5"><span class="lineNum">       5 </span>            : #ifndef _NPY_SIMD_AVX512_ARITHMETIC_H</a>
+<a name="6"><span class="lineNum">       6 </span>            : #define _NPY_SIMD_AVX512_ARITHMETIC_H</a>
+<a name="7"><span class="lineNum">       7 </span>            : </a>
+<a name="8"><span class="lineNum">       8 </span>            : #include &quot;../avx2/utils.h&quot;</a>
+<a name="9"><span class="lineNum">       9 </span>            : #include &quot;../sse/utils.h&quot;</a>
+<a name="10"><span class="lineNum">      10 </span>            : /***************************</a>
+<a name="11"><span class="lineNum">      11 </span>            :  * Addition</a>
+<a name="12"><span class="lineNum">      12 </span>            :  ***************************/</a>
+<a name="13"><span class="lineNum">      13 </span>            : // non-saturated</a>
+<a name="14"><span class="lineNum">      14 </span>            : #ifdef NPY_HAVE_AVX512BW</a>
+<a name="15"><span class="lineNum">      15 </span>            :     #define npyv_add_u8  _mm512_add_epi8</a>
+<a name="16"><span class="lineNum">      16 </span>            :     #define npyv_add_u16 _mm512_add_epi16</a>
+<a name="17"><span class="lineNum">      17 </span>            : #else</a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_add_u8,  _mm256_add_epi8)</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_add_u16, _mm256_add_epi16)</span></a>
+<a name="20"><span class="lineNum">      20 </span>            : #endif</a>
+<a name="21"><span class="lineNum">      21 </span>            : #define npyv_add_s8  npyv_add_u8</a>
+<a name="22"><span class="lineNum">      22 </span>            : #define npyv_add_s16 npyv_add_u16</a>
+<a name="23"><span class="lineNum">      23 </span>            : #define npyv_add_u32 _mm512_add_epi32</a>
+<a name="24"><span class="lineNum">      24 </span>            : #define npyv_add_s32 _mm512_add_epi32</a>
+<a name="25"><span class="lineNum">      25 </span>            : #define npyv_add_u64 _mm512_add_epi64</a>
+<a name="26"><span class="lineNum">      26 </span>            : #define npyv_add_s64 _mm512_add_epi64</a>
+<a name="27"><span class="lineNum">      27 </span>            : #define npyv_add_f32 _mm512_add_ps</a>
+<a name="28"><span class="lineNum">      28 </span>            : #define npyv_add_f64 _mm512_add_pd</a>
+<a name="29"><span class="lineNum">      29 </span>            : </a>
+<a name="30"><span class="lineNum">      30 </span>            : // saturated</a>
+<a name="31"><span class="lineNum">      31 </span>            : #ifdef NPY_HAVE_AVX512BW</a>
+<a name="32"><span class="lineNum">      32 </span>            :     #define npyv_adds_u8  _mm512_adds_epu8</a>
+<a name="33"><span class="lineNum">      33 </span>            :     #define npyv_adds_s8  _mm512_adds_epi8</a>
+<a name="34"><span class="lineNum">      34 </span>            :     #define npyv_adds_u16 _mm512_adds_epu16</a>
+<a name="35"><span class="lineNum">      35 </span>            :     #define npyv_adds_s16 _mm512_adds_epi16</a>
+<a name="36"><span class="lineNum">      36 </span>            : #else</a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_adds_u8,  _mm256_adds_epu8)</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_adds_s8,  _mm256_adds_epi8)</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_adds_u16, _mm256_adds_epu16)</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_adds_s16, _mm256_adds_epi16)</span></a>
+<a name="41"><span class="lineNum">      41 </span>            : #endif</a>
+<a name="42"><span class="lineNum">      42 </span>            : // TODO: rest, after implement Packs intrins</a>
+<a name="43"><span class="lineNum">      43 </span>            : </a>
+<a name="44"><span class="lineNum">      44 </span>            : /***************************</a>
+<a name="45"><span class="lineNum">      45 </span>            :  * Subtraction</a>
+<a name="46"><span class="lineNum">      46 </span>            :  ***************************/</a>
+<a name="47"><span class="lineNum">      47 </span>            : // non-saturated</a>
+<a name="48"><span class="lineNum">      48 </span>            : #ifdef NPY_HAVE_AVX512BW</a>
+<a name="49"><span class="lineNum">      49 </span>            :     #define npyv_sub_u8  _mm512_sub_epi8</a>
+<a name="50"><span class="lineNum">      50 </span>            :     #define npyv_sub_u16 _mm512_sub_epi16</a>
+<a name="51"><span class="lineNum">      51 </span>            : #else</a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_sub_u8,  _mm256_sub_epi8)</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_sub_u16, _mm256_sub_epi16)</span></a>
+<a name="54"><span class="lineNum">      54 </span>            : #endif</a>
+<a name="55"><span class="lineNum">      55 </span>            : #define npyv_sub_s8  npyv_sub_u8</a>
+<a name="56"><span class="lineNum">      56 </span>            : #define npyv_sub_s16 npyv_sub_u16</a>
+<a name="57"><span class="lineNum">      57 </span>            : #define npyv_sub_u32 _mm512_sub_epi32</a>
+<a name="58"><span class="lineNum">      58 </span>            : #define npyv_sub_s32 _mm512_sub_epi32</a>
+<a name="59"><span class="lineNum">      59 </span>            : #define npyv_sub_u64 _mm512_sub_epi64</a>
+<a name="60"><span class="lineNum">      60 </span>            : #define npyv_sub_s64 _mm512_sub_epi64</a>
+<a name="61"><span class="lineNum">      61 </span>            : #define npyv_sub_f32 _mm512_sub_ps</a>
+<a name="62"><span class="lineNum">      62 </span>            : #define npyv_sub_f64 _mm512_sub_pd</a>
+<a name="63"><span class="lineNum">      63 </span>            : </a>
+<a name="64"><span class="lineNum">      64 </span>            : // saturated</a>
+<a name="65"><span class="lineNum">      65 </span>            : #ifdef NPY_HAVE_AVX512BW</a>
+<a name="66"><span class="lineNum">      66 </span>            :     #define npyv_subs_u8  _mm512_subs_epu8</a>
+<a name="67"><span class="lineNum">      67 </span>            :     #define npyv_subs_s8  _mm512_subs_epi8</a>
+<a name="68"><span class="lineNum">      68 </span>            :     #define npyv_subs_u16 _mm512_subs_epu16</a>
+<a name="69"><span class="lineNum">      69 </span>            :     #define npyv_subs_s16 _mm512_subs_epi16</a>
+<a name="70"><span class="lineNum">      70 </span>            : #else</a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_subs_u8,  _mm256_subs_epu8)</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_subs_s8,  _mm256_subs_epi8)</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_subs_u16, _mm256_subs_epu16)</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_subs_s16, _mm256_subs_epi16)</span></a>
+<a name="75"><span class="lineNum">      75 </span>            : #endif</a>
+<a name="76"><span class="lineNum">      76 </span>            : // TODO: rest, after implement Packs intrins</a>
+<a name="77"><span class="lineNum">      77 </span>            : </a>
+<a name="78"><span class="lineNum">      78 </span>            : /***************************</a>
+<a name="79"><span class="lineNum">      79 </span>            :  * Multiplication</a>
+<a name="80"><span class="lineNum">      80 </span>            :  ***************************/</a>
+<a name="81"><span class="lineNum">      81 </span>            : // non-saturated</a>
+<a name="82"><span class="lineNum">      82 </span>            : #ifdef NPY_HAVE_AVX512BW</a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 : NPY_FINLINE __m512i npyv_mul_u8(__m512i a, __m512i b)</span></a>
+<a name="84"><span class="lineNum">      84 </span>            : {</a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :     __m512i even = _mm512_mullo_epi16(a, b);</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :     __m512i odd  = _mm512_mullo_epi16(_mm512_srai_epi16(a, 8), _mm512_srai_epi16(b, 8));</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :             odd  = _mm512_slli_epi16(odd, 8);</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 :     return _mm512_mask_blend_epi8(0xAAAAAAAAAAAAAAAA, even, odd);</span></a>
+<a name="89"><span class="lineNum">      89 </span>            : }</a>
+<a name="90"><span class="lineNum">      90 </span>            : #else</a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_mul_u8, npyv256_mul_u8)</span></a>
+<a name="92"><span class="lineNum">      92 </span>            : #endif</a>
+<a name="93"><span class="lineNum">      93 </span>            : </a>
+<a name="94"><span class="lineNum">      94 </span>            : #ifdef NPY_HAVE_AVX512BW</a>
+<a name="95"><span class="lineNum">      95 </span>            :     #define npyv_mul_u16 _mm512_mullo_epi16</a>
+<a name="96"><span class="lineNum">      96 </span>            : #else</a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineNoCov">          0 :     NPYV_IMPL_AVX512_FROM_AVX2_2ARG(npyv_mul_u16, _mm256_mullo_epi16)</span></a>
+<a name="98"><span class="lineNum">      98 </span>            : #endif</a>
+<a name="99"><span class="lineNum">      99 </span>            : #define npyv_mul_s8  npyv_mul_u8</a>
+<a name="100"><span class="lineNum">     100 </span>            : #define npyv_mul_s16 npyv_mul_u16</a>
+<a name="101"><span class="lineNum">     101 </span>            : #define npyv_mul_u32 _mm512_mullo_epi32</a>
+<a name="102"><span class="lineNum">     102 </span>            : #define npyv_mul_s32 _mm512_mullo_epi32</a>
+<a name="103"><span class="lineNum">     103 </span>            : #define npyv_mul_f32 _mm512_mul_ps</a>
+<a name="104"><span class="lineNum">     104 </span>            : #define npyv_mul_f64 _mm512_mul_pd</a>
+<a name="105"><span class="lineNum">     105 </span>            : </a>
+<a name="106"><span class="lineNum">     106 </span>            : // saturated</a>
+<a name="107"><span class="lineNum">     107 </span>            : // TODO: after implement Packs intrins</a>
+<a name="108"><span class="lineNum">     108 </span>            : </a>
+<a name="109"><span class="lineNum">     109 </span>            : /***************************</a>
+<a name="110"><span class="lineNum">     110 </span>            :  * Integer Division</a>
+<a name="111"><span class="lineNum">     111 </span>            :  ***************************/</a>
+<a name="112"><span class="lineNum">     112 </span>            : // See simd/intdiv.h for more clarification</a>
+<a name="113"><span class="lineNum">     113 </span>            : // divide each unsigned 8-bit element by divisor</a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 : NPY_FINLINE npyv_u8 npyv_divc_u8(npyv_u8 a, const npyv_u8x3 divisor)</span></a>
+<a name="115"><span class="lineNum">     115 </span>            : {</a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 :     const __m128i shf1  = _mm512_castsi512_si128(divisor.val[1]);</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 :     const __m128i shf2  = _mm512_castsi512_si128(divisor.val[2]);</span></a>
+<a name="118"><span class="lineNum">     118 </span>            : #ifdef NPY_HAVE_AVX512BW</a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineNoCov">          0 :     const __m512i bmask = _mm512_set1_epi32(0x00FF00FF);</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :     const __m512i shf1b = _mm512_set1_epi8(0xFFU &gt;&gt; _mm_cvtsi128_si32(shf1));</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :     const __m512i shf2b = _mm512_set1_epi8(0xFFU &gt;&gt; _mm_cvtsi128_si32(shf2));</span></a>
+<a name="122"><span class="lineNum">     122 </span>            :     // high part of unsigned multiplication</a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :     __m512i mulhi_even  = _mm512_mullo_epi16(_mm512_and_si512(a, bmask), divisor.val[0]);</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :             mulhi_even  = _mm512_srli_epi16(mulhi_even, 8);</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :     __m512i mulhi_odd   = _mm512_mullo_epi16(_mm512_srli_epi16(a, 8), divisor.val[0]);</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :     __m512i mulhi       = _mm512_mask_mov_epi8(mulhi_even, 0xAAAAAAAAAAAAAAAA, mulhi_odd);</span></a>
+<a name="127"><span class="lineNum">     127 </span>            :     // floor(a/d)       = (mulhi + ((a-mulhi) &gt;&gt; sh1)) &gt;&gt; sh2</a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :     __m512i q           = _mm512_sub_epi8(a, mulhi);</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :             q           = _mm512_and_si512(_mm512_srl_epi16(q, shf1), shf1b);</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :             q           = _mm512_add_epi8(mulhi, q);</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :             q           = _mm512_and_si512(_mm512_srl_epi16(q, shf2), shf2b);</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :     return  q;</span></a>
+<a name="133"><span class="lineNum">     133 </span>            : #else</a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :     const __m256i bmask = _mm256_set1_epi32(0x00FF00FF);</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :     const __m256i shf1b = _mm256_set1_epi8(0xFFU &gt;&gt; _mm_cvtsi128_si32(shf1));</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :     const __m256i shf2b = _mm256_set1_epi8(0xFFU &gt;&gt; _mm_cvtsi128_si32(shf2));</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :     const __m512i shf2bw= npyv512_combine_si256(shf2b, shf2b);</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     const __m256i mulc  = npyv512_lower_si256(divisor.val[0]);</span></a>
+<a name="139"><span class="lineNum">     139 </span>            :     //// lower 256-bit</a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :     __m256i lo_a        = npyv512_lower_si256(a);</span></a>
+<a name="141"><span class="lineNum">     141 </span>            :     // high part of unsigned multiplication</a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 :     __m256i mulhi_even  = _mm256_mullo_epi16(_mm256_and_si256(lo_a, bmask), mulc);</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :             mulhi_even  = _mm256_srli_epi16(mulhi_even, 8);</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :     __m256i mulhi_odd   = _mm256_mullo_epi16(_mm256_srli_epi16(lo_a, 8), mulc);</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :     __m256i mulhi       = _mm256_blendv_epi8(mulhi_odd, mulhi_even, bmask);</span></a>
+<a name="146"><span class="lineNum">     146 </span>            :     // floor(a/d)       = (mulhi + ((a-mulhi) &gt;&gt; sh1)) &gt;&gt; sh2</a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :     __m256i lo_q        = _mm256_sub_epi8(lo_a, mulhi);</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :             lo_q        = _mm256_and_si256(_mm256_srl_epi16(lo_q, shf1), shf1b);</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineNoCov">          0 :             lo_q        = _mm256_add_epi8(mulhi, lo_q);</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :             lo_q        = _mm256_srl_epi16(lo_q, shf2); // no sign extend</span></a>
+<a name="151"><span class="lineNum">     151 </span>            : </a>
+<a name="152"><span class="lineNum">     152 </span>            :     //// higher 256-bit</a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :     __m256i hi_a        = npyv512_higher_si256(a);</span></a>
+<a name="154"><span class="lineNum">     154 </span>            :     // high part of unsigned multiplication</a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :             mulhi_even  = _mm256_mullo_epi16(_mm256_and_si256(hi_a, bmask), mulc);</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :             mulhi_even  = _mm256_srli_epi16(mulhi_even, 8);</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :             mulhi_odd   = _mm256_mullo_epi16(_mm256_srli_epi16(hi_a, 8), mulc);</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :             mulhi       = _mm256_blendv_epi8(mulhi_odd, mulhi_even, bmask);</span></a>
+<a name="159"><span class="lineNum">     159 </span>            :     // floor(a/d)       = (mulhi + ((a-mulhi) &gt;&gt; sh1)) &gt;&gt; sh2</a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     __m256i hi_q        = _mm256_sub_epi8(hi_a, mulhi);</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :             hi_q        = _mm256_and_si256(_mm256_srl_epi16(hi_q, shf1), shf1b);</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :             hi_q        = _mm256_add_epi8(mulhi, hi_q);</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :             hi_q        = _mm256_srl_epi16(hi_q, shf2); // no sign extend</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :     return _mm512_and_si512(npyv512_combine_si256(lo_q, hi_q), shf2bw); // extend sign</span></a>
+<a name="165"><span class="lineNum">     165 </span>            : #endif</a>
+<a name="166"><span class="lineNum">     166 </span>            : }</a>
+<a name="167"><span class="lineNum">     167 </span>            : // divide each signed 8-bit element by divisor (round towards zero)</a>
+<a name="168"><span class="lineNum">     168 </span>            : NPY_FINLINE npyv_s16 npyv_divc_s16(npyv_s16 a, const npyv_s16x3 divisor);</a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 : NPY_FINLINE npyv_s8 npyv_divc_s8(npyv_s8 a, const npyv_s8x3 divisor)</span></a>
+<a name="170"><span class="lineNum">     170 </span>            : {</a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :     __m512i divc_even = npyv_divc_s16(npyv_shri_s16(npyv_shli_s16(a, 8), 8), divisor);</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :     __m512i divc_odd  = npyv_divc_s16(npyv_shri_s16(a, 8), divisor);</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :             divc_odd  = npyv_shli_s16(divc_odd, 8);</span></a>
+<a name="174"><span class="lineNum">     174 </span>            : #ifdef NPY_HAVE_AVX512BW</a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :     return _mm512_mask_mov_epi8(divc_even, 0xAAAAAAAAAAAAAAAA, divc_odd);</span></a>
+<a name="176"><span class="lineNum">     176 </span>            : #else</a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     const __m512i bmask = _mm512_set1_epi32(0x00FF00FF);</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :     return npyv_select_u8(bmask, divc_even, divc_odd);</span></a>
+<a name="179"><span class="lineNum">     179 </span>            : #endif</a>
+<a name="180"><span class="lineNum">     180 </span>            : }</a>
+<a name="181"><span class="lineNum">     181 </span>            : // divide each unsigned 16-bit element by divisor</a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 : NPY_FINLINE npyv_u16 npyv_divc_u16(npyv_u16 a, const npyv_u16x3 divisor)</span></a>
+<a name="183"><span class="lineNum">     183 </span>            : {</a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :     const __m128i shf1 = _mm512_castsi512_si128(divisor.val[1]);</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :     const __m128i shf2 = _mm512_castsi512_si128(divisor.val[2]);</span></a>
+<a name="186"><span class="lineNum">     186 </span>            :     // floor(a/d)      = (mulhi + ((a-mulhi) &gt;&gt; sh1)) &gt;&gt; sh2</a>
+<a name="187"><span class="lineNum">     187 </span>            :     #define NPYV__DIVC_U16(RLEN, A, MULC, R)      \</a>
+<a name="188"><span class="lineNum">     188 </span>            :         mulhi = _mm##RLEN##_mulhi_epu16(A, MULC); \</a>
+<a name="189"><span class="lineNum">     189 </span>            :         R     = _mm##RLEN##_sub_epi16(A, mulhi);  \</a>
+<a name="190"><span class="lineNum">     190 </span>            :         R     = _mm##RLEN##_srl_epi16(R, shf1);   \</a>
+<a name="191"><span class="lineNum">     191 </span>            :         R     = _mm##RLEN##_add_epi16(mulhi, R);  \</a>
+<a name="192"><span class="lineNum">     192 </span>            :         R     = _mm##RLEN##_srl_epi16(R, shf2);</a>
+<a name="193"><span class="lineNum">     193 </span>            : </a>
+<a name="194"><span class="lineNum">     194 </span>            : #ifdef NPY_HAVE_AVX512BW</a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :     __m512i mulhi, q;</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :     NPYV__DIVC_U16(512, a, divisor.val[0], q)</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :     return q;</span></a>
+<a name="198"><span class="lineNum">     198 </span>            : #else</a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :     const __m256i m = npyv512_lower_si256(divisor.val[0]);</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :     __m256i lo_a    = npyv512_lower_si256(a);</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :     __m256i hi_a    = npyv512_higher_si256(a);</span></a>
+<a name="202"><span class="lineNum">     202 </span>            : </a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :     __m256i mulhi, lo_q, hi_q;</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :     NPYV__DIVC_U16(256, lo_a, m, lo_q)</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :     NPYV__DIVC_U16(256, hi_a, m, hi_q)</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :     return npyv512_combine_si256(lo_q, hi_q);</span></a>
+<a name="207"><span class="lineNum">     207 </span>            : #endif</a>
+<a name="208"><span class="lineNum">     208 </span>            :     #undef NPYV__DIVC_U16</a>
+<a name="209"><span class="lineNum">     209 </span>            : }</a>
+<a name="210"><span class="lineNum">     210 </span>            : // divide each signed 16-bit element by divisor (round towards zero)</a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 : NPY_FINLINE npyv_s16 npyv_divc_s16(npyv_s16 a, const npyv_s16x3 divisor)</span></a>
+<a name="212"><span class="lineNum">     212 </span>            : {</a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :     const __m128i shf1 = _mm512_castsi512_si128(divisor.val[1]);</span></a>
+<a name="214"><span class="lineNum">     214 </span>            :     // q               = ((a + mulhi) &gt;&gt; sh1) - XSIGN(a)</a>
+<a name="215"><span class="lineNum">     215 </span>            :     // trunc(a/d)      = (q ^ dsign) - dsign</a>
+<a name="216"><span class="lineNum">     216 </span>            :     #define NPYV__DIVC_S16(RLEN, A, MULC, DSIGN, R)                       \</a>
+<a name="217"><span class="lineNum">     217 </span>            :         mulhi  = _mm##RLEN##_mulhi_epi16(A, MULC);                        \</a>
+<a name="218"><span class="lineNum">     218 </span>            :         R = _mm##RLEN##_sra_epi16(_mm##RLEN##_add_epi16(A, mulhi), shf1); \</a>
+<a name="219"><span class="lineNum">     219 </span>            :         R = _mm##RLEN##_sub_epi16(R, _mm##RLEN##_srai_epi16(A, 15));      \</a>
+<a name="220"><span class="lineNum">     220 </span>            :         R = _mm##RLEN##_sub_epi16(_mm##RLEN##_xor_si##RLEN(R, DSIGN), DSIGN);</a>
+<a name="221"><span class="lineNum">     221 </span>            : </a>
+<a name="222"><span class="lineNum">     222 </span>            : #ifdef NPY_HAVE_AVX512BW</a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :     __m512i mulhi, q;</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 :     NPYV__DIVC_S16(512, a, divisor.val[0], divisor.val[2], q)</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :     return q;</span></a>
+<a name="226"><span class="lineNum">     226 </span>            : #else</a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :     const __m256i m     = npyv512_lower_si256(divisor.val[0]);</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 :     const __m256i dsign = npyv512_lower_si256(divisor.val[2]);</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :     __m256i lo_a        = npyv512_lower_si256(a);</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :     __m256i hi_a        = npyv512_higher_si256(a);</span></a>
+<a name="231"><span class="lineNum">     231 </span>            : </a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :     __m256i mulhi, lo_q, hi_q;</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :     NPYV__DIVC_S16(256, lo_a, m, dsign, lo_q)</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :     NPYV__DIVC_S16(256, hi_a, m, dsign, hi_q)</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :     return npyv512_combine_si256(lo_q, hi_q);</span></a>
+<a name="236"><span class="lineNum">     236 </span>            : #endif</a>
+<a name="237"><span class="lineNum">     237 </span>            :     #undef NPYV__DIVC_S16</a>
+<a name="238"><span class="lineNum">     238 </span>            : }</a>
+<a name="239"><span class="lineNum">     239 </span>            : // divide each unsigned 32-bit element by divisor</a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 : NPY_FINLINE npyv_u32 npyv_divc_u32(npyv_u32 a, const npyv_u32x3 divisor)</span></a>
+<a name="241"><span class="lineNum">     241 </span>            : {</a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :     const __m128i shf1 = _mm512_castsi512_si128(divisor.val[1]);</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :     const __m128i shf2 = _mm512_castsi512_si128(divisor.val[2]);</span></a>
+<a name="244"><span class="lineNum">     244 </span>            :     // high part of unsigned multiplication</a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :     __m512i mulhi_even = _mm512_srli_epi64(_mm512_mul_epu32(a, divisor.val[0]), 32);</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :     __m512i mulhi_odd  = _mm512_mul_epu32(_mm512_srli_epi64(a, 32), divisor.val[0]);</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :     __m512i mulhi      = _mm512_mask_mov_epi32(mulhi_even, 0xAAAA, mulhi_odd);</span></a>
+<a name="248"><span class="lineNum">     248 </span>            :     // floor(a/d)      = (mulhi + ((a-mulhi) &gt;&gt; sh1)) &gt;&gt; sh2</a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineNoCov">          0 :     __m512i q          = _mm512_sub_epi32(a, mulhi);</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 :             q          = _mm512_srl_epi32(q, shf1);</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineNoCov">          0 :             q          = _mm512_add_epi32(mulhi, q);</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :             q          = _mm512_srl_epi32(q, shf2);</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 :     return  q;</span></a>
+<a name="254"><span class="lineNum">     254 </span>            : }</a>
+<a name="255"><span class="lineNum">     255 </span>            : // divide each signed 32-bit element by divisor (round towards zero)</a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineNoCov">          0 : NPY_FINLINE npyv_s32 npyv_divc_s32(npyv_s32 a, const npyv_s32x3 divisor)</span></a>
+<a name="257"><span class="lineNum">     257 </span>            : {</a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 :     const __m128i shf1 = _mm512_castsi512_si128(divisor.val[1]);</span></a>
+<a name="259"><span class="lineNum">     259 </span>            :     // high part of signed multiplication</a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineNoCov">          0 :     __m512i mulhi_even = _mm512_srli_epi64(_mm512_mul_epi32(a, divisor.val[0]), 32);</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 :     __m512i mulhi_odd  = _mm512_mul_epi32(_mm512_srli_epi64(a, 32), divisor.val[0]);</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :     __m512i mulhi      = _mm512_mask_mov_epi32(mulhi_even, 0xAAAA, mulhi_odd);</span></a>
+<a name="263"><span class="lineNum">     263 </span>            :     // q               = ((a + mulhi) &gt;&gt; sh1) - XSIGN(a)</a>
+<a name="264"><span class="lineNum">     264 </span>            :     // trunc(a/d)      = (q ^ dsign) - dsign</a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :     __m512i q          = _mm512_sra_epi32(_mm512_add_epi32(a, mulhi), shf1);</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 :             q          = _mm512_sub_epi32(q, _mm512_srai_epi32(a, 31));</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineNoCov">          0 :             q          = _mm512_sub_epi32(_mm512_xor_si512(q, divisor.val[2]), divisor.val[2]);</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :     return  q;</span></a>
+<a name="269"><span class="lineNum">     269 </span>            : }</a>
+<a name="270"><span class="lineNum">     270 </span>            : // returns the high 64 bits of unsigned 64-bit multiplication</a>
+<a name="271"><span class="lineNum">     271 </span>            : // xref https://stackoverflow.com/a/28827013</a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 : NPY_FINLINE npyv_u64 npyv__mullhi_u64(npyv_u64 a, npyv_u64 b)</span></a>
+<a name="273"><span class="lineNum">     273 </span>            : {</a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :     __m512i lomask = npyv_setall_s64(0xffffffff);</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineNoCov">          0 :     __m512i a_hi   = _mm512_srli_epi64(a, 32);        // a0l, a0h, a1l, a1h</span></a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 :     __m512i b_hi   = _mm512_srli_epi64(b, 32);        // b0l, b0h, b1l, b1h</span></a>
+<a name="277"><span class="lineNum">     277 </span>            :     // compute partial products</a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 :     __m512i w0     = _mm512_mul_epu32(a, b);          // a0l*b0l, a1l*b1l</span></a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 :     __m512i w1     = _mm512_mul_epu32(a, b_hi);       // a0l*b0h, a1l*b1h</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :     __m512i w2     = _mm512_mul_epu32(a_hi, b);       // a0h*b0l, a1h*b0l</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 :     __m512i w3     = _mm512_mul_epu32(a_hi, b_hi);    // a0h*b0h, a1h*b1h</span></a>
+<a name="282"><span class="lineNum">     282 </span>            :     // sum partial products</a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineNoCov">          0 :     __m512i w0h    = _mm512_srli_epi64(w0, 32);</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :     __m512i s1     = _mm512_add_epi64(w1, w0h);</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :     __m512i s1l    = _mm512_and_si512(s1, lomask);</span></a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :     __m512i s1h    = _mm512_srli_epi64(s1, 32);</span></a>
+<a name="287"><span class="lineNum">     287 </span>            : </a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :     __m512i s2     = _mm512_add_epi64(w2, s1l);</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :     __m512i s2h    = _mm512_srli_epi64(s2, 32);</span></a>
+<a name="290"><span class="lineNum">     290 </span>            : </a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :     __m512i hi     = _mm512_add_epi64(w3, s1h);</span></a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :             hi     = _mm512_add_epi64(hi, s2h);</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :     return hi;</span></a>
+<a name="294"><span class="lineNum">     294 </span>            : }</a>
+<a name="295"><span class="lineNum">     295 </span>            : // divide each unsigned 64-bit element by a divisor</a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 : NPY_FINLINE npyv_u64 npyv_divc_u64(npyv_u64 a, const npyv_u64x3 divisor)</span></a>
+<a name="297"><span class="lineNum">     297 </span>            : {</a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :     const __m128i shf1 = _mm512_castsi512_si128(divisor.val[1]);</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 :     const __m128i shf2 = _mm512_castsi512_si128(divisor.val[2]);</span></a>
+<a name="300"><span class="lineNum">     300 </span>            :     // high part of unsigned multiplication</a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :     __m512i mulhi      = npyv__mullhi_u64(a, divisor.val[0]);</span></a>
+<a name="302"><span class="lineNum">     302 </span>            :     // floor(a/d)      = (mulhi + ((a-mulhi) &gt;&gt; sh1)) &gt;&gt; sh2</a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 :     __m512i q          = _mm512_sub_epi64(a, mulhi);</span></a>
+<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 :             q          = _mm512_srl_epi64(q, shf1);</span></a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :             q          = _mm512_add_epi64(mulhi, q);</span></a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :             q          = _mm512_srl_epi64(q, shf2);</span></a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :     return  q;</span></a>
+<a name="308"><span class="lineNum">     308 </span>            : }</a>
+<a name="309"><span class="lineNum">     309 </span>            : // divide each unsigned 64-bit element by a divisor (round towards zero)</a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 : NPY_FINLINE npyv_s64 npyv_divc_s64(npyv_s64 a, const npyv_s64x3 divisor)</span></a>
+<a name="311"><span class="lineNum">     311 </span>            : {</a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 :     const __m128i shf1 = _mm512_castsi512_si128(divisor.val[1]);</span></a>
+<a name="313"><span class="lineNum">     313 </span>            :     // high part of unsigned multiplication</a>
+<a name="314"><span class="lineNum">     314 </span><span class="lineNoCov">          0 :     __m512i mulhi      = npyv__mullhi_u64(a, divisor.val[0]);</span></a>
+<a name="315"><span class="lineNum">     315 </span>            :     // convert unsigned to signed high multiplication</a>
+<a name="316"><span class="lineNum">     316 </span>            :     // mulhi - ((a &lt; 0) ? m : 0) - ((m &lt; 0) ? a : 0);</a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :     __m512i asign      = _mm512_srai_epi64(a, 63);</span></a>
+<a name="318"><span class="lineNum">     318 </span><span class="lineNoCov">          0 :     __m512i msign      = _mm512_srai_epi64(divisor.val[0], 63);</span></a>
+<a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 :     __m512i m_asign    = _mm512_and_si512(divisor.val[0], asign);</span></a>
+<a name="320"><span class="lineNum">     320 </span><span class="lineNoCov">          0 :     __m512i a_msign    = _mm512_and_si512(a, msign);</span></a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 :             mulhi      = _mm512_sub_epi64(mulhi, m_asign);</span></a>
+<a name="322"><span class="lineNum">     322 </span><span class="lineNoCov">          0 :             mulhi      = _mm512_sub_epi64(mulhi, a_msign);</span></a>
+<a name="323"><span class="lineNum">     323 </span>            :     // q               = ((a + mulhi) &gt;&gt; sh1) - XSIGN(a)</a>
+<a name="324"><span class="lineNum">     324 </span>            :     // trunc(a/d)      = (q ^ dsign) - dsign</a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineNoCov">          0 :     __m512i q          = _mm512_sra_epi64(_mm512_add_epi64(a, mulhi), shf1);</span></a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 :             q          = _mm512_sub_epi64(q, asign);</span></a>
+<a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 :             q          = _mm512_sub_epi64(_mm512_xor_si512(q, divisor.val[2]), divisor.val[2]);</span></a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :     return  q;</span></a>
+<a name="329"><span class="lineNum">     329 </span>            : }</a>
+<a name="330"><span class="lineNum">     330 </span>            : /***************************</a>
+<a name="331"><span class="lineNum">     331 </span>            :  * Division</a>
+<a name="332"><span class="lineNum">     332 </span>            :  ***************************/</a>
+<a name="333"><span class="lineNum">     333 </span>            : // TODO: emulate integer division</a>
+<a name="334"><span class="lineNum">     334 </span>            : #define npyv_div_f32 _mm512_div_ps</a>
+<a name="335"><span class="lineNum">     335 </span>            : #define npyv_div_f64 _mm512_div_pd</a>
+<a name="336"><span class="lineNum">     336 </span>            : </a>
+<a name="337"><span class="lineNum">     337 </span>            : /***************************</a>
+<a name="338"><span class="lineNum">     338 </span>            :  * FUSED</a>
+<a name="339"><span class="lineNum">     339 </span>            :  ***************************/</a>
+<a name="340"><span class="lineNum">     340 </span>            : // multiply and add, a*b + c</a>
+<a name="341"><span class="lineNum">     341 </span>            : #define npyv_muladd_f32 _mm512_fmadd_ps</a>
+<a name="342"><span class="lineNum">     342 </span>            : #define npyv_muladd_f64 _mm512_fmadd_pd</a>
+<a name="343"><span class="lineNum">     343 </span>            : // multiply and subtract, a*b - c</a>
+<a name="344"><span class="lineNum">     344 </span>            : #define npyv_mulsub_f32 _mm512_fmsub_ps</a>
+<a name="345"><span class="lineNum">     345 </span>            : #define npyv_mulsub_f64 _mm512_fmsub_pd</a>
+<a name="346"><span class="lineNum">     346 </span>            : // negate multiply and add, -(a*b) + c</a>
+<a name="347"><span class="lineNum">     347 </span>            : #define npyv_nmuladd_f32 _mm512_fnmadd_ps</a>
+<a name="348"><span class="lineNum">     348 </span>            : #define npyv_nmuladd_f64 _mm512_fnmadd_pd</a>
+<a name="349"><span class="lineNum">     349 </span>            : // negate multiply and subtract, -(a*b) - c</a>
+<a name="350"><span class="lineNum">     350 </span>            : #define npyv_nmulsub_f32 _mm512_fnmsub_ps</a>
+<a name="351"><span class="lineNum">     351 </span>            : #define npyv_nmulsub_f64 _mm512_fnmsub_pd</a>
+<a name="352"><span class="lineNum">     352 </span>            : </a>
+<a name="353"><span class="lineNum">     353 </span>            : /***************************</a>
+<a name="354"><span class="lineNum">     354 </span>            :  * Summation: Calculates the sum of all vector elements.</a>
+<a name="355"><span class="lineNum">     355 </span>            :  * there are three ways to implement reduce sum for AVX512:</a>
+<a name="356"><span class="lineNum">     356 </span>            :  * 1- split(256) /add /split(128) /add /hadd /hadd /extract</a>
+<a name="357"><span class="lineNum">     357 </span>            :  * 2- shuff(cross) /add /shuff(cross) /add /shuff /add /shuff /add /extract</a>
+<a name="358"><span class="lineNum">     358 </span>            :  * 3- _mm512_reduce_add_ps/pd</a>
+<a name="359"><span class="lineNum">     359 </span>            :  * The first one is been widely used by many projects</a>
+<a name="360"><span class="lineNum">     360 </span>            :  *</a>
+<a name="361"><span class="lineNum">     361 </span>            :  * the second one is used by Intel Compiler, maybe because the</a>
+<a name="362"><span class="lineNum">     362 </span>            :  * latency of hadd increased by (2-3) starting from Skylake-X which makes two</a>
+<a name="363"><span class="lineNum">     363 </span>            :  * extra shuffles(non-cross) cheaper. check https://godbolt.org/z/s3G9Er for more info.</a>
+<a name="364"><span class="lineNum">     364 </span>            :  *</a>
+<a name="365"><span class="lineNum">     365 </span>            :  * The third one is almost the same as the second one but only works for</a>
+<a name="366"><span class="lineNum">     366 </span>            :  * intel compiler/GCC 7.1/Clang 4, we still need to support older GCC.</a>
+<a name="367"><span class="lineNum">     367 </span>            :  ***************************/</a>
+<a name="368"><span class="lineNum">     368 </span>            : // reduce sum across vector</a>
+<a name="369"><span class="lineNum">     369 </span>            : #ifdef NPY_HAVE_AVX512F_REDUCE</a>
+<a name="370"><span class="lineNum">     370 </span>            :     #define npyv_sum_u32 _mm512_reduce_add_epi32</a>
+<a name="371"><span class="lineNum">     371 </span>            :     #define npyv_sum_u64 _mm512_reduce_add_epi64</a>
+<a name="372"><span class="lineNum">     372 </span>            :     #define npyv_sum_f32 _mm512_reduce_add_ps</a>
+<a name="373"><span class="lineNum">     373 </span>            :     #define npyv_sum_f64 _mm512_reduce_add_pd</a>
+<a name="374"><span class="lineNum">     374 </span>            : #else</a>
+<a name="375"><span class="lineNum">     375 </span>            :     NPY_FINLINE npy_uint32 npyv_sum_u32(npyv_u32 a)</a>
+<a name="376"><span class="lineNum">     376 </span>            :     {</a>
+<a name="377"><span class="lineNum">     377 </span>            :         __m256i half = _mm256_add_epi32(npyv512_lower_si256(a), npyv512_higher_si256(a));</a>
+<a name="378"><span class="lineNum">     378 </span>            :         __m128i quarter = _mm_add_epi32(_mm256_castsi256_si128(half), _mm256_extracti128_si256(half, 1));</a>
+<a name="379"><span class="lineNum">     379 </span>            :         quarter = _mm_hadd_epi32(quarter, quarter);</a>
+<a name="380"><span class="lineNum">     380 </span>            :         return _mm_cvtsi128_si32(_mm_hadd_epi32(quarter, quarter));</a>
+<a name="381"><span class="lineNum">     381 </span>            :     }</a>
+<a name="382"><span class="lineNum">     382 </span>            : </a>
+<a name="383"><span class="lineNum">     383 </span>            :     NPY_FINLINE npy_uint64 npyv_sum_u64(npyv_u64 a)</a>
+<a name="384"><span class="lineNum">     384 </span>            :     {</a>
+<a name="385"><span class="lineNum">     385 </span>            :         __m256i four = _mm256_add_epi64(npyv512_lower_si256(a), npyv512_higher_si256(a));</a>
+<a name="386"><span class="lineNum">     386 </span>            :         __m256i two = _mm256_add_epi64(four, _mm256_shuffle_epi32(four, _MM_SHUFFLE(1, 0, 3, 2)));</a>
+<a name="387"><span class="lineNum">     387 </span>            :         __m128i one = _mm_add_epi64(_mm256_castsi256_si128(two), _mm256_extracti128_si256(two, 1));</a>
+<a name="388"><span class="lineNum">     388 </span>            :         return (npy_uint64)npyv128_cvtsi128_si64(one);</a>
+<a name="389"><span class="lineNum">     389 </span>            :     }</a>
+<a name="390"><span class="lineNum">     390 </span>            : </a>
+<a name="391"><span class="lineNum">     391 </span>            :     NPY_FINLINE float npyv_sum_f32(npyv_f32 a)</a>
+<a name="392"><span class="lineNum">     392 </span>            :     {</a>
+<a name="393"><span class="lineNum">     393 </span>            :         __m512 h64   = _mm512_shuffle_f32x4(a, a, _MM_SHUFFLE(3, 2, 3, 2));</a>
+<a name="394"><span class="lineNum">     394 </span>            :         __m512 sum32 = _mm512_add_ps(a, h64);</a>
+<a name="395"><span class="lineNum">     395 </span>            :         __m512 h32   = _mm512_shuffle_f32x4(sum32, sum32, _MM_SHUFFLE(1, 0, 3, 2));</a>
+<a name="396"><span class="lineNum">     396 </span>            :         __m512 sum16 = _mm512_add_ps(sum32, h32);</a>
+<a name="397"><span class="lineNum">     397 </span>            :         __m512 h16   = _mm512_permute_ps(sum16, _MM_SHUFFLE(1, 0, 3, 2));</a>
+<a name="398"><span class="lineNum">     398 </span>            :         __m512 sum8  = _mm512_add_ps(sum16, h16);</a>
+<a name="399"><span class="lineNum">     399 </span>            :         __m512 h4    = _mm512_permute_ps(sum8, _MM_SHUFFLE(2, 3, 0, 1));</a>
+<a name="400"><span class="lineNum">     400 </span>            :         __m512 sum4  = _mm512_add_ps(sum8, h4);</a>
+<a name="401"><span class="lineNum">     401 </span>            :         return _mm_cvtss_f32(_mm512_castps512_ps128(sum4));</a>
+<a name="402"><span class="lineNum">     402 </span>            :     }</a>
+<a name="403"><span class="lineNum">     403 </span>            : </a>
+<a name="404"><span class="lineNum">     404 </span>            :     NPY_FINLINE double npyv_sum_f64(npyv_f64 a)</a>
+<a name="405"><span class="lineNum">     405 </span>            :     {</a>
+<a name="406"><span class="lineNum">     406 </span>            :         __m512d h64   = _mm512_shuffle_f64x2(a, a, _MM_SHUFFLE(3, 2, 3, 2));</a>
+<a name="407"><span class="lineNum">     407 </span>            :         __m512d sum32 = _mm512_add_pd(a, h64);</a>
+<a name="408"><span class="lineNum">     408 </span>            :         __m512d h32   = _mm512_permutex_pd(sum32, _MM_SHUFFLE(1, 0, 3, 2));</a>
+<a name="409"><span class="lineNum">     409 </span>            :         __m512d sum16 = _mm512_add_pd(sum32, h32);</a>
+<a name="410"><span class="lineNum">     410 </span>            :         __m512d h16   = _mm512_permute_pd(sum16, _MM_SHUFFLE(2, 3, 0, 1));</a>
+<a name="411"><span class="lineNum">     411 </span>            :         __m512d sum8  = _mm512_add_pd(sum16, h16);</a>
+<a name="412"><span class="lineNum">     412 </span>            :         return _mm_cvtsd_f64(_mm512_castpd512_pd128(sum8));</a>
+<a name="413"><span class="lineNum">     413 </span>            :     }</a>
+<a name="414"><span class="lineNum">     414 </span>            : #endif</a>
+<a name="415"><span class="lineNum">     415 </span>            : </a>
+<a name="416"><span class="lineNum">     416 </span>            : // expand the source vector and performs sum reduce</a>
+<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 : NPY_FINLINE npy_uint16 npyv_sumup_u8(npyv_u8 a)</span></a>
+<a name="418"><span class="lineNum">     418 </span>            : {</a>
+<a name="419"><span class="lineNum">     419 </span>            : #ifdef NPY_HAVE_AVX512BW</a>
+<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :     __m512i eight = _mm512_sad_epu8(a, _mm512_setzero_si512());</span></a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :     __m256i four  = _mm256_add_epi16(npyv512_lower_si256(eight), npyv512_higher_si256(eight));</span></a>
+<a name="422"><span class="lineNum">     422 </span>            : #else</a>
+<a name="423"><span class="lineNum">     423 </span><span class="lineNoCov">          0 :     __m256i lo_four = _mm256_sad_epu8(npyv512_lower_si256(a), _mm256_setzero_si256());</span></a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :     __m256i hi_four = _mm256_sad_epu8(npyv512_higher_si256(a), _mm256_setzero_si256());</span></a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :     __m256i four    = _mm256_add_epi16(lo_four, hi_four);</span></a>
+<a name="426"><span class="lineNum">     426 </span>            : #endif</a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :     __m128i two     = _mm_add_epi16(_mm256_castsi256_si128(four), _mm256_extracti128_si256(four, 1));</span></a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 :     __m128i one     = _mm_add_epi16(two, _mm_unpackhi_epi64(two, two));</span></a>
+<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :     return (npy_uint16)_mm_cvtsi128_si32(one);</span></a>
+<a name="430"><span class="lineNum">     430 </span>            : }</a>
+<a name="431"><span class="lineNum">     431 </span>            : </a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 : NPY_FINLINE npy_uint32 npyv_sumup_u16(npyv_u16 a)</span></a>
+<a name="433"><span class="lineNum">     433 </span>            : {</a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :     const npyv_u16 even_mask = _mm512_set1_epi32(0x0000FFFF);</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :     __m512i even = _mm512_and_si512(a, even_mask);</span></a>
+<a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 :     __m512i odd  = _mm512_srli_epi32(a, 16);</span></a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :     __m512i ff   = _mm512_add_epi32(even, odd);</span></a>
+<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :     return npyv_sum_u32(ff);</span></a>
+<a name="439"><span class="lineNum">     439 </span>            : }</a>
+<a name="440"><span class="lineNum">     440 </span>            : </a>
+<a name="441"><span class="lineNum">     441 </span>            : #endif // _NPY_SIMD_AVX512_ARITHMETIC_H</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

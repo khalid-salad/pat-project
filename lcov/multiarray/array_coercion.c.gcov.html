@@ -1,0 +1,1608 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.out - multiarray/array_coercion.c</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">multiarray</a> - array_coercion.c<span style="font-size: 80%;"> (source / <a href="array_coercion.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.out</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">463</td>
+            <td class="headerCovTableEntry">500</td>
+            <td class="headerCovTableEntryHi">92.6 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+</td>
+            <td></td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #define NPY_NO_DEPRECATED_API NPY_API_VERSION</a>
+<a name="2"><span class="lineNum">       2 </span>            : #define _UMATHMODULE</a>
+<a name="3"><span class="lineNum">       3 </span>            : #define _MULTIARRAYMODULE</a>
+<a name="4"><span class="lineNum">       4 </span>            : </a>
+<a name="5"><span class="lineNum">       5 </span>            : #include &quot;Python.h&quot;</a>
+<a name="6"><span class="lineNum">       6 </span>            : </a>
+<a name="7"><span class="lineNum">       7 </span>            : #include &quot;numpy/npy_3kcompat.h&quot;</a>
+<a name="8"><span class="lineNum">       8 </span>            : </a>
+<a name="9"><span class="lineNum">       9 </span>            : #include &quot;lowlevel_strided_loops.h&quot;</a>
+<a name="10"><span class="lineNum">      10 </span>            : #include &quot;numpy/arrayobject.h&quot;</a>
+<a name="11"><span class="lineNum">      11 </span>            : </a>
+<a name="12"><span class="lineNum">      12 </span>            : #include &quot;descriptor.h&quot;</a>
+<a name="13"><span class="lineNum">      13 </span>            : #include &quot;convert_datatype.h&quot;</a>
+<a name="14"><span class="lineNum">      14 </span>            : #include &quot;common_dtype.h&quot;</a>
+<a name="15"><span class="lineNum">      15 </span>            : #include &quot;dtypemeta.h&quot;</a>
+<a name="16"><span class="lineNum">      16 </span>            : </a>
+<a name="17"><span class="lineNum">      17 </span>            : #include &quot;array_coercion.h&quot;</a>
+<a name="18"><span class="lineNum">      18 </span>            : #include &quot;ctors.h&quot;</a>
+<a name="19"><span class="lineNum">      19 </span>            : #include &quot;common.h&quot;</a>
+<a name="20"><span class="lineNum">      20 </span>            : #include &quot;_datetime.h&quot;</a>
+<a name="21"><span class="lineNum">      21 </span>            : #include &quot;npy_import.h&quot;</a>
+<a name="22"><span class="lineNum">      22 </span>            : </a>
+<a name="23"><span class="lineNum">      23 </span>            : </a>
+<a name="24"><span class="lineNum">      24 </span>            : /*</a>
+<a name="25"><span class="lineNum">      25 </span>            :  * This file defines helpers for some of the ctors.c functions which</a>
+<a name="26"><span class="lineNum">      26 </span>            :  * create an array from Python sequences and types.</a>
+<a name="27"><span class="lineNum">      27 </span>            :  * When creating an array with ``np.array(...)`` we have to do two main things:</a>
+<a name="28"><span class="lineNum">      28 </span>            :  *</a>
+<a name="29"><span class="lineNum">      29 </span>            :  * 1. Find the exact shape of the resulting array</a>
+<a name="30"><span class="lineNum">      30 </span>            :  * 2. Find the correct dtype of the resulting array.</a>
+<a name="31"><span class="lineNum">      31 </span>            :  *</a>
+<a name="32"><span class="lineNum">      32 </span>            :  * In most cases these two things are can be done in a single processing step.</a>
+<a name="33"><span class="lineNum">      33 </span>            :  * There are in principle three different calls that should be distinguished:</a>
+<a name="34"><span class="lineNum">      34 </span>            :  *</a>
+<a name="35"><span class="lineNum">      35 </span>            :  * 1. The user calls ``np.array(..., dtype=np.dtype(&quot;&lt;f8&quot;))``</a>
+<a name="36"><span class="lineNum">      36 </span>            :  * 2. The user calls ``np.array(..., dtype=&quot;S&quot;)``</a>
+<a name="37"><span class="lineNum">      37 </span>            :  * 3. The user calls ``np.array(...)``</a>
+<a name="38"><span class="lineNum">      38 </span>            :  *</a>
+<a name="39"><span class="lineNum">      39 </span>            :  * In the first case, in principle only the shape needs to be found. In the</a>
+<a name="40"><span class="lineNum">      40 </span>            :  * second case, the DType class (e.g. string) is already known but the DType</a>
+<a name="41"><span class="lineNum">      41 </span>            :  * instance (e.g. length of the string) has to be found.</a>
+<a name="42"><span class="lineNum">      42 </span>            :  * In the last case the DType class needs to be found as well. Note that</a>
+<a name="43"><span class="lineNum">      43 </span>            :  * it is not necessary to find the DType class of the entire array, but</a>
+<a name="44"><span class="lineNum">      44 </span>            :  * the DType class needs to be found for each element before the actual</a>
+<a name="45"><span class="lineNum">      45 </span>            :  * dtype instance can be found.</a>
+<a name="46"><span class="lineNum">      46 </span>            :  *</a>
+<a name="47"><span class="lineNum">      47 </span>            :  * Further, there are a few other things to keep in mind when coercing arrays:</a>
+<a name="48"><span class="lineNum">      48 </span>            :  *</a>
+<a name="49"><span class="lineNum">      49 </span>            :  *   * For UFunc promotion, Python scalars need to be handled specially to</a>
+<a name="50"><span class="lineNum">      50 </span>            :  *     allow value based casting.  This requires python complex/float to</a>
+<a name="51"><span class="lineNum">      51 </span>            :  *     have their own DTypes.</a>
+<a name="52"><span class="lineNum">      52 </span>            :  *   * It is necessary to decide whether or not a sequence is an element.</a>
+<a name="53"><span class="lineNum">      53 </span>            :  *     For example tuples are considered elements for structured dtypes, but</a>
+<a name="54"><span class="lineNum">      54 </span>            :  *     otherwise are considered sequences.</a>
+<a name="55"><span class="lineNum">      55 </span>            :  *     This means that if a dtype is given (either as a class or instance),</a>
+<a name="56"><span class="lineNum">      56 </span>            :  *     it can effect the dimension discovery part.</a>
+<a name="57"><span class="lineNum">      57 </span>            :  *     For the &quot;special&quot; NumPy types structured void and &quot;c&quot; (single character)</a>
+<a name="58"><span class="lineNum">      58 </span>            :  *     this is special cased.  For future user-types, this is currently</a>
+<a name="59"><span class="lineNum">      59 </span>            :  *     handled by providing calling an `is_known_scalar` method.  This method</a>
+<a name="60"><span class="lineNum">      60 </span>            :  *     currently ensures that Python numerical types are handled quickly.</a>
+<a name="61"><span class="lineNum">      61 </span>            :  *</a>
+<a name="62"><span class="lineNum">      62 </span>            :  * In the initial version of this implementation, it is assumed that dtype</a>
+<a name="63"><span class="lineNum">      63 </span>            :  * discovery can be implemented sufficiently fast.  That is, it is not</a>
+<a name="64"><span class="lineNum">      64 </span>            :  * necessary to create fast paths that only find the correct shape e.g. when</a>
+<a name="65"><span class="lineNum">      65 </span>            :  * ``dtype=np.dtype(&quot;f8&quot;)`` is given.</a>
+<a name="66"><span class="lineNum">      66 </span>            :  *</a>
+<a name="67"><span class="lineNum">      67 </span>            :  * The code here avoid multiple conversion of array-like objects (including</a>
+<a name="68"><span class="lineNum">      68 </span>            :  * sequences). These objects are cached after conversion, which will require</a>
+<a name="69"><span class="lineNum">      69 </span>            :  * additional memory, but can drastically speed up coercion from from array</a>
+<a name="70"><span class="lineNum">      70 </span>            :  * like objects.</a>
+<a name="71"><span class="lineNum">      71 </span>            :  */</a>
+<a name="72"><span class="lineNum">      72 </span>            : </a>
+<a name="73"><span class="lineNum">      73 </span>            : </a>
+<a name="74"><span class="lineNum">      74 </span>            : /*</a>
+<a name="75"><span class="lineNum">      75 </span>            :  * For finding a DType quickly from a type, it is easiest to have a</a>
+<a name="76"><span class="lineNum">      76 </span>            :  * a mapping of pytype -&gt; DType.</a>
+<a name="77"><span class="lineNum">      77 </span>            :  * TODO: This mapping means that it is currently impossible to delete a</a>
+<a name="78"><span class="lineNum">      78 </span>            :  *       pair of pytype &lt;-&gt; DType.  To resolve this, it is necessary to</a>
+<a name="79"><span class="lineNum">      79 </span>            :  *       weakly reference the pytype. As long as the pytype is alive, we</a>
+<a name="80"><span class="lineNum">      80 </span>            :  *       want to be able to use `np.array([pytype()])`.</a>
+<a name="81"><span class="lineNum">      81 </span>            :  *       It should be possible to retrofit this without too much trouble</a>
+<a name="82"><span class="lineNum">      82 </span>            :  *       (all type objects support weak references).</a>
+<a name="83"><span class="lineNum">      83 </span>            :  */</a>
+<a name="84"><span class="lineNum">      84 </span>            : PyObject *_global_pytype_to_type_dict = NULL;</a>
+<a name="85"><span class="lineNum">      85 </span>            : </a>
+<a name="86"><span class="lineNum">      86 </span>            : </a>
+<a name="87"><span class="lineNum">      87 </span>            : /* Enum to track or signal some things during dtype and shape discovery */</a>
+<a name="88"><span class="lineNum">      88 </span>            : enum _dtype_discovery_flags {</a>
+<a name="89"><span class="lineNum">      89 </span>            :     FOUND_RAGGED_ARRAY = 1 &lt;&lt; 0,</a>
+<a name="90"><span class="lineNum">      90 </span>            :     GAVE_SUBCLASS_WARNING = 1 &lt;&lt; 1,</a>
+<a name="91"><span class="lineNum">      91 </span>            :     PROMOTION_FAILED = 1 &lt;&lt; 2,</a>
+<a name="92"><span class="lineNum">      92 </span>            :     DISCOVER_STRINGS_AS_SEQUENCES = 1 &lt;&lt; 3,</a>
+<a name="93"><span class="lineNum">      93 </span>            :     DISCOVER_TUPLES_AS_ELEMENTS = 1 &lt;&lt; 4,</a>
+<a name="94"><span class="lineNum">      94 </span>            :     MAX_DIMS_WAS_REACHED = 1 &lt;&lt; 5,</a>
+<a name="95"><span class="lineNum">      95 </span>            :     DESCRIPTOR_WAS_SET = 1 &lt;&lt; 6,</a>
+<a name="96"><span class="lineNum">      96 </span>            : };</a>
+<a name="97"><span class="lineNum">      97 </span>            : </a>
+<a name="98"><span class="lineNum">      98 </span>            : </a>
+<a name="99"><span class="lineNum">      99 </span>            : /**</a>
+<a name="100"><span class="lineNum">     100 </span>            :  * Adds known sequence types to the global type dictionary, note that when</a>
+<a name="101"><span class="lineNum">     101 </span>            :  * a DType is passed in, this lookup may be ignored.</a>
+<a name="102"><span class="lineNum">     102 </span>            :  *</a>
+<a name="103"><span class="lineNum">     103 </span>            :  * @return -1 on error 0 on success</a>
+<a name="104"><span class="lineNum">     104 </span>            :  */</a>
+<a name="105"><span class="lineNum">     105 </span>            : static int</a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">         49 : _prime_global_pytype_to_type_dict(void)</span></a>
+<a name="107"><span class="lineNum">     107 </span>            : {</a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">         49 :     int res;</span></a>
+<a name="109"><span class="lineNum">     109 </span>            : </a>
+<a name="110"><span class="lineNum">     110 </span>            :     /* Add the basic Python sequence types */</a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">         49 :     res = PyDict_SetItem(_global_pytype_to_type_dict,</span></a>
+<a name="112"><span class="lineNum">     112 </span>            :                          (PyObject *)&amp;PyList_Type, Py_None);</a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">         49 :     if (res &lt; 0) {</span></a>
+<a name="114"><span class="lineNum">     114 </span>            :         return -1;</a>
+<a name="115"><span class="lineNum">     115 </span>            :     }</a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">         49 :     res = PyDict_SetItem(_global_pytype_to_type_dict,</span></a>
+<a name="117"><span class="lineNum">     117 </span>            :                          (PyObject *)&amp;PyTuple_Type, Py_None);</a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">         49 :     if (res &lt; 0) {</span></a>
+<a name="119"><span class="lineNum">     119 </span>            :         return -1;</a>
+<a name="120"><span class="lineNum">     120 </span>            :     }</a>
+<a name="121"><span class="lineNum">     121 </span>            :     /* NumPy Arrays are not handled as scalars */</a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">         49 :     res = PyDict_SetItem(_global_pytype_to_type_dict,</span></a>
+<a name="123"><span class="lineNum">     123 </span>            :                          (PyObject *)&amp;PyArray_Type, Py_None);</a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">         49 :     if (res &lt; 0) {</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :         return -1;</span></a>
+<a name="126"><span class="lineNum">     126 </span>            :     }</a>
+<a name="127"><span class="lineNum">     127 </span>            :     return 0;</a>
+<a name="128"><span class="lineNum">     128 </span>            : }</a>
+<a name="129"><span class="lineNum">     129 </span>            : </a>
+<a name="130"><span class="lineNum">     130 </span>            : </a>
+<a name="131"><span class="lineNum">     131 </span>            : /**</a>
+<a name="132"><span class="lineNum">     132 </span>            :  * Add a new mapping from a python type to the DType class. For a user</a>
+<a name="133"><span class="lineNum">     133 </span>            :  * defined legacy dtype, this function does nothing unless the pytype</a>
+<a name="134"><span class="lineNum">     134 </span>            :  * subclass from `np.generic`.</a>
+<a name="135"><span class="lineNum">     135 </span>            :  *</a>
+<a name="136"><span class="lineNum">     136 </span>            :  * This assumes that the DType class is guaranteed to hold on the</a>
+<a name="137"><span class="lineNum">     137 </span>            :  * python type (this assumption is guaranteed).</a>
+<a name="138"><span class="lineNum">     138 </span>            :  * This functionality supercedes ``_typenum_fromtypeobj``.</a>
+<a name="139"><span class="lineNum">     139 </span>            :  *</a>
+<a name="140"><span class="lineNum">     140 </span>            :  * @param DType DType to map the python type to</a>
+<a name="141"><span class="lineNum">     141 </span>            :  * @param pytype Python type to map from</a>
+<a name="142"><span class="lineNum">     142 </span>            :  * @param userdef Whether or not it is user defined. We ensure that user</a>
+<a name="143"><span class="lineNum">     143 </span>            :  *        defined scalars subclass from our scalars (for now).</a>
+<a name="144"><span class="lineNum">     144 </span>            :  */</a>
+<a name="145"><span class="lineNum">     145 </span>            : NPY_NO_EXPORT int</a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">       1472 : _PyArray_MapPyTypeToDType(</span></a>
+<a name="147"><span class="lineNum">     147 </span>            :         PyArray_DTypeMeta *DType, PyTypeObject *pytype, npy_bool userdef)</a>
+<a name="148"><span class="lineNum">     148 </span>            : {</a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">       1472 :     PyObject *Dtype_obj = (PyObject *)DType;</span></a>
+<a name="150"><span class="lineNum">     150 </span>            : </a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">       1472 :     if (userdef &amp;&amp; !PyObject_IsSubclass(</span></a>
+<a name="152"><span class="lineNum">     152 </span>            :                     (PyObject *)pytype, (PyObject *)&amp;PyGenericArrType_Type)) {</a>
+<a name="153"><span class="lineNum">     153 </span>            :         /*</a>
+<a name="154"><span class="lineNum">     154 </span>            :          * We expect that user dtypes (for now) will subclass some numpy</a>
+<a name="155"><span class="lineNum">     155 </span>            :          * scalar class to allow automatic discovery.</a>
+<a name="156"><span class="lineNum">     156 </span>            :          */</a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">          1 :         if (DType-&gt;legacy) {</span></a>
+<a name="158"><span class="lineNum">     158 </span>            :             /*</a>
+<a name="159"><span class="lineNum">     159 </span>            :              * For legacy user dtypes, discovery relied on subclassing, but</a>
+<a name="160"><span class="lineNum">     160 </span>            :              * arbitrary type objects are supported, so do nothing.</a>
+<a name="161"><span class="lineNum">     161 </span>            :              */</a>
+<a name="162"><span class="lineNum">     162 </span>            :             return 0;</a>
+<a name="163"><span class="lineNum">     163 </span>            :         }</a>
+<a name="164"><span class="lineNum">     164 </span>            :         /*</a>
+<a name="165"><span class="lineNum">     165 </span>            :          * We currently enforce that user DTypes subclass from `np.generic`</a>
+<a name="166"><span class="lineNum">     166 </span>            :          * (this should become a `np.generic` base class and may be lifted</a>
+<a name="167"><span class="lineNum">     167 </span>            :          * entirely).</a>
+<a name="168"><span class="lineNum">     168 </span>            :          */</a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :         PyErr_Format(PyExc_RuntimeError,</span></a>
+<a name="170"><span class="lineNum">     170 </span>            :                 &quot;currently it is only possible to register a DType &quot;</a>
+<a name="171"><span class="lineNum">     171 </span>            :                 &quot;for scalars deriving from `np.generic`, got '%S'.&quot;,</a>
+<a name="172"><span class="lineNum">     172 </span>            :                 (PyObject *)pytype);</a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :         return -1;</span></a>
+<a name="174"><span class="lineNum">     174 </span>            :     }</a>
+<a name="175"><span class="lineNum">     175 </span>            : </a>
+<a name="176"><span class="lineNum">     176 </span>            :     /* Create the global dictionary if it does not exist */</a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">       1471 :     if (NPY_UNLIKELY(_global_pytype_to_type_dict == NULL)) {</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">         49 :         _global_pytype_to_type_dict = PyDict_New();</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">         49 :         if (_global_pytype_to_type_dict == NULL) {</span></a>
+<a name="180"><span class="lineNum">     180 </span>            :             return -1;</a>
+<a name="181"><span class="lineNum">     181 </span>            :         }</a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">         49 :         if (_prime_global_pytype_to_type_dict() &lt; 0) {</span></a>
+<a name="183"><span class="lineNum">     183 </span>            :             return -1;</a>
+<a name="184"><span class="lineNum">     184 </span>            :         }</a>
+<a name="185"><span class="lineNum">     185 </span>            :     }</a>
+<a name="186"><span class="lineNum">     186 </span>            : </a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">       1471 :     int res = PyDict_Contains(_global_pytype_to_type_dict, (PyObject *)pytype);</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">       1471 :     if (res &lt; 0) {</span></a>
+<a name="189"><span class="lineNum">     189 </span>            :         return -1;</a>
+<a name="190"><span class="lineNum">     190 </span>            :     }</a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">       1471 :     else if (res) {</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 :         PyErr_SetString(PyExc_RuntimeError,</span></a>
+<a name="193"><span class="lineNum">     193 </span>            :                 &quot;Can only map one python type to DType.&quot;);</a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :         return -1;</span></a>
+<a name="195"><span class="lineNum">     195 </span>            :     }</a>
+<a name="196"><span class="lineNum">     196 </span>            : </a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">       1471 :     return PyDict_SetItem(_global_pytype_to_type_dict,</span></a>
+<a name="198"><span class="lineNum">     198 </span>            :             (PyObject *)pytype, Dtype_obj);</a>
+<a name="199"><span class="lineNum">     199 </span>            : }</a>
+<a name="200"><span class="lineNum">     200 </span>            : </a>
+<a name="201"><span class="lineNum">     201 </span>            : </a>
+<a name="202"><span class="lineNum">     202 </span>            : /**</a>
+<a name="203"><span class="lineNum">     203 </span>            :  * Lookup the DType for a registered known python scalar type.</a>
+<a name="204"><span class="lineNum">     204 </span>            :  *</a>
+<a name="205"><span class="lineNum">     205 </span>            :  * @param pytype Python Type to look up</a>
+<a name="206"><span class="lineNum">     206 </span>            :  * @return DType, None if it a known non-scalar, or NULL if an unknown object.</a>
+<a name="207"><span class="lineNum">     207 </span>            :  */</a>
+<a name="208"><span class="lineNum">     208 </span>            : static NPY_INLINE PyArray_DTypeMeta *</a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">    6742605 : npy_discover_dtype_from_pytype(PyTypeObject *pytype)</span></a>
+<a name="210"><span class="lineNum">     210 </span>            : {</a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">    6742605 :     PyObject *DType;</span></a>
+<a name="212"><span class="lineNum">     212 </span>            : </a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">    6742605 :     if (pytype == &amp;PyArray_Type) {</span></a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineCov">    1431079 :         Py_INCREF(Py_None);</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">    1431079 :         return (PyArray_DTypeMeta *)Py_None;</span></a>
+<a name="216"><span class="lineNum">     216 </span>            :     }</a>
+<a name="217"><span class="lineNum">     217 </span>            : </a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">    5311526 :     DType = PyDict_GetItem(_global_pytype_to_type_dict, (PyObject *)pytype);</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">    5311526 :     if (DType == NULL) {</span></a>
+<a name="220"><span class="lineNum">     220 </span>            :         /* the python type is not known */</a>
+<a name="221"><span class="lineNum">     221 </span>            :         return NULL;</a>
+<a name="222"><span class="lineNum">     222 </span>            :     }</a>
+<a name="223"><span class="lineNum">     223 </span>            : </a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">    5187328 :     Py_INCREF(DType);</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">    5187328 :     if (DType == Py_None) {</span></a>
+<a name="226"><span class="lineNum">     226 </span>            :         return (PyArray_DTypeMeta *)Py_None;</a>
+<a name="227"><span class="lineNum">     227 </span>            :     }</a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">    4761683 :     assert(PyObject_TypeCheck(DType, (PyTypeObject *)&amp;PyArrayDTypeMeta_Type));</span></a>
+<a name="229"><span class="lineNum">     229 </span>            :     return (PyArray_DTypeMeta *)DType;</a>
+<a name="230"><span class="lineNum">     230 </span>            : }</a>
+<a name="231"><span class="lineNum">     231 </span>            : </a>
+<a name="232"><span class="lineNum">     232 </span>            : </a>
+<a name="233"><span class="lineNum">     233 </span>            : /**</a>
+<a name="234"><span class="lineNum">     234 </span>            :  * Find the correct DType class for the given python type. If flags is NULL</a>
+<a name="235"><span class="lineNum">     235 </span>            :  * this is not used to discover a dtype, but only for conversion to an</a>
+<a name="236"><span class="lineNum">     236 </span>            :  * existing dtype. In that case the Python (not NumPy) scalar subclass</a>
+<a name="237"><span class="lineNum">     237 </span>            :  * checks are skipped.</a>
+<a name="238"><span class="lineNum">     238 </span>            :  *</a>
+<a name="239"><span class="lineNum">     239 </span>            :  * @param obj The python object, mainly type(pyobj) is used, the object</a>
+<a name="240"><span class="lineNum">     240 </span>            :  *        is passed to reuse existing code at this time only.</a>
+<a name="241"><span class="lineNum">     241 </span>            :  * @param flags Flags used to know if warnings were already given. If</a>
+<a name="242"><span class="lineNum">     242 </span>            :  *        flags is NULL, this is not</a>
+<a name="243"><span class="lineNum">     243 </span>            :  * @param fixed_DType if not NULL, will be checked first for whether or not</a>
+<a name="244"><span class="lineNum">     244 </span>            :  *        it can/wants to handle the (possible) scalar value.</a>
+<a name="245"><span class="lineNum">     245 </span>            :  * @return New reference to either a DType class, Py_None, or NULL on error.</a>
+<a name="246"><span class="lineNum">     246 </span>            :  */</a>
+<a name="247"><span class="lineNum">     247 </span>            : static NPY_INLINE PyArray_DTypeMeta *</a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">   25748073 : discover_dtype_from_pyobject(</span></a>
+<a name="249"><span class="lineNum">     249 </span>            :         PyObject *obj, enum _dtype_discovery_flags *flags,</a>
+<a name="250"><span class="lineNum">     250 </span>            :         PyArray_DTypeMeta *fixed_DType)</a>
+<a name="251"><span class="lineNum">     251 </span>            : {</a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">   25748073 :     if (fixed_DType != NULL) {</span></a>
+<a name="253"><span class="lineNum">     253 </span>            :         /*</a>
+<a name="254"><span class="lineNum">     254 </span>            :          * Let the given DType handle the discovery.  This is when the</a>
+<a name="255"><span class="lineNum">     255 </span>            :          * scalar-type matches exactly, or the DType signals that it can</a>
+<a name="256"><span class="lineNum">     256 </span>            :          * handle the scalar-type.  (Even if it cannot handle here it may be</a>
+<a name="257"><span class="lineNum">     257 </span>            :          * asked to attempt to do so later, if no other matching DType exists.)</a>
+<a name="258"><span class="lineNum">     258 </span>            :          */</a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineCov">   19883697 :         if ((Py_TYPE(obj) == fixed_DType-&gt;scalar_type) ||</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">   34448584 :                 (fixed_DType-&gt;is_known_scalar_type != NULL &amp;&amp;</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">   17224292 :                  fixed_DType-&gt;is_known_scalar_type(fixed_DType, Py_TYPE(obj)))) {</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">   19005468 :             Py_INCREF(fixed_DType);</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">   19005468 :             return fixed_DType;</span></a>
+<a name="264"><span class="lineNum">     264 </span>            :         }</a>
+<a name="265"><span class="lineNum">     265 </span>            :     }</a>
+<a name="266"><span class="lineNum">     266 </span>            : </a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">    6742605 :     PyArray_DTypeMeta *DType = npy_discover_dtype_from_pytype(Py_TYPE(obj));</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineCov">    6742605 :     if (DType != NULL) {</span></a>
+<a name="269"><span class="lineNum">     269 </span>            :         return DType;</a>
+<a name="270"><span class="lineNum">     270 </span>            :     }</a>
+<a name="271"><span class="lineNum">     271 </span>            :     /*</a>
+<a name="272"><span class="lineNum">     272 </span>            :      * At this point we have not found a clear mapping, but mainly for</a>
+<a name="273"><span class="lineNum">     273 </span>            :      * backward compatibility we have to make some further attempts at</a>
+<a name="274"><span class="lineNum">     274 </span>            :      * interpreting the input as a known scalar type.</a>
+<a name="275"><span class="lineNum">     275 </span>            :      */</a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineCov">     124198 :     PyArray_Descr *legacy_descr;</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">     124198 :     if (PyArray_IsScalar(obj, Generic)) {</span></a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineCov">        135 :         legacy_descr = PyArray_DescrFromScalar(obj);</span></a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineCov">        135 :         if (legacy_descr == NULL) {</span></a>
+<a name="280"><span class="lineNum">     280 </span>            :             return NULL;</a>
+<a name="281"><span class="lineNum">     281 </span>            :         }</a>
+<a name="282"><span class="lineNum">     282 </span>            :     }</a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineCov">     124063 :     else if (flags == NULL) {</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">        875 :         Py_INCREF(Py_None);</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">        875 :         return (PyArray_DTypeMeta *)Py_None;</span></a>
+<a name="286"><span class="lineNum">     286 </span>            :     }</a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">     123188 :     else if (PyBytes_Check(obj)) {</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :         legacy_descr = PyArray_DescrFromType(NPY_BYTE);</span></a>
+<a name="289"><span class="lineNum">     289 </span>            :     }</a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineCov">     123188 :     else if (PyUnicode_Check(obj)) {</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :         legacy_descr = PyArray_DescrFromType(NPY_UNICODE);</span></a>
+<a name="292"><span class="lineNum">     292 </span>            :     }</a>
+<a name="293"><span class="lineNum">     293 </span>            :     else {</a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineCov">     123188 :         legacy_descr = _array_find_python_scalar_type(obj);</span></a>
+<a name="295"><span class="lineNum">     295 </span>            :     }</a>
+<a name="296"><span class="lineNum">     296 </span>            : </a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineCov">     123323 :     if (legacy_descr != NULL) {</span></a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineCov">        141 :         DType = NPY_DTYPE(legacy_descr);</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineCov">        141 :         Py_INCREF(DType);</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineCov">        141 :         Py_DECREF(legacy_descr);</span></a>
+<a name="301"><span class="lineNum">     301 </span>            :         /* TODO: Enable warning about subclass handling */</a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineCov">        141 :         if ((0) &amp;&amp; !((*flags) &amp; GAVE_SUBCLASS_WARNING)) {</span></a>
+<a name="303"><span class="lineNum">     303 </span>            :             if (DEPRECATE_FUTUREWARNING(</a>
+<a name="304"><span class="lineNum">     304 </span>            :                     &quot;in the future NumPy will not automatically find the &quot;</a>
+<a name="305"><span class="lineNum">     305 </span>            :                     &quot;dtype for subclasses of scalars known to NumPy (i.e. &quot;</a>
+<a name="306"><span class="lineNum">     306 </span>            :                     &quot;python types). Use the appropriate `dtype=...` to create &quot;</a>
+<a name="307"><span class="lineNum">     307 </span>            :                     &quot;this array. This will use the `object` dtype or raise &quot;</a>
+<a name="308"><span class="lineNum">     308 </span>            :                     &quot;an error in the future.&quot;) &lt; 0) {</a>
+<a name="309"><span class="lineNum">     309 </span>            :                 return NULL;</a>
+<a name="310"><span class="lineNum">     310 </span>            :             }</a>
+<a name="311"><span class="lineNum">     311 </span>            :             *flags |= GAVE_SUBCLASS_WARNING;</a>
+<a name="312"><span class="lineNum">     312 </span>            :         }</a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineCov">        141 :         return DType;</span></a>
+<a name="314"><span class="lineNum">     314 </span>            :     }</a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineCov">     123182 :     Py_INCREF(Py_None);</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineCov">     123182 :     return (PyArray_DTypeMeta *)Py_None;</span></a>
+<a name="317"><span class="lineNum">     317 </span>            : }</a>
+<a name="318"><span class="lineNum">     318 </span>            : </a>
+<a name="319"><span class="lineNum">     319 </span>            : </a>
+<a name="320"><span class="lineNum">     320 </span>            : /**</a>
+<a name="321"><span class="lineNum">     321 </span>            :  * Discover the correct descriptor from a known DType class and scalar.</a>
+<a name="322"><span class="lineNum">     322 </span>            :  * If the fixed DType can discover a dtype instance/descr all is fine,</a>
+<a name="323"><span class="lineNum">     323 </span>            :  * if it cannot and DType is used instead, a cast will have to be tried.</a>
+<a name="324"><span class="lineNum">     324 </span>            :  *</a>
+<a name="325"><span class="lineNum">     325 </span>            :  * @param fixed_DType A user provided fixed DType, can be NULL</a>
+<a name="326"><span class="lineNum">     326 </span>            :  * @param DType A discovered DType (by discover_dtype_from_pyobject);</a>
+<a name="327"><span class="lineNum">     327 </span>            :  *        this can be identical to `fixed_DType`, if it obj is a</a>
+<a name="328"><span class="lineNum">     328 </span>            :  *        known scalar. Can be `NULL` indicating no known type.</a>
+<a name="329"><span class="lineNum">     329 </span>            :  * @param obj The Python scalar object. At the time of calling this function</a>
+<a name="330"><span class="lineNum">     330 </span>            :  *        it must be known that `obj` should represent a scalar.</a>
+<a name="331"><span class="lineNum">     331 </span>            :  */</a>
+<a name="332"><span class="lineNum">     332 </span>            : static NPY_INLINE PyArray_Descr *</a>
+<a name="333"><span class="lineNum">     333 </span><span class="lineCov">    4866470 : find_scalar_descriptor(</span></a>
+<a name="334"><span class="lineNum">     334 </span>            :         PyArray_DTypeMeta *fixed_DType, PyArray_DTypeMeta *DType,</a>
+<a name="335"><span class="lineNum">     335 </span>            :         PyObject *obj)</a>
+<a name="336"><span class="lineNum">     336 </span>            : {</a>
+<a name="337"><span class="lineNum">     337 </span><span class="lineCov">    4866470 :     PyArray_Descr *descr;</span></a>
+<a name="338"><span class="lineNum">     338 </span>            : </a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineCov">    4866470 :     if (DType == NULL &amp;&amp; fixed_DType == NULL) {</span></a>
+<a name="340"><span class="lineNum">     340 </span>            :         /* No known DType and no fixed one means we go to object. */</a>
+<a name="341"><span class="lineNum">     341 </span><span class="lineCov">     104561 :         return PyArray_DescrFromType(NPY_OBJECT);</span></a>
+<a name="342"><span class="lineNum">     342 </span>            :     }</a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">    4761909 :     else if (DType == NULL) {</span></a>
+<a name="344"><span class="lineNum">     344 </span>            :         /*</a>
+<a name="345"><span class="lineNum">     345 </span>            :          * If no DType is known/found, give the fixed give one a second</a>
+<a name="346"><span class="lineNum">     346 </span>            :          * chance.  This allows for example string, to call `str(obj)` to</a>
+<a name="347"><span class="lineNum">     347 </span>            :          * figure out the length for arbitrary objects.</a>
+<a name="348"><span class="lineNum">     348 </span>            :          */</a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineCov">         68 :         descr = fixed_DType-&gt;discover_descr_from_pyobject(fixed_DType, obj);</span></a>
+<a name="350"><span class="lineNum">     350 </span>            :     }</a>
+<a name="351"><span class="lineNum">     351 </span>            :     else {</a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineCov">    4761841 :         descr = DType-&gt;discover_descr_from_pyobject(DType, obj);</span></a>
+<a name="353"><span class="lineNum">     353 </span>            :     }</a>
+<a name="354"><span class="lineNum">     354 </span><span class="lineCov">    4761909 :     if (descr == NULL) {</span></a>
+<a name="355"><span class="lineNum">     355 </span>            :         return NULL;</a>
+<a name="356"><span class="lineNum">     356 </span>            :     }</a>
+<a name="357"><span class="lineNum">     357 </span><span class="lineCov">    4761894 :     if (fixed_DType == NULL) {</span></a>
+<a name="358"><span class="lineNum">     358 </span>            :         return descr;</a>
+<a name="359"><span class="lineNum">     359 </span>            :     }</a>
+<a name="360"><span class="lineNum">     360 </span>            : </a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineCov">       2836 :     Py_SETREF(descr, PyArray_CastDescrToDType(descr, fixed_DType));</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">       2836 :     return descr;</span></a>
+<a name="363"><span class="lineNum">     363 </span>            : }</a>
+<a name="364"><span class="lineNum">     364 </span>            : </a>
+<a name="365"><span class="lineNum">     365 </span>            : </a>
+<a name="366"><span class="lineNum">     366 </span>            : /**</a>
+<a name="367"><span class="lineNum">     367 </span>            :  * Assign a single element in an array from a python value.</a>
+<a name="368"><span class="lineNum">     368 </span>            :  *</a>
+<a name="369"><span class="lineNum">     369 </span>            :  * The dtypes SETITEM should only be trusted to generally do the right</a>
+<a name="370"><span class="lineNum">     370 </span>            :  * thing if something is known to be a scalar *and* is of a python type known</a>
+<a name="371"><span class="lineNum">     371 </span>            :  * to the DType (which should include all basic Python math types), but in</a>
+<a name="372"><span class="lineNum">     372 </span>            :  * general a cast may be necessary.</a>
+<a name="373"><span class="lineNum">     373 </span>            :  * This function handles the cast, which is for example hit when assigning</a>
+<a name="374"><span class="lineNum">     374 </span>            :  * a float128 to complex128.</a>
+<a name="375"><span class="lineNum">     375 </span>            :  *</a>
+<a name="376"><span class="lineNum">     376 </span>            :  * At this time, this function does not support arrays (historically we</a>
+<a name="377"><span class="lineNum">     377 </span>            :  * mainly supported arrays through `__float__()`, etc.). Such support should</a>
+<a name="378"><span class="lineNum">     378 </span>            :  * possibly be added (although when called from `PyArray_AssignFromCache`</a>
+<a name="379"><span class="lineNum">     379 </span>            :  * the input cannot be an array).</a>
+<a name="380"><span class="lineNum">     380 </span>            :  * Note that this is also problematic for some array-likes, such as</a>
+<a name="381"><span class="lineNum">     381 </span>            :  * `astropy.units.Quantity` and `np.ma.masked`.  These are used to us calling</a>
+<a name="382"><span class="lineNum">     382 </span>            :  * `__float__`/`__int__` for 0-D instances in many cases.</a>
+<a name="383"><span class="lineNum">     383 </span>            :  * Eventually, we may want to define this as wrong: They must use DTypes</a>
+<a name="384"><span class="lineNum">     384 </span>            :  * instead of (only) subclasses.  Until then, here as well as in</a>
+<a name="385"><span class="lineNum">     385 </span>            :  * `PyArray_AssignFromCache` (which already does this), we need to special</a>
+<a name="386"><span class="lineNum">     386 </span>            :  * case 0-D array-likes to behave like arbitrary (unknown!) Python objects.</a>
+<a name="387"><span class="lineNum">     387 </span>            :  *</a>
+<a name="388"><span class="lineNum">     388 </span>            :  * @param descr</a>
+<a name="389"><span class="lineNum">     389 </span>            :  * @param item</a>
+<a name="390"><span class="lineNum">     390 </span>            :  * @param value</a>
+<a name="391"><span class="lineNum">     391 </span>            :  * @return 0 on success -1 on failure.</a>
+<a name="392"><span class="lineNum">     392 </span>            :  */</a>
+<a name="393"><span class="lineNum">     393 </span>            : /*</a>
+<a name="394"><span class="lineNum">     394 </span>            :  * TODO: This function should possibly be public API.</a>
+<a name="395"><span class="lineNum">     395 </span>            :  */</a>
+<a name="396"><span class="lineNum">     396 </span>            : NPY_NO_EXPORT int</a>
+<a name="397"><span class="lineNum">     397 </span><span class="lineCov">   14035417 : PyArray_Pack(PyArray_Descr *descr, char *item, PyObject *value)</span></a>
+<a name="398"><span class="lineNum">     398 </span>            : {</a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineCov">   14035417 :     PyArrayObject_fields arr_fields = {</span></a>
+<a name="400"><span class="lineNum">     400 </span>            :             .flags = NPY_ARRAY_WRITEABLE,  /* assume array is not behaved. */</a>
+<a name="401"><span class="lineNum">     401 </span>            :         };</a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineCov">   14035417 :     Py_SET_TYPE(&amp;arr_fields, &amp;PyArray_Type);</span></a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineCov">   14035417 :     Py_SET_REFCNT(&amp;arr_fields, 1);</span></a>
+<a name="404"><span class="lineNum">     404 </span>            : </a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineCov">   14035417 :     if (NPY_UNLIKELY(descr-&gt;type_num == NPY_OBJECT)) {</span></a>
+<a name="406"><span class="lineNum">     406 </span>            :         /*</a>
+<a name="407"><span class="lineNum">     407 </span>            :          * We always have store objects directly, casting will lose some</a>
+<a name="408"><span class="lineNum">     408 </span>            :          * type information. Any other dtype discards the type information.</a>
+<a name="409"><span class="lineNum">     409 </span>            :          * TODO: For a Categorical[object] this path may be necessary?</a>
+<a name="410"><span class="lineNum">     410 </span>            :          */</a>
+<a name="411"><span class="lineNum">     411 </span><span class="lineCov">     190520 :         arr_fields.descr = descr;</span></a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineCov">     190520 :         return descr-&gt;f-&gt;setitem(value, item, &amp;arr_fields);</span></a>
+<a name="413"><span class="lineNum">     413 </span>            :     }</a>
+<a name="414"><span class="lineNum">     414 </span>            : </a>
+<a name="415"><span class="lineNum">     415 </span>            :     /* discover_dtype_from_pyobject includes a check for is_known_scalar_type */</a>
+<a name="416"><span class="lineNum">     416 </span><span class="lineCov">   27689794 :     PyArray_DTypeMeta *DType = discover_dtype_from_pyobject(</span></a>
+<a name="417"><span class="lineNum">     417 </span><span class="lineCov">   13844897 :             value, NULL, NPY_DTYPE(descr));</span></a>
+<a name="418"><span class="lineNum">     418 </span><span class="lineCov">   13844897 :     if (DType == NULL) {</span></a>
+<a name="419"><span class="lineNum">     419 </span>            :         return -1;</a>
+<a name="420"><span class="lineNum">     420 </span>            :     }</a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineCov">   13844897 :     if (DType == NPY_DTYPE(descr) || DType == (PyArray_DTypeMeta *)Py_None) {</span></a>
+<a name="422"><span class="lineNum">     422 </span>            :         /* We can set the element directly (or at least will try to) */</a>
+<a name="423"><span class="lineNum">     423 </span><span class="lineCov">   13843198 :         Py_XDECREF(DType);</span></a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineCov">   13843198 :         arr_fields.descr = descr;</span></a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineCov">   13843198 :         return descr-&gt;f-&gt;setitem(value, item, &amp;arr_fields);</span></a>
+<a name="426"><span class="lineNum">     426 </span>            :     }</a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineCov">       1699 :     PyArray_Descr *tmp_descr;</span></a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineCov">       1699 :     tmp_descr = DType-&gt;discover_descr_from_pyobject(DType, value);</span></a>
+<a name="429"><span class="lineNum">     429 </span><span class="lineCov">       1699 :     Py_DECREF(DType);</span></a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineCov">       1699 :     if (tmp_descr == NULL) {</span></a>
+<a name="431"><span class="lineNum">     431 </span>            :         return -1;</a>
+<a name="432"><span class="lineNum">     432 </span>            :     }</a>
+<a name="433"><span class="lineNum">     433 </span>            : </a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineCov">       1699 :     char *data = PyObject_Malloc(tmp_descr-&gt;elsize);</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineCov">       1699 :     if (data == NULL) {</span></a>
+<a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 :         PyErr_NoMemory();</span></a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :         Py_DECREF(tmp_descr);</span></a>
+<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :         return -1;</span></a>
+<a name="439"><span class="lineNum">     439 </span>            :     }</a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineCov">       1699 :     if (PyDataType_FLAGCHK(tmp_descr, NPY_NEEDS_INIT)) {</span></a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineCov">          3 :         memset(data, 0, tmp_descr-&gt;elsize);</span></a>
+<a name="442"><span class="lineNum">     442 </span>            :     }</a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineCov">       1699 :     arr_fields.descr = tmp_descr;</span></a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineCov">       1699 :     if (tmp_descr-&gt;f-&gt;setitem(value, data, &amp;arr_fields) &lt; 0) {</span></a>
+<a name="445"><span class="lineNum">     445 </span><span class="lineNoCov">          0 :         PyObject_Free(data);</span></a>
+<a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 :         Py_DECREF(tmp_descr);</span></a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :         return -1;</span></a>
+<a name="448"><span class="lineNum">     448 </span>            :     }</a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineCov">       1699 :     if (PyDataType_REFCHK(tmp_descr)) {</span></a>
+<a name="450"><span class="lineNum">     450 </span>            :         /* We could probably use move-references above */</a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :         PyArray_Item_INCREF(data, tmp_descr);</span></a>
+<a name="452"><span class="lineNum">     452 </span>            :     }</a>
+<a name="453"><span class="lineNum">     453 </span>            : </a>
+<a name="454"><span class="lineNum">     454 </span><span class="lineCov">       1699 :     int res = 0;</span></a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineCov">       1699 :     int needs_api = 0;</span></a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineCov">       1699 :     NPY_cast_info cast_info;</span></a>
+<a name="457"><span class="lineNum">     457 </span><span class="lineCov">       1699 :     if (PyArray_GetDTypeTransferFunction(</span></a>
+<a name="458"><span class="lineNum">     458 </span>            :             0, 0, 0, tmp_descr, descr, 0, &amp;cast_info,</a>
+<a name="459"><span class="lineNum">     459 </span>            :             &amp;needs_api) == NPY_FAIL) {</a>
+<a name="460"><span class="lineNum">     460 </span><span class="lineCov">         51 :         res = -1;</span></a>
+<a name="461"><span class="lineNum">     461 </span><span class="lineCov">         51 :         goto finish;</span></a>
+<a name="462"><span class="lineNum">     462 </span>            :     }</a>
+<a name="463"><span class="lineNum">     463 </span><span class="lineCov">       1648 :     char *args[2] = {data, item};</span></a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineCov">       1648 :     const npy_intp strides[2] = {0, 0};</span></a>
+<a name="465"><span class="lineNum">     465 </span><span class="lineCov">       1648 :     const npy_intp length = 1;</span></a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineCov">       1648 :     if (cast_info.func(&amp;cast_info.context,</span></a>
+<a name="467"><span class="lineNum">     467 </span>            :             args, &amp;length, strides, cast_info.auxdata) &lt; 0) {</a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 :         res = -1;</span></a>
+<a name="469"><span class="lineNum">     469 </span>            :     }</a>
+<a name="470"><span class="lineNum">     470 </span><span class="lineCov">       1648 :     NPY_cast_info_xfree(&amp;cast_info);</span></a>
+<a name="471"><span class="lineNum">     471 </span>            : </a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       1699 :   finish:</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       1699 :     if (PyDataType_REFCHK(tmp_descr)) {</span></a>
+<a name="474"><span class="lineNum">     474 </span>            :         /* We could probably use move-references above */</a>
+<a name="475"><span class="lineNum">     475 </span><span class="lineNoCov">          0 :         PyArray_Item_XDECREF(data, tmp_descr);</span></a>
+<a name="476"><span class="lineNum">     476 </span>            :     }</a>
+<a name="477"><span class="lineNum">     477 </span><span class="lineCov">       1699 :     PyObject_Free(data);</span></a>
+<a name="478"><span class="lineNum">     478 </span><span class="lineCov">       1699 :     Py_DECREF(tmp_descr);</span></a>
+<a name="479"><span class="lineNum">     479 </span>            :     return res;</a>
+<a name="480"><span class="lineNum">     480 </span>            : }</a>
+<a name="481"><span class="lineNum">     481 </span>            : </a>
+<a name="482"><span class="lineNum">     482 </span>            : </a>
+<a name="483"><span class="lineNum">     483 </span>            : static int</a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineCov">   10508304 : update_shape(int curr_ndim, int *max_ndim,</span></a>
+<a name="485"><span class="lineNum">     485 </span>            :              npy_intp out_shape[NPY_MAXDIMS], int new_ndim,</a>
+<a name="486"><span class="lineNum">     486 </span>            :              const npy_intp new_shape[NPY_MAXDIMS], npy_bool sequence,</a>
+<a name="487"><span class="lineNum">     487 </span>            :              enum _dtype_discovery_flags *flags)</a>
+<a name="488"><span class="lineNum">     488 </span>            : {</a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineCov">   10508304 :     int success = 0;  /* unsuccessful if array is ragged */</span></a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineCov">   10508304 :     const npy_bool max_dims_reached = *flags &amp; MAX_DIMS_WAS_REACHED;</span></a>
+<a name="491"><span class="lineNum">     491 </span>            : </a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineCov">   10508304 :     if (curr_ndim + new_ndim &gt; *max_ndim) {</span></a>
+<a name="493"><span class="lineNum">     493 </span><span class="lineCov">         60 :         success = -1;</span></a>
+<a name="494"><span class="lineNum">     494 </span>            :         /* Only update/check as many dims as possible, max_ndim is unchanged */</a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineCov">         60 :         new_ndim = *max_ndim - curr_ndim;</span></a>
+<a name="496"><span class="lineNum">     496 </span>            :     }</a>
+<a name="497"><span class="lineNum">     497 </span><span class="lineCov">   10508244 :     else if (!sequence &amp;&amp; (*max_ndim != curr_ndim + new_ndim)) {</span></a>
+<a name="498"><span class="lineNum">     498 </span>            :         /*</a>
+<a name="499"><span class="lineNum">     499 </span>            :          * Sequences do not update max_ndim, otherwise shrink and check.</a>
+<a name="500"><span class="lineNum">     500 </span>            :          * This is depth first, so if it is already set, `out_shape` is filled.</a>
+<a name="501"><span class="lineNum">     501 </span>            :          */</a>
+<a name="502"><span class="lineNum">     502 </span><span class="lineCov">    3227183 :         *max_ndim = curr_ndim + new_ndim;</span></a>
+<a name="503"><span class="lineNum">     503 </span>            :         /* If a shape was already set, this is also ragged */</a>
+<a name="504"><span class="lineNum">     504 </span><span class="lineCov">    3227183 :         if (max_dims_reached) {</span></a>
+<a name="505"><span class="lineNum">     505 </span><span class="lineCov">         36 :             success = -1;</span></a>
+<a name="506"><span class="lineNum">     506 </span>            :         }</a>
+<a name="507"><span class="lineNum">     507 </span>            :     }</a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineCov">   10906168 :     for (int i = 0; i &lt; new_ndim; i++) {</span></a>
+<a name="509"><span class="lineNum">     509 </span><span class="lineCov">     397905 :         npy_intp curr_dim = out_shape[curr_ndim + i];</span></a>
+<a name="510"><span class="lineNum">     510 </span><span class="lineCov">     397905 :         npy_intp new_dim = new_shape[i];</span></a>
+<a name="511"><span class="lineNum">     511 </span>            : </a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineCov">     397905 :         if (!max_dims_reached) {</span></a>
+<a name="513"><span class="lineNum">     513 </span><span class="lineCov">     127830 :             out_shape[curr_ndim + i] = new_dim;</span></a>
+<a name="514"><span class="lineNum">     514 </span>            :         }</a>
+<a name="515"><span class="lineNum">     515 </span><span class="lineCov">     270075 :         else if (new_dim != curr_dim) {</span></a>
+<a name="516"><span class="lineNum">     516 </span>            :             /* The array is ragged, and this dimension is unusable already */</a>
+<a name="517"><span class="lineNum">     517 </span><span class="lineCov">         41 :             success = -1;</span></a>
+<a name="518"><span class="lineNum">     518 </span><span class="lineCov">         41 :             if (!sequence) {</span></a>
+<a name="519"><span class="lineNum">     519 </span>            :                 /* Remove dimensions that we cannot use: */</a>
+<a name="520"><span class="lineNum">     520 </span><span class="lineCov">          8 :                 *max_ndim -= new_ndim - i;</span></a>
+<a name="521"><span class="lineNum">     521 </span>            :             }</a>
+<a name="522"><span class="lineNum">     522 </span>            :             else {</a>
+<a name="523"><span class="lineNum">     523 </span><span class="lineCov">         33 :                 assert(i == 0);</span></a>
+<a name="524"><span class="lineNum">     524 </span>            :                 /* max_ndim is usually not updated for sequences, so set now: */</a>
+<a name="525"><span class="lineNum">     525 </span><span class="lineCov">         33 :                 *max_ndim = curr_ndim;</span></a>
+<a name="526"><span class="lineNum">     526 </span>            :             }</a>
+<a name="527"><span class="lineNum">     527 </span>            :             break;</a>
+<a name="528"><span class="lineNum">     528 </span>            :         }</a>
+<a name="529"><span class="lineNum">     529 </span>            :     }</a>
+<a name="530"><span class="lineNum">     530 </span><span class="lineCov">   10508304 :     if (!sequence) {</span></a>
+<a name="531"><span class="lineNum">     531 </span><span class="lineCov">   10114214 :         *flags |= MAX_DIMS_WAS_REACHED;</span></a>
+<a name="532"><span class="lineNum">     532 </span>            :     }</a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineCov">   10508304 :     return success;</span></a>
+<a name="534"><span class="lineNum">     534 </span>            : }</a>
+<a name="535"><span class="lineNum">     535 </span>            : </a>
+<a name="536"><span class="lineNum">     536 </span>            : </a>
+<a name="537"><span class="lineNum">     537 </span>            : #define COERCION_CACHE_CACHE_SIZE 5</a>
+<a name="538"><span class="lineNum">     538 </span>            : static int _coercion_cache_num = 0;</a>
+<a name="539"><span class="lineNum">     539 </span>            : static coercion_cache_obj *_coercion_cache_cache[COERCION_CACHE_CACHE_SIZE];</a>
+<a name="540"><span class="lineNum">     540 </span>            : </a>
+<a name="541"><span class="lineNum">     541 </span>            : /*</a>
+<a name="542"><span class="lineNum">     542 </span>            :  * Steals a reference to the object.</a>
+<a name="543"><span class="lineNum">     543 </span>            :  */</a>
+<a name="544"><span class="lineNum">     544 </span>            : static NPY_INLINE int</a>
+<a name="545"><span class="lineNum">     545 </span><span class="lineCov">    1837369 : npy_new_coercion_cache(</span></a>
+<a name="546"><span class="lineNum">     546 </span>            :         PyObject *converted_obj, PyObject *arr_or_sequence, npy_bool sequence,</a>
+<a name="547"><span class="lineNum">     547 </span>            :         coercion_cache_obj ***next_ptr, int ndim)</a>
+<a name="548"><span class="lineNum">     548 </span>            : {</a>
+<a name="549"><span class="lineNum">     549 </span><span class="lineCov">    1837369 :     coercion_cache_obj *cache;</span></a>
+<a name="550"><span class="lineNum">     550 </span><span class="lineCov">    1837369 :     if (_coercion_cache_num &gt; 0) {</span></a>
+<a name="551"><span class="lineNum">     551 </span><span class="lineCov">    1532554 :         _coercion_cache_num--;</span></a>
+<a name="552"><span class="lineNum">     552 </span><span class="lineCov">    1532554 :         cache = _coercion_cache_cache[_coercion_cache_num];</span></a>
+<a name="553"><span class="lineNum">     553 </span>            :     }</a>
+<a name="554"><span class="lineNum">     554 </span>            :     else {</a>
+<a name="555"><span class="lineNum">     555 </span><span class="lineCov">     304815 :         cache = PyMem_Malloc(sizeof(coercion_cache_obj));</span></a>
+<a name="556"><span class="lineNum">     556 </span>            :     }</a>
+<a name="557"><span class="lineNum">     557 </span><span class="lineCov">    1837369 :     if (cache == NULL) {</span></a>
+<a name="558"><span class="lineNum">     558 </span><span class="lineNoCov">          0 :         PyErr_NoMemory();</span></a>
+<a name="559"><span class="lineNum">     559 </span><span class="lineNoCov">          0 :         return -1;</span></a>
+<a name="560"><span class="lineNum">     560 </span>            :     }</a>
+<a name="561"><span class="lineNum">     561 </span><span class="lineCov">    1837369 :     cache-&gt;converted_obj = converted_obj;</span></a>
+<a name="562"><span class="lineNum">     562 </span><span class="lineCov">    1837369 :     cache-&gt;arr_or_sequence = arr_or_sequence;</span></a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineCov">    1837369 :     cache-&gt;sequence = sequence;</span></a>
+<a name="564"><span class="lineNum">     564 </span><span class="lineCov">    1837369 :     cache-&gt;depth = ndim;</span></a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineCov">    1837369 :     cache-&gt;next = NULL;</span></a>
+<a name="566"><span class="lineNum">     566 </span><span class="lineCov">    1837369 :     **next_ptr = cache;</span></a>
+<a name="567"><span class="lineNum">     567 </span><span class="lineCov">    1837369 :     *next_ptr = &amp;(cache-&gt;next);</span></a>
+<a name="568"><span class="lineNum">     568 </span><span class="lineCov">    1837369 :     return 0;</span></a>
+<a name="569"><span class="lineNum">     569 </span>            : }</a>
+<a name="570"><span class="lineNum">     570 </span>            : </a>
+<a name="571"><span class="lineNum">     571 </span>            : /**</a>
+<a name="572"><span class="lineNum">     572 </span>            :  * Unlink coercion cache item.</a>
+<a name="573"><span class="lineNum">     573 </span>            :  *</a>
+<a name="574"><span class="lineNum">     574 </span>            :  * @param current</a>
+<a name="575"><span class="lineNum">     575 </span>            :  * @return next coercion cache object (or NULL)</a>
+<a name="576"><span class="lineNum">     576 </span>            :  */</a>
+<a name="577"><span class="lineNum">     577 </span>            : NPY_NO_EXPORT coercion_cache_obj *</a>
+<a name="578"><span class="lineNum">     578 </span><span class="lineCov">    1837369 : npy_unlink_coercion_cache(coercion_cache_obj *current)</span></a>
+<a name="579"><span class="lineNum">     579 </span>            : {</a>
+<a name="580"><span class="lineNum">     580 </span><span class="lineCov">    1837369 :     coercion_cache_obj *next = current-&gt;next;</span></a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineCov">    1837369 :     Py_DECREF(current-&gt;arr_or_sequence);</span></a>
+<a name="582"><span class="lineNum">     582 </span><span class="lineCov">    1837369 :     if (_coercion_cache_num &lt; COERCION_CACHE_CACHE_SIZE) {</span></a>
+<a name="583"><span class="lineNum">     583 </span><span class="lineCov">    1532655 :         _coercion_cache_cache[_coercion_cache_num] = current;</span></a>
+<a name="584"><span class="lineNum">     584 </span><span class="lineCov">    1532655 :         _coercion_cache_num++;</span></a>
+<a name="585"><span class="lineNum">     585 </span>            :     }</a>
+<a name="586"><span class="lineNum">     586 </span>            :     else {</a>
+<a name="587"><span class="lineNum">     587 </span><span class="lineCov">     304714 :         PyMem_Free(current);</span></a>
+<a name="588"><span class="lineNum">     588 </span>            :     }</a>
+<a name="589"><span class="lineNum">     589 </span><span class="lineCov">    1837369 :     return next;</span></a>
+<a name="590"><span class="lineNum">     590 </span>            : }</a>
+<a name="591"><span class="lineNum">     591 </span>            : </a>
+<a name="592"><span class="lineNum">     592 </span>            : NPY_NO_EXPORT void</a>
+<a name="593"><span class="lineNum">     593 </span><span class="lineCov">     191454 : npy_free_coercion_cache(coercion_cache_obj *next) {</span></a>
+<a name="594"><span class="lineNum">     594 </span>            :     /* We only need to check from the last used cache pos */</a>
+<a name="595"><span class="lineNum">     595 </span><span class="lineCov">     344367 :     while (next != NULL) {</span></a>
+<a name="596"><span class="lineNum">     596 </span><span class="lineCov">     152913 :         next = npy_unlink_coercion_cache(next);</span></a>
+<a name="597"><span class="lineNum">     597 </span>            :     }</a>
+<a name="598"><span class="lineNum">     598 </span><span class="lineCov">     191359 : }</span></a>
+<a name="599"><span class="lineNum">     599 </span>            : </a>
+<a name="600"><span class="lineNum">     600 </span>            : #undef COERCION_CACHE_CACHE_SIZE</a>
+<a name="601"><span class="lineNum">     601 </span>            : </a>
+<a name="602"><span class="lineNum">     602 </span>            : /**</a>
+<a name="603"><span class="lineNum">     603 </span>            :  * Do the promotion step and possible casting. This function should</a>
+<a name="604"><span class="lineNum">     604 </span>            :  * never be called if a descriptor was requested. In that case the output</a>
+<a name="605"><span class="lineNum">     605 </span>            :  * dtype is not of importance, so we must not risk promotion errors.</a>
+<a name="606"><span class="lineNum">     606 </span>            :  *</a>
+<a name="607"><span class="lineNum">     607 </span>            :  * @param out_descr The current descriptor.</a>
+<a name="608"><span class="lineNum">     608 </span>            :  * @param descr The newly found descriptor to promote with</a>
+<a name="609"><span class="lineNum">     609 </span>            :  * @param fixed_DType The user provided (fixed) DType or NULL</a>
+<a name="610"><span class="lineNum">     610 </span>            :  * @param flags dtype discover flags to signal failed promotion.</a>
+<a name="611"><span class="lineNum">     611 </span>            :  * @return -1 on error, 0 on success.</a>
+<a name="612"><span class="lineNum">     612 </span>            :  */</a>
+<a name="613"><span class="lineNum">     613 </span>            : static NPY_INLINE int</a>
+<a name="614"><span class="lineNum">     614 </span><span class="lineCov">    5786485 : handle_promotion(PyArray_Descr **out_descr, PyArray_Descr *descr,</span></a>
+<a name="615"><span class="lineNum">     615 </span>            :         PyArray_DTypeMeta *fixed_DType, enum _dtype_discovery_flags *flags)</a>
+<a name="616"><span class="lineNum">     616 </span>            : {</a>
+<a name="617"><span class="lineNum">     617 </span><span class="lineCov">    5786485 :     assert(!(*flags &amp; DESCRIPTOR_WAS_SET));</span></a>
+<a name="618"><span class="lineNum">     618 </span>            : </a>
+<a name="619"><span class="lineNum">     619 </span><span class="lineCov">    5786485 :     if (*out_descr == NULL) {</span></a>
+<a name="620"><span class="lineNum">     620 </span><span class="lineCov">    3706642 :         Py_INCREF(descr);</span></a>
+<a name="621"><span class="lineNum">     621 </span><span class="lineCov">    3706642 :         *out_descr = descr;</span></a>
+<a name="622"><span class="lineNum">     622 </span><span class="lineCov">    3706642 :         return 0;</span></a>
+<a name="623"><span class="lineNum">     623 </span>            :     }</a>
+<a name="624"><span class="lineNum">     624 </span><span class="lineCov">    2079843 :     PyArray_Descr *new_descr = PyArray_PromoteTypes(descr, *out_descr);</span></a>
+<a name="625"><span class="lineNum">     625 </span><span class="lineCov">    2079843 :     if (NPY_UNLIKELY(new_descr == NULL)) {</span></a>
+<a name="626"><span class="lineNum">     626 </span><span class="lineCov">        271 :         if (fixed_DType != NULL || PyErr_ExceptionMatches(PyExc_FutureWarning)) {</span></a>
+<a name="627"><span class="lineNum">     627 </span>            :             /*</a>
+<a name="628"><span class="lineNum">     628 </span>            :              * If a DType is fixed, promotion must not fail. Do not catch</a>
+<a name="629"><span class="lineNum">     629 </span>            :              * FutureWarning (raised for string+numeric promotions). We could</a>
+<a name="630"><span class="lineNum">     630 </span>            :              * only catch TypeError here or even always raise the error.</a>
+<a name="631"><span class="lineNum">     631 </span>            :              */</a>
+<a name="632"><span class="lineNum">     632 </span><span class="lineCov">          5 :             return -1;</span></a>
+<a name="633"><span class="lineNum">     633 </span>            :         }</a>
+<a name="634"><span class="lineNum">     634 </span><span class="lineCov">        266 :         PyErr_Clear();</span></a>
+<a name="635"><span class="lineNum">     635 </span><span class="lineCov">        266 :         *flags |= PROMOTION_FAILED;</span></a>
+<a name="636"><span class="lineNum">     636 </span>            :         /* Continue with object, since we may need the dimensionality */</a>
+<a name="637"><span class="lineNum">     637 </span><span class="lineCov">        266 :         new_descr = PyArray_DescrFromType(NPY_OBJECT);</span></a>
+<a name="638"><span class="lineNum">     638 </span>            :     }</a>
+<a name="639"><span class="lineNum">     639 </span><span class="lineCov">    2079838 :     Py_SETREF(*out_descr, new_descr);</span></a>
+<a name="640"><span class="lineNum">     640 </span><span class="lineCov">    2079838 :     return 0;</span></a>
+<a name="641"><span class="lineNum">     641 </span>            : }</a>
+<a name="642"><span class="lineNum">     642 </span>            : </a>
+<a name="643"><span class="lineNum">     643 </span>            : </a>
+<a name="644"><span class="lineNum">     644 </span>            : /**</a>
+<a name="645"><span class="lineNum">     645 </span>            :  * Handle a leave node (known scalar) during dtype and shape discovery.</a>
+<a name="646"><span class="lineNum">     646 </span>            :  *</a>
+<a name="647"><span class="lineNum">     647 </span>            :  * @param obj The python object or nested sequence to convert</a>
+<a name="648"><span class="lineNum">     648 </span>            :  * @param curr_dims The current number of dimensions (depth in the recursion)</a>
+<a name="649"><span class="lineNum">     649 </span>            :  * @param max_dims The maximum number of dimensions.</a>
+<a name="650"><span class="lineNum">     650 </span>            :  * @param out_shape The discovered output shape, will be filled</a>
+<a name="651"><span class="lineNum">     651 </span>            :  * @param fixed_DType The user provided (fixed) DType or NULL</a>
+<a name="652"><span class="lineNum">     652 </span>            :  * @param flags used signal that this is a ragged array, used internally and</a>
+<a name="653"><span class="lineNum">     653 </span>            :  *        can be expanded if necessary.</a>
+<a name="654"><span class="lineNum">     654 </span>            :  * @param DType the DType class that should be used, or NULL, if not provided.</a>
+<a name="655"><span class="lineNum">     655 </span>            :  *</a>
+<a name="656"><span class="lineNum">     656 </span>            :  * @return 0 on success -1 on error</a>
+<a name="657"><span class="lineNum">     657 </span>            :  */</a>
+<a name="658"><span class="lineNum">     658 </span>            : static NPY_INLINE int</a>
+<a name="659"><span class="lineNum">     659 </span><span class="lineCov">   10065773 : handle_scalar(</span></a>
+<a name="660"><span class="lineNum">     660 </span>            :         PyObject *obj, int curr_dims, int *max_dims,</a>
+<a name="661"><span class="lineNum">     661 </span>            :         PyArray_Descr **out_descr, npy_intp *out_shape,</a>
+<a name="662"><span class="lineNum">     662 </span>            :         PyArray_DTypeMeta *fixed_DType,</a>
+<a name="663"><span class="lineNum">     663 </span>            :         enum _dtype_discovery_flags *flags, PyArray_DTypeMeta *DType)</a>
+<a name="664"><span class="lineNum">     664 </span>            : {</a>
+<a name="665"><span class="lineNum">     665 </span><span class="lineCov">   10065773 :     PyArray_Descr *descr;</span></a>
+<a name="666"><span class="lineNum">     666 </span>            : </a>
+<a name="667"><span class="lineNum">     667 </span><span class="lineCov">   10065773 :     if (update_shape(curr_dims, max_dims, out_shape,</span></a>
+<a name="668"><span class="lineNum">     668 </span>            :             0, NULL, NPY_FALSE, flags) &lt; 0) {</a>
+<a name="669"><span class="lineNum">     669 </span><span class="lineCov">         32 :         *flags |= FOUND_RAGGED_ARRAY;</span></a>
+<a name="670"><span class="lineNum">     670 </span><span class="lineCov">         32 :         return *max_dims;</span></a>
+<a name="671"><span class="lineNum">     671 </span>            :     }</a>
+<a name="672"><span class="lineNum">     672 </span><span class="lineCov">   10065741 :     if (*flags &amp; DESCRIPTOR_WAS_SET) {</span></a>
+<a name="673"><span class="lineNum">     673 </span>            :         /* no need to do any promotion */</a>
+<a name="674"><span class="lineNum">     674 </span><span class="lineCov">    5199271 :         return *max_dims;</span></a>
+<a name="675"><span class="lineNum">     675 </span>            :     }</a>
+<a name="676"><span class="lineNum">     676 </span>            :     /* This is a scalar, so find the descriptor */</a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineCov">    4866470 :     descr = find_scalar_descriptor(fixed_DType, DType, obj);</span></a>
+<a name="678"><span class="lineNum">     678 </span><span class="lineCov">    4866470 :     if (descr == NULL) {</span></a>
+<a name="679"><span class="lineNum">     679 </span>            :         return -1;</a>
+<a name="680"><span class="lineNum">     680 </span>            :     }</a>
+<a name="681"><span class="lineNum">     681 </span><span class="lineCov">    4866451 :     if (handle_promotion(out_descr, descr, fixed_DType, flags) &lt; 0) {</span></a>
+<a name="682"><span class="lineNum">     682 </span><span class="lineCov">          4 :         Py_DECREF(descr);</span></a>
+<a name="683"><span class="lineNum">     683 </span><span class="lineCov">          4 :         return -1;</span></a>
+<a name="684"><span class="lineNum">     684 </span>            :     }</a>
+<a name="685"><span class="lineNum">     685 </span><span class="lineCov">    4866447 :     Py_DECREF(descr);</span></a>
+<a name="686"><span class="lineNum">     686 </span><span class="lineCov">    4866447 :     return *max_dims;</span></a>
+<a name="687"><span class="lineNum">     687 </span>            : }</a>
+<a name="688"><span class="lineNum">     688 </span>            : </a>
+<a name="689"><span class="lineNum">     689 </span>            : </a>
+<a name="690"><span class="lineNum">     690 </span>            : /**</a>
+<a name="691"><span class="lineNum">     691 </span>            :  * Return the correct descriptor given an array object and a DType class.</a>
+<a name="692"><span class="lineNum">     692 </span>            :  *</a>
+<a name="693"><span class="lineNum">     693 </span>            :  * This is identical to casting the arrays descriptor/dtype to the new</a>
+<a name="694"><span class="lineNum">     694 </span>            :  * DType class</a>
+<a name="695"><span class="lineNum">     695 </span>            :  *</a>
+<a name="696"><span class="lineNum">     696 </span>            :  * @param arr The array object.</a>
+<a name="697"><span class="lineNum">     697 </span>            :  * @param DType The DType class to cast to (or NULL for convenience)</a>
+<a name="698"><span class="lineNum">     698 </span>            :  * @param out_descr The output descriptor will set. The result can be NULL</a>
+<a name="699"><span class="lineNum">     699 </span>            :  *        when the array is of object dtype and has no elements.</a>
+<a name="700"><span class="lineNum">     700 </span>            :  *</a>
+<a name="701"><span class="lineNum">     701 </span>            :  * @return -1 on failure, 0 on success.</a>
+<a name="702"><span class="lineNum">     702 </span>            :  */</a>
+<a name="703"><span class="lineNum">     703 </span>            : static int</a>
+<a name="704"><span class="lineNum">     704 </span><span class="lineCov">     920280 : find_descriptor_from_array(</span></a>
+<a name="705"><span class="lineNum">     705 </span>            :         PyArrayObject *arr, PyArray_DTypeMeta *DType, PyArray_Descr **out_descr)</a>
+<a name="706"><span class="lineNum">     706 </span>            : {</a>
+<a name="707"><span class="lineNum">     707 </span><span class="lineCov">     920280 :     enum _dtype_discovery_flags flags = 0;</span></a>
+<a name="708"><span class="lineNum">     708 </span><span class="lineCov">     920280 :     *out_descr = NULL;</span></a>
+<a name="709"><span class="lineNum">     709 </span>            : </a>
+<a name="710"><span class="lineNum">     710 </span><span class="lineCov">     920280 :     if (DType == NULL) {</span></a>
+<a name="711"><span class="lineNum">     711 </span><span class="lineCov">     919952 :         *out_descr = PyArray_DESCR(arr);</span></a>
+<a name="712"><span class="lineNum">     712 </span><span class="lineCov">     919952 :         Py_INCREF(*out_descr);</span></a>
+<a name="713"><span class="lineNum">     713 </span><span class="lineCov">     919952 :         return 0;</span></a>
+<a name="714"><span class="lineNum">     714 </span>            :     }</a>
+<a name="715"><span class="lineNum">     715 </span>            : </a>
+<a name="716"><span class="lineNum">     716 </span><span class="lineCov">        328 :     if (NPY_UNLIKELY(DType-&gt;parametric &amp;&amp; PyArray_ISOBJECT(arr))) {</span></a>
+<a name="717"><span class="lineNum">     717 </span>            :         /*</a>
+<a name="718"><span class="lineNum">     718 </span>            :          * We have one special case, if (and only if) the input array is of</a>
+<a name="719"><span class="lineNum">     719 </span>            :          * object DType and the dtype is not fixed already but parametric.</a>
+<a name="720"><span class="lineNum">     720 </span>            :          * Then, we allow inspection of all elements, treating them as</a>
+<a name="721"><span class="lineNum">     721 </span>            :          * elements. We do this recursively, so nested 0-D arrays can work,</a>
+<a name="722"><span class="lineNum">     722 </span>            :          * but nested higher dimensional arrays will lead to an error.</a>
+<a name="723"><span class="lineNum">     723 </span>            :          */</a>
+<a name="724"><span class="lineNum">     724 </span><span class="lineCov">         64 :         assert(DType-&gt;type_num != NPY_OBJECT);  /* not parametric */</span></a>
+<a name="725"><span class="lineNum">     725 </span>            : </a>
+<a name="726"><span class="lineNum">     726 </span><span class="lineCov">         64 :         PyArrayIterObject *iter;</span></a>
+<a name="727"><span class="lineNum">     727 </span><span class="lineCov">         64 :         iter = (PyArrayIterObject *)PyArray_IterNew((PyObject *)arr);</span></a>
+<a name="728"><span class="lineNum">     728 </span><span class="lineCov">         64 :         if (iter == NULL) {</span></a>
+<a name="729"><span class="lineNum">     729 </span>            :             return -1;</a>
+<a name="730"><span class="lineNum">     730 </span>            :         }</a>
+<a name="731"><span class="lineNum">     731 </span><span class="lineCov">        169 :         while (iter-&gt;index &lt; iter-&gt;size) {</span></a>
+<a name="732"><span class="lineNum">     732 </span><span class="lineCov">        108 :             PyArray_DTypeMeta *item_DType;</span></a>
+<a name="733"><span class="lineNum">     733 </span>            :             /*</a>
+<a name="734"><span class="lineNum">     734 </span>            :              * Note: If the array contains typed objects we may need to use</a>
+<a name="735"><span class="lineNum">     735 </span>            :              *       the dtype to use casting for finding the correct instance.</a>
+<a name="736"><span class="lineNum">     736 </span>            :              */</a>
+<a name="737"><span class="lineNum">     737 </span><span class="lineCov">        108 :             PyObject *elem = PyArray_GETITEM(arr, iter-&gt;dataptr);</span></a>
+<a name="738"><span class="lineNum">     738 </span><span class="lineCov">        108 :             if (elem == NULL) {</span></a>
+<a name="739"><span class="lineNum">     739 </span><span class="lineNoCov">          0 :                 Py_DECREF(iter);</span></a>
+<a name="740"><span class="lineNum">     740 </span><span class="lineCov">          3 :                 return -1;</span></a>
+<a name="741"><span class="lineNum">     741 </span>            :             }</a>
+<a name="742"><span class="lineNum">     742 </span><span class="lineCov">        108 :             item_DType = discover_dtype_from_pyobject(elem, &amp;flags, DType);</span></a>
+<a name="743"><span class="lineNum">     743 </span><span class="lineCov">        108 :             if (item_DType == NULL) {</span></a>
+<a name="744"><span class="lineNum">     744 </span><span class="lineNoCov">          0 :                 Py_DECREF(iter);</span></a>
+<a name="745"><span class="lineNum">     745 </span><span class="lineNoCov">          0 :                 Py_DECREF(elem);</span></a>
+<a name="746"><span class="lineNum">     746 </span><span class="lineNoCov">          0 :                 return -1;</span></a>
+<a name="747"><span class="lineNum">     747 </span>            :             }</a>
+<a name="748"><span class="lineNum">     748 </span><span class="lineCov">        108 :             if (item_DType == (PyArray_DTypeMeta *)Py_None) {</span></a>
+<a name="749"><span class="lineNum">     749 </span><span class="lineCov">         63 :                 Py_SETREF(item_DType, NULL);</span></a>
+<a name="750"><span class="lineNum">     750 </span>            :             }</a>
+<a name="751"><span class="lineNum">     751 </span><span class="lineCov">        108 :             int flat_max_dims = 0;</span></a>
+<a name="752"><span class="lineNum">     752 </span><span class="lineCov">        108 :             if (handle_scalar(elem, 0, &amp;flat_max_dims, out_descr,</span></a>
+<a name="753"><span class="lineNum">     753 </span>            :                     NULL, DType, &amp;flags, item_DType) &lt; 0) {</a>
+<a name="754"><span class="lineNum">     754 </span><span class="lineCov">          3 :                 Py_DECREF(iter);</span></a>
+<a name="755"><span class="lineNum">     755 </span><span class="lineCov">          3 :                 Py_DECREF(elem);</span></a>
+<a name="756"><span class="lineNum">     756 </span><span class="lineCov">          3 :                 Py_XDECREF(*out_descr);</span></a>
+<a name="757"><span class="lineNum">     757 </span><span class="lineCov">          3 :                 Py_XDECREF(item_DType);</span></a>
+<a name="758"><span class="lineNum">     758 </span><span class="lineCov">          3 :                 return -1;</span></a>
+<a name="759"><span class="lineNum">     759 </span>            :             }</a>
+<a name="760"><span class="lineNum">     760 </span><span class="lineCov">        105 :             Py_XDECREF(item_DType);</span></a>
+<a name="761"><span class="lineNum">     761 </span><span class="lineCov">        105 :             Py_DECREF(elem);</span></a>
+<a name="762"><span class="lineNum">     762 </span><span class="lineCov">        105 :             PyArray_ITER_NEXT(iter);</span></a>
+<a name="763"><span class="lineNum">     763 </span>            :         }</a>
+<a name="764"><span class="lineNum">     764 </span><span class="lineCov">         61 :         Py_DECREF(iter);</span></a>
+<a name="765"><span class="lineNum">     765 </span>            :     }</a>
+<a name="766"><span class="lineNum">     766 </span><span class="lineCov">        264 :     else if (NPY_UNLIKELY(DType-&gt;type_num == NPY_DATETIME) &amp;&amp;</span></a>
+<a name="767"><span class="lineNum">     767 </span><span class="lineCov">         53 :                 PyArray_ISSTRING(arr)) {</span></a>
+<a name="768"><span class="lineNum">     768 </span>            :         /*</a>
+<a name="769"><span class="lineNum">     769 </span>            :          * TODO: This branch should be deprecated IMO, the workaround is</a>
+<a name="770"><span class="lineNum">     770 </span>            :          *       to cast to the object to a string array. Although a specific</a>
+<a name="771"><span class="lineNum">     771 </span>            :          *       function (if there is even any need) would be better.</a>
+<a name="772"><span class="lineNum">     772 </span>            :          *       This is value based casting!</a>
+<a name="773"><span class="lineNum">     773 </span>            :          * Unless of course we actually want to support this kind of thing</a>
+<a name="774"><span class="lineNum">     774 </span>            :          * in general (not just for object dtype)...</a>
+<a name="775"><span class="lineNum">     775 </span>            :          */</a>
+<a name="776"><span class="lineNum">     776 </span><span class="lineCov">          8 :         PyArray_DatetimeMetaData meta;</span></a>
+<a name="777"><span class="lineNum">     777 </span><span class="lineCov">          8 :         meta.base = NPY_FR_GENERIC;</span></a>
+<a name="778"><span class="lineNum">     778 </span><span class="lineCov">          8 :         meta.num = 1;</span></a>
+<a name="779"><span class="lineNum">     779 </span>            : </a>
+<a name="780"><span class="lineNum">     780 </span><span class="lineCov">          8 :         if (find_string_array_datetime64_type(arr, &amp;meta) &lt; 0) {</span></a>
+<a name="781"><span class="lineNum">     781 </span><span class="lineNoCov">          0 :             return -1;</span></a>
+<a name="782"><span class="lineNum">     782 </span>            :         }</a>
+<a name="783"><span class="lineNum">     783 </span>            :         else {</a>
+<a name="784"><span class="lineNum">     784 </span><span class="lineCov">          8 :             *out_descr = create_datetime_dtype(NPY_DATETIME, &amp;meta);</span></a>
+<a name="785"><span class="lineNum">     785 </span><span class="lineCov">          8 :             if (*out_descr == NULL) {</span></a>
+<a name="786"><span class="lineNum">     786 </span>            :                 return -1;</a>
+<a name="787"><span class="lineNum">     787 </span>            :             }</a>
+<a name="788"><span class="lineNum">     788 </span>            :         }</a>
+<a name="789"><span class="lineNum">     789 </span>            :     }</a>
+<a name="790"><span class="lineNum">     790 </span>            :     else {</a>
+<a name="791"><span class="lineNum">     791 </span>            :         /*</a>
+<a name="792"><span class="lineNum">     792 </span>            :          * If this is not an object array figure out the dtype cast,</a>
+<a name="793"><span class="lineNum">     793 </span>            :          * or simply use the returned DType.</a>
+<a name="794"><span class="lineNum">     794 </span>            :          */</a>
+<a name="795"><span class="lineNum">     795 </span><span class="lineCov">        256 :         *out_descr = PyArray_CastDescrToDType(PyArray_DESCR(arr), DType);</span></a>
+<a name="796"><span class="lineNum">     796 </span><span class="lineCov">        256 :         if (*out_descr == NULL) {</span></a>
+<a name="797"><span class="lineNum">     797 </span><span class="lineCov">          3 :             return -1;</span></a>
+<a name="798"><span class="lineNum">     798 </span>            :         }</a>
+<a name="799"><span class="lineNum">     799 </span>            :     }</a>
+<a name="800"><span class="lineNum">     800 </span>            :     return 0;</a>
+<a name="801"><span class="lineNum">     801 </span>            : }</a>
+<a name="802"><span class="lineNum">     802 </span>            : </a>
+<a name="803"><span class="lineNum">     803 </span>            : /**</a>
+<a name="804"><span class="lineNum">     804 </span>            :  * Given a dtype or DType object, find the correct descriptor to cast the</a>
+<a name="805"><span class="lineNum">     805 </span>            :  * array to.</a>
+<a name="806"><span class="lineNum">     806 </span>            :  *</a>
+<a name="807"><span class="lineNum">     807 </span>            :  * This function is identical to normal casting using only the dtype, however,</a>
+<a name="808"><span class="lineNum">     808 </span>            :  * it supports inspecting the elements when the array has object dtype</a>
+<a name="809"><span class="lineNum">     809 </span>            :  * (and the given datatype describes a parametric DType class).</a>
+<a name="810"><span class="lineNum">     810 </span>            :  *</a>
+<a name="811"><span class="lineNum">     811 </span>            :  * @param arr</a>
+<a name="812"><span class="lineNum">     812 </span>            :  * @param dtype A dtype instance or class.</a>
+<a name="813"><span class="lineNum">     813 </span>            :  * @return A concrete dtype instance or NULL</a>
+<a name="814"><span class="lineNum">     814 </span>            :  */</a>
+<a name="815"><span class="lineNum">     815 </span>            : NPY_NO_EXPORT PyArray_Descr *</a>
+<a name="816"><span class="lineNum">     816 </span><span class="lineCov">    1635969 : PyArray_AdaptDescriptorToArray(PyArrayObject *arr, PyObject *dtype)</span></a>
+<a name="817"><span class="lineNum">     817 </span>            : {</a>
+<a name="818"><span class="lineNum">     818 </span>            :     /* If the requested dtype is flexible, adapt it */</a>
+<a name="819"><span class="lineNum">     819 </span><span class="lineCov">    1635969 :     PyArray_Descr *new_dtype;</span></a>
+<a name="820"><span class="lineNum">     820 </span><span class="lineCov">    1635969 :     PyArray_DTypeMeta *new_DType;</span></a>
+<a name="821"><span class="lineNum">     821 </span><span class="lineCov">    1635969 :     int res;</span></a>
+<a name="822"><span class="lineNum">     822 </span>            : </a>
+<a name="823"><span class="lineNum">     823 </span><span class="lineCov">    1635969 :     res = PyArray_ExtractDTypeAndDescriptor((PyObject *)dtype,</span></a>
+<a name="824"><span class="lineNum">     824 </span>            :             &amp;new_dtype, &amp;new_DType);</a>
+<a name="825"><span class="lineNum">     825 </span><span class="lineCov">    1635969 :     if (res &lt; 0) {</span></a>
+<a name="826"><span class="lineNum">     826 </span><span class="lineCov">    1635969 :         return NULL;</span></a>
+<a name="827"><span class="lineNum">     827 </span>            :     }</a>
+<a name="828"><span class="lineNum">     828 </span><span class="lineCov">    1635969 :     if (new_dtype == NULL) {</span></a>
+<a name="829"><span class="lineNum">     829 </span><span class="lineCov">        248 :         res = find_descriptor_from_array(arr, new_DType, &amp;new_dtype);</span></a>
+<a name="830"><span class="lineNum">     830 </span><span class="lineCov">        248 :         if (res &lt; 0) {</span></a>
+<a name="831"><span class="lineNum">     831 </span><span class="lineCov">          5 :             Py_DECREF(new_DType);</span></a>
+<a name="832"><span class="lineNum">     832 </span><span class="lineCov">          5 :             return NULL;</span></a>
+<a name="833"><span class="lineNum">     833 </span>            :         }</a>
+<a name="834"><span class="lineNum">     834 </span><span class="lineCov">        243 :         if (new_dtype == NULL) {</span></a>
+<a name="835"><span class="lineNum">     835 </span>            :             /* This is an object array but contained no elements, use default */</a>
+<a name="836"><span class="lineNum">     836 </span><span class="lineCov">          1 :             new_dtype = new_DType-&gt;default_descr(new_DType);</span></a>
+<a name="837"><span class="lineNum">     837 </span>            :         }</a>
+<a name="838"><span class="lineNum">     838 </span>            :     }</a>
+<a name="839"><span class="lineNum">     839 </span><span class="lineCov">    1635964 :     Py_DECREF(new_DType);</span></a>
+<a name="840"><span class="lineNum">     840 </span><span class="lineCov">    1635964 :     return new_dtype;</span></a>
+<a name="841"><span class="lineNum">     841 </span>            : }</a>
+<a name="842"><span class="lineNum">     842 </span>            : </a>
+<a name="843"><span class="lineNum">     843 </span>            : </a>
+<a name="844"><span class="lineNum">     844 </span>            : /**</a>
+<a name="845"><span class="lineNum">     845 </span>            :  * Recursion helper for `PyArray_DiscoverDTypeAndShape`.  See its</a>
+<a name="846"><span class="lineNum">     846 </span>            :  * documentation for additional details.</a>
+<a name="847"><span class="lineNum">     847 </span>            :  *</a>
+<a name="848"><span class="lineNum">     848 </span>            :  * @param obj The current (possibly nested) object</a>
+<a name="849"><span class="lineNum">     849 </span>            :  * @param curr_dims The current depth, i.e. initially 0 and increasing.</a>
+<a name="850"><span class="lineNum">     850 </span>            :  * @param max_dims Maximum number of dimensions, modified during discovery.</a>
+<a name="851"><span class="lineNum">     851 </span>            :  * @param out_descr dtype instance (or NULL) to promoted and update.</a>
+<a name="852"><span class="lineNum">     852 </span>            :  * @param out_shape The current shape (updated)</a>
+<a name="853"><span class="lineNum">     853 </span>            :  * @param coercion_cache_tail_ptr The tail of the linked list of coercion</a>
+<a name="854"><span class="lineNum">     854 </span>            :  *        cache objects, which hold on to converted sequences and arrays.</a>
+<a name="855"><span class="lineNum">     855 </span>            :  *        This is a pointer to the `-&gt;next` slot of the previous cache so</a>
+<a name="856"><span class="lineNum">     856 </span>            :  *        that we can append a new cache object (and update this pointer).</a>
+<a name="857"><span class="lineNum">     857 </span>            :  *        (Initially it is a pointer to the user-provided head pointer).</a>
+<a name="858"><span class="lineNum">     858 </span>            :  * @param fixed_DType User provided fixed DType class</a>
+<a name="859"><span class="lineNum">     859 </span>            :  * @param flags Discovery flags (reporting and behaviour flags, see def.)</a>
+<a name="860"><span class="lineNum">     860 </span>            :  * @return The updated number of maximum dimensions (i.e. scalars will set</a>
+<a name="861"><span class="lineNum">     861 </span>            :  *         this to the current dimensions).</a>
+<a name="862"><span class="lineNum">     862 </span>            :  */</a>
+<a name="863"><span class="lineNum">     863 </span>            : NPY_NO_EXPORT int</a>
+<a name="864"><span class="lineNum">     864 </span><span class="lineCov">   11903076 : PyArray_DiscoverDTypeAndShape_Recursive(</span></a>
+<a name="865"><span class="lineNum">     865 </span>            :         PyObject *obj, int curr_dims, int max_dims, PyArray_Descr**out_descr,</a>
+<a name="866"><span class="lineNum">     866 </span>            :         npy_intp out_shape[NPY_MAXDIMS],</a>
+<a name="867"><span class="lineNum">     867 </span>            :         coercion_cache_obj ***coercion_cache_tail_ptr,</a>
+<a name="868"><span class="lineNum">     868 </span>            :         PyArray_DTypeMeta *fixed_DType, enum _dtype_discovery_flags *flags)</a>
+<a name="869"><span class="lineNum">     869 </span>            : {</a>
+<a name="870"><span class="lineNum">     870 </span><span class="lineCov">   11903076 :     PyArrayObject *arr = NULL;</span></a>
+<a name="871"><span class="lineNum">     871 </span><span class="lineCov">   11903076 :     PyObject *seq;</span></a>
+<a name="872"><span class="lineNum">     872 </span>            : </a>
+<a name="873"><span class="lineNum">     873 </span>            :     /*</a>
+<a name="874"><span class="lineNum">     874 </span>            :      * The first step is to find the DType class if it was not provided,</a>
+<a name="875"><span class="lineNum">     875 </span>            :      * alternatively we have to find out that this is not a scalar at all</a>
+<a name="876"><span class="lineNum">     876 </span>            :      * (which could fail and lead us to `object` dtype).</a>
+<a name="877"><span class="lineNum">     877 </span>            :      */</a>
+<a name="878"><span class="lineNum">     878 </span><span class="lineCov">   11903076 :     PyArray_DTypeMeta *DType = NULL;</span></a>
+<a name="879"><span class="lineNum">     879 </span>            : </a>
+<a name="880"><span class="lineNum">     880 </span><span class="lineCov">   11903076 :     if (NPY_UNLIKELY(*flags &amp; DISCOVER_STRINGS_AS_SEQUENCES)) {</span></a>
+<a name="881"><span class="lineNum">     881 </span>            :         /*</a>
+<a name="882"><span class="lineNum">     882 </span>            :          * We currently support that bytes/strings are considered sequences,</a>
+<a name="883"><span class="lineNum">     883 </span>            :          * if the dtype is np.dtype('c'), this should be deprecated probably,</a>
+<a name="884"><span class="lineNum">     884 </span>            :          * but requires hacks right now.</a>
+<a name="885"><span class="lineNum">     885 </span>            :          */</a>
+<a name="886"><span class="lineNum">     886 </span><span class="lineCov">        110 :         if (PyBytes_Check(obj) &amp;&amp; PyBytes_Size(obj) != 1) {</span></a>
+<a name="887"><span class="lineNum">     887 </span><span class="lineNoCov">          0 :             goto force_sequence_due_to_char_dtype;</span></a>
+<a name="888"><span class="lineNum">     888 </span>            :         }</a>
+<a name="889"><span class="lineNum">     889 </span><span class="lineCov">        110 :         else if (PyUnicode_Check(obj) &amp;&amp; PyUnicode_GetLength(obj) != 1) {</span></a>
+<a name="890"><span class="lineNum">     890 </span><span class="lineCov">          8 :             goto force_sequence_due_to_char_dtype;</span></a>
+<a name="891"><span class="lineNum">     891 </span>            :         }</a>
+<a name="892"><span class="lineNum">     892 </span>            :     }</a>
+<a name="893"><span class="lineNum">     893 </span>            : </a>
+<a name="894"><span class="lineNum">     894 </span>            :     /* If this is a known scalar, find the corresponding DType class */</a>
+<a name="895"><span class="lineNum">     895 </span><span class="lineCov">   11903068 :     DType = discover_dtype_from_pyobject(obj, flags, fixed_DType);</span></a>
+<a name="896"><span class="lineNum">     896 </span><span class="lineCov">   11903068 :     if (DType == NULL) {</span></a>
+<a name="897"><span class="lineNum">     897 </span><span class="lineCov">   11903076 :         return -1;</span></a>
+<a name="898"><span class="lineNum">     898 </span>            :     }</a>
+<a name="899"><span class="lineNum">     899 </span><span class="lineCov">   11903068 :     else if (DType == (PyArray_DTypeMeta *)Py_None) {</span></a>
+<a name="900"><span class="lineNum">     900 </span><span class="lineCov">    1959679 :         Py_DECREF(Py_None);</span></a>
+<a name="901"><span class="lineNum">     901 </span>            :     }</a>
+<a name="902"><span class="lineNum">     902 </span>            :     else {</a>
+<a name="903"><span class="lineNum">     903 </span><span class="lineCov">    9943389 :         max_dims = handle_scalar(</span></a>
+<a name="904"><span class="lineNum">     904 </span>            :                 obj, curr_dims, &amp;max_dims, out_descr, out_shape, fixed_DType,</a>
+<a name="905"><span class="lineNum">     905 </span>            :                 flags, DType);</a>
+<a name="906"><span class="lineNum">     906 </span><span class="lineCov">    9943389 :         Py_DECREF(DType);</span></a>
+<a name="907"><span class="lineNum">     907 </span><span class="lineCov">    9943389 :         return max_dims;</span></a>
+<a name="908"><span class="lineNum">     908 </span>            :     }</a>
+<a name="909"><span class="lineNum">     909 </span>            : </a>
+<a name="910"><span class="lineNum">     910 </span>            :     /*</a>
+<a name="911"><span class="lineNum">     911 </span>            :      * At this point we expect to find either a sequence, or an array-like.</a>
+<a name="912"><span class="lineNum">     912 </span>            :      * Although it is still possible that this fails and we have to use</a>
+<a name="913"><span class="lineNum">     913 </span>            :      * `object`.</a>
+<a name="914"><span class="lineNum">     914 </span>            :      */</a>
+<a name="915"><span class="lineNum">     915 </span><span class="lineCov">    1959679 :     if (PyArray_Check(obj)) {</span></a>
+<a name="916"><span class="lineNum">     916 </span><span class="lineCov">    1434854 :         arr = (PyArrayObject *)obj;</span></a>
+<a name="917"><span class="lineNum">     917 </span><span class="lineCov">    1434854 :         Py_INCREF(arr);</span></a>
+<a name="918"><span class="lineNum">     918 </span>            :     }</a>
+<a name="919"><span class="lineNum">     919 </span>            :     else {</a>
+<a name="920"><span class="lineNum">     920 </span><span class="lineCov">     524825 :         PyArray_Descr *requested_descr = NULL;</span></a>
+<a name="921"><span class="lineNum">     921 </span><span class="lineCov">     524825 :         if (*flags &amp; DESCRIPTOR_WAS_SET) {</span></a>
+<a name="922"><span class="lineNum">     922 </span>            :             /* __array__ may be passed the requested descriptor if provided */</a>
+<a name="923"><span class="lineNum">     923 </span><span class="lineCov">     330669 :             requested_descr = *out_descr;</span></a>
+<a name="924"><span class="lineNum">     924 </span>            :         }</a>
+<a name="925"><span class="lineNum">     925 </span><span class="lineCov">     524825 :         arr = (PyArrayObject *)_array_from_array_like(obj,</span></a>
+<a name="926"><span class="lineNum">     926 </span>            :                 requested_descr, 0, NULL);</a>
+<a name="927"><span class="lineNum">     927 </span><span class="lineCov">     524825 :         if (arr == NULL) {</span></a>
+<a name="928"><span class="lineNum">     928 </span>            :             return -1;</a>
+<a name="929"><span class="lineNum">     929 </span>            :         }</a>
+<a name="930"><span class="lineNum">     930 </span><span class="lineCov">     524795 :         else if (arr == (PyArrayObject *)Py_NotImplemented) {</span></a>
+<a name="931"><span class="lineNum">     931 </span><span class="lineCov">     516361 :             Py_DECREF(arr);</span></a>
+<a name="932"><span class="lineNum">     932 </span>            :             arr = NULL;</a>
+<a name="933"><span class="lineNum">     933 </span>            :         }</a>
+<a name="934"><span class="lineNum">     934 </span><span class="lineCov">       8434 :         else if (curr_dims &gt; 0 &amp;&amp; curr_dims != max_dims) {</span></a>
+<a name="935"><span class="lineNum">     935 </span>            :             /*</a>
+<a name="936"><span class="lineNum">     936 </span>            :              * Deprecated 2020-12-09, NumPy 1.20</a>
+<a name="937"><span class="lineNum">     937 </span>            :              *</a>
+<a name="938"><span class="lineNum">     938 </span>            :              * See https://github.com/numpy/numpy/issues/17965</a>
+<a name="939"><span class="lineNum">     939 </span>            :              * Shapely had objects which are not sequences but did export</a>
+<a name="940"><span class="lineNum">     940 </span>            :              * the array-interface (and so are arguably array-like).</a>
+<a name="941"><span class="lineNum">     941 </span>            :              * Previously numpy would not use array-like information during</a>
+<a name="942"><span class="lineNum">     942 </span>            :              * shape discovery, so that it ended up acting as if this was</a>
+<a name="943"><span class="lineNum">     943 </span>            :              * an (unknown) scalar but with the specified dtype.</a>
+<a name="944"><span class="lineNum">     944 </span>            :              * Thus we ignore &quot;scalars&quot; here, as the value stored in the</a>
+<a name="945"><span class="lineNum">     945 </span>            :              * array should be acceptable.</a>
+<a name="946"><span class="lineNum">     946 </span>            :              */</a>
+<a name="947"><span class="lineNum">     947 </span><span class="lineCov">         56 :             if (PyArray_NDIM(arr) &gt; 0 &amp;&amp; NPY_UNLIKELY(!PySequence_Check(obj))) {</span></a>
+<a name="948"><span class="lineNum">     948 </span><span class="lineCov">          9 :                 if (PyErr_WarnFormat(PyExc_FutureWarning, 1,</span></a>
+<a name="949"><span class="lineNum">     949 </span>            :                         &quot;The input object of type '%s' is an array-like &quot;</a>
+<a name="950"><span class="lineNum">     950 </span>            :                         &quot;implementing one of the corresponding protocols &quot;</a>
+<a name="951"><span class="lineNum">     951 </span>            :                         &quot;(`__array__`, `__array_interface__` or &quot;</a>
+<a name="952"><span class="lineNum">     952 </span>            :                         &quot;`__array_struct__`); but not a sequence (or 0-D). &quot;</a>
+<a name="953"><span class="lineNum">     953 </span>            :                         &quot;In the future, this object will be coerced as if it &quot;</a>
+<a name="954"><span class="lineNum">     954 </span>            :                         &quot;was first converted using `np.array(obj)`. &quot;</a>
+<a name="955"><span class="lineNum">     955 </span>            :                         &quot;To retain the old behaviour, you have to either &quot;</a>
+<a name="956"><span class="lineNum">     956 </span>            :                         &quot;modify the type '%s', or assign to an empty array &quot;</a>
+<a name="957"><span class="lineNum">     957 </span>            :                         &quot;created with `np.empty(correct_shape, dtype=object)`.&quot;,</a>
+<a name="958"><span class="lineNum">     958 </span><span class="lineCov">          9 :                         Py_TYPE(obj)-&gt;tp_name, Py_TYPE(obj)-&gt;tp_name) &lt; 0) {</span></a>
+<a name="959"><span class="lineNum">     959 </span><span class="lineCov">          3 :                     Py_DECREF(arr);</span></a>
+<a name="960"><span class="lineNum">     960 </span><span class="lineCov">          3 :                     return -1;</span></a>
+<a name="961"><span class="lineNum">     961 </span>            :                 }</a>
+<a name="962"><span class="lineNum">     962 </span>            :                 /*</a>
+<a name="963"><span class="lineNum">     963 </span>            :                  * Strangely enough, even though we threw away the result here,</a>
+<a name="964"><span class="lineNum">     964 </span>            :                  * we did use it during descriptor discovery, so promote it:</a>
+<a name="965"><span class="lineNum">     965 </span>            :                  */</a>
+<a name="966"><span class="lineNum">     966 </span><span class="lineCov">          6 :                 if (update_shape(curr_dims, &amp;max_dims, out_shape,</span></a>
+<a name="967"><span class="lineNum">     967 </span>            :                         0, NULL, NPY_FALSE, flags) &lt; 0) {</a>
+<a name="968"><span class="lineNum">     968 </span><span class="lineNoCov">          0 :                     *flags |= FOUND_RAGGED_ARRAY;</span></a>
+<a name="969"><span class="lineNum">     969 </span><span class="lineNoCov">          0 :                     Py_DECREF(arr);</span></a>
+<a name="970"><span class="lineNum">     970 </span><span class="lineNoCov">          0 :                     return max_dims;</span></a>
+<a name="971"><span class="lineNum">     971 </span>            :                 }</a>
+<a name="972"><span class="lineNum">     972 </span><span class="lineCov">          6 :                 if (!(*flags &amp; DESCRIPTOR_WAS_SET) &amp;&amp; handle_promotion(</span></a>
+<a name="973"><span class="lineNum">     973 </span>            :                         out_descr, PyArray_DESCR(arr), fixed_DType, flags) &lt; 0) {</a>
+<a name="974"><span class="lineNum">     974 </span><span class="lineNoCov">          0 :                     Py_DECREF(arr);</span></a>
+<a name="975"><span class="lineNum">     975 </span><span class="lineNoCov">          0 :                     return -1;</span></a>
+<a name="976"><span class="lineNum">     976 </span>            :                 }</a>
+<a name="977"><span class="lineNum">     977 </span><span class="lineCov">          6 :                 Py_DECREF(arr);</span></a>
+<a name="978"><span class="lineNum">     978 </span><span class="lineCov">          6 :                 return max_dims;</span></a>
+<a name="979"><span class="lineNum">     979 </span>            :             }</a>
+<a name="980"><span class="lineNum">     980 </span>            :         }</a>
+<a name="981"><span class="lineNum">     981 </span>            :     }</a>
+<a name="982"><span class="lineNum">     982 </span><span class="lineCov">    1959640 :     if (arr != NULL) {</span></a>
+<a name="983"><span class="lineNum">     983 </span>            :         /*</a>
+<a name="984"><span class="lineNum">     984 </span>            :          * This is an array object which will be added to the cache, keeps</a>
+<a name="985"><span class="lineNum">     985 </span>            :          * the reference to the array alive (takes ownership).</a>
+<a name="986"><span class="lineNum">     986 </span>            :          */</a>
+<a name="987"><span class="lineNum">     987 </span><span class="lineCov">    1443279 :         if (npy_new_coercion_cache(obj, (PyObject *)arr,</span></a>
+<a name="988"><span class="lineNum">     988 </span>            :                 0, coercion_cache_tail_ptr, curr_dims) &lt; 0) {</a>
+<a name="989"><span class="lineNum">     989 </span><span class="lineCov">    1443279 :             return -1;</span></a>
+<a name="990"><span class="lineNum">     990 </span>            :         }</a>
+<a name="991"><span class="lineNum">     991 </span>            : </a>
+<a name="992"><span class="lineNum">     992 </span><span class="lineCov">    1443279 :         if (curr_dims == 0) {</span></a>
+<a name="993"><span class="lineNum">     993 </span>            :             /*</a>
+<a name="994"><span class="lineNum">     994 </span>            :              * Special case for reverse broadcasting, ignore max_dims if this</a>
+<a name="995"><span class="lineNum">     995 </span>            :              * is a single array-like object; needed for PyArray_CopyObject.</a>
+<a name="996"><span class="lineNum">     996 </span>            :              */</a>
+<a name="997"><span class="lineNum">     997 </span><span class="lineCov">    1394844 :             memcpy(out_shape, PyArray_SHAPE(arr),</span></a>
+<a name="998"><span class="lineNum">     998 </span><span class="lineCov">    1394844 :                    PyArray_NDIM(arr) * sizeof(npy_intp));</span></a>
+<a name="999"><span class="lineNum">     999 </span><span class="lineCov">    1394844 :             max_dims = PyArray_NDIM(arr);</span></a>
+<a name="1000"><span class="lineNum">    1000 </span>            :         }</a>
+<a name="1001"><span class="lineNum">    1001 </span><span class="lineCov">      48435 :         else if (update_shape(curr_dims, &amp;max_dims, out_shape,</span></a>
+<a name="1002"><span class="lineNum">    1002 </span><span class="lineCov">      48435 :                 PyArray_NDIM(arr), PyArray_SHAPE(arr), NPY_FALSE, flags) &lt; 0) {</span></a>
+<a name="1003"><span class="lineNum">    1003 </span><span class="lineCov">         70 :             *flags |= FOUND_RAGGED_ARRAY;</span></a>
+<a name="1004"><span class="lineNum">    1004 </span><span class="lineCov">         70 :             return max_dims;</span></a>
+<a name="1005"><span class="lineNum">    1005 </span>            :         }</a>
+<a name="1006"><span class="lineNum">    1006 </span>            : </a>
+<a name="1007"><span class="lineNum">    1007 </span><span class="lineCov">    1443209 :         if (*flags &amp; DESCRIPTOR_WAS_SET) {</span></a>
+<a name="1008"><span class="lineNum">    1008 </span><span class="lineCov">     523177 :             return max_dims;</span></a>
+<a name="1009"><span class="lineNum">    1009 </span>            :         }</a>
+<a name="1010"><span class="lineNum">    1010 </span>            :         /*</a>
+<a name="1011"><span class="lineNum">    1011 </span>            :          * For arrays we may not just need to cast the dtype to the user</a>
+<a name="1012"><span class="lineNum">    1012 </span>            :          * provided fixed_DType. If this is an object array, the elements</a>
+<a name="1013"><span class="lineNum">    1013 </span>            :          * may need to be inspected individually.</a>
+<a name="1014"><span class="lineNum">    1014 </span>            :          * Note, this finds the descriptor of the array first and only then</a>
+<a name="1015"><span class="lineNum">    1015 </span>            :          * promotes here (different associativity).</a>
+<a name="1016"><span class="lineNum">    1016 </span>            :          */</a>
+<a name="1017"><span class="lineNum">    1017 </span><span class="lineCov">     920032 :         PyArray_Descr *cast_descr;</span></a>
+<a name="1018"><span class="lineNum">    1018 </span><span class="lineCov">     920032 :         if (find_descriptor_from_array(arr, fixed_DType, &amp;cast_descr) &lt; 0) {</span></a>
+<a name="1019"><span class="lineNum">    1019 </span>            :             return -1;</a>
+<a name="1020"><span class="lineNum">    1020 </span>            :         }</a>
+<a name="1021"><span class="lineNum">    1021 </span><span class="lineCov">     920031 :         if (cast_descr == NULL) {</span></a>
+<a name="1022"><span class="lineNum">    1022 </span>            :             /* object array with no elements, no need to promote/adjust. */</a>
+<a name="1023"><span class="lineNum">    1023 </span><span class="lineNoCov">          0 :             return max_dims;</span></a>
+<a name="1024"><span class="lineNum">    1024 </span>            :         }</a>
+<a name="1025"><span class="lineNum">    1025 </span><span class="lineCov">     920031 :         if (handle_promotion(out_descr, cast_descr, fixed_DType, flags) &lt; 0) {</span></a>
+<a name="1026"><span class="lineNum">    1026 </span><span class="lineCov">          1 :             Py_DECREF(cast_descr);</span></a>
+<a name="1027"><span class="lineNum">    1027 </span><span class="lineCov">          1 :             return -1;</span></a>
+<a name="1028"><span class="lineNum">    1028 </span>            :         }</a>
+<a name="1029"><span class="lineNum">    1029 </span><span class="lineCov">     920030 :         Py_DECREF(cast_descr);</span></a>
+<a name="1030"><span class="lineNum">    1030 </span><span class="lineCov">     920030 :         return max_dims;</span></a>
+<a name="1031"><span class="lineNum">    1031 </span>            :     }</a>
+<a name="1032"><span class="lineNum">    1032 </span>            : </a>
+<a name="1033"><span class="lineNum">    1033 </span>            :     /*</a>
+<a name="1034"><span class="lineNum">    1034 </span>            :      * The last step is to assume the input should be handled as a sequence</a>
+<a name="1035"><span class="lineNum">    1035 </span>            :      * and to handle it recursively. That is, unless we have hit the</a>
+<a name="1036"><span class="lineNum">    1036 </span>            :      * dimension limit.</a>
+<a name="1037"><span class="lineNum">    1037 </span>            :      */</a>
+<a name="1038"><span class="lineNum">    1038 </span><span class="lineCov">     516361 :     npy_bool is_sequence = PySequence_Check(obj);</span></a>
+<a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">     516361 :     if (is_sequence) {</span></a>
+<a name="1040"><span class="lineNum">    1040 </span><span class="lineCov">     411041 :         is_sequence = PySequence_Size(obj) &gt;= 0;</span></a>
+<a name="1041"><span class="lineNum">    1041 </span><span class="lineCov">     411041 :         if (NPY_UNLIKELY(!is_sequence)) {</span></a>
+<a name="1042"><span class="lineNum">    1042 </span>            :             /* NOTE: This should likely just raise all errors */</a>
+<a name="1043"><span class="lineNum">    1043 </span><span class="lineCov">         17 :             if (PyErr_ExceptionMatches(PyExc_RecursionError) ||</span></a>
+<a name="1044"><span class="lineNum">    1044 </span><span class="lineCov">          8 :                     PyErr_ExceptionMatches(PyExc_MemoryError)) {</span></a>
+<a name="1045"><span class="lineNum">    1045 </span>            :                 /*</a>
+<a name="1046"><span class="lineNum">    1046 </span>            :                  * Consider these unrecoverable errors, continuing execution</a>
+<a name="1047"><span class="lineNum">    1047 </span>            :                  * might crash the interpreter.</a>
+<a name="1048"><span class="lineNum">    1048 </span>            :                  */</a>
+<a name="1049"><span class="lineNum">    1049 </span><span class="lineCov">          2 :                 return -1;</span></a>
+<a name="1050"><span class="lineNum">    1050 </span>            :             }</a>
+<a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">          7 :             PyErr_Clear();</span></a>
+<a name="1052"><span class="lineNum">    1052 </span>            :         }</a>
+<a name="1053"><span class="lineNum">    1053 </span>            :     }</a>
+<a name="1054"><span class="lineNum">    1054 </span><span class="lineCov">     516359 :     if (NPY_UNLIKELY(*flags &amp; DISCOVER_TUPLES_AS_ELEMENTS) &amp;&amp;</span></a>
+<a name="1055"><span class="lineNum">    1055 </span><span class="lineCov">      17853 :             PyTuple_Check(obj)) {</span></a>
+<a name="1056"><span class="lineNum">    1056 </span><span class="lineCov">      16866 :         is_sequence = NPY_FALSE;</span></a>
+<a name="1057"><span class="lineNum">    1057 </span>            :     }</a>
+<a name="1058"><span class="lineNum">    1058 </span><span class="lineCov">     516359 :     if (curr_dims == max_dims || !is_sequence) {</span></a>
+<a name="1059"><span class="lineNum">    1059 </span>            :         /* Clear any PySequence_Size error which would corrupts further calls */</a>
+<a name="1060"><span class="lineNum">    1060 </span><span class="lineCov">     122275 :         max_dims = handle_scalar(</span></a>
+<a name="1061"><span class="lineNum">    1061 </span>            :                 obj, curr_dims, &amp;max_dims, out_descr, out_shape, fixed_DType,</a>
+<a name="1062"><span class="lineNum">    1062 </span>            :                 flags, NULL);</a>
+<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">     122275 :         if (is_sequence) {</span></a>
+<a name="1064"><span class="lineNum">    1064 </span>            :             /* Flag as ragged or too deep array */</a>
+<a name="1065"><span class="lineNum">    1065 </span><span class="lineCov">         82 :             *flags |= FOUND_RAGGED_ARRAY;</span></a>
+<a name="1066"><span class="lineNum">    1066 </span>            :         }</a>
+<a name="1067"><span class="lineNum">    1067 </span><span class="lineCov">     122275 :         return max_dims;</span></a>
+<a name="1068"><span class="lineNum">    1068 </span>            :     }</a>
+<a name="1069"><span class="lineNum">    1069 </span>            :     /* If we stop supporting bytes/str subclasses, more may be required here: */</a>
+<a name="1070"><span class="lineNum">    1070 </span><span class="lineCov">     394084 :     assert(!PyBytes_Check(obj) &amp;&amp; !PyUnicode_Check(obj));</span></a>
+<a name="1071"><span class="lineNum">    1071 </span>            : </a>
+<a name="1072"><span class="lineNum">    1072 </span><span class="lineCov">     394092 :   force_sequence_due_to_char_dtype:</span></a>
+<a name="1073"><span class="lineNum">    1073 </span>            : </a>
+<a name="1074"><span class="lineNum">    1074 </span>            :     /* Ensure we have a sequence (required for PyPy) */</a>
+<a name="1075"><span class="lineNum">    1075 </span><span class="lineCov">     394092 :     seq = PySequence_Fast(obj, &quot;Could not convert object to sequence&quot;);</span></a>
+<a name="1076"><span class="lineNum">    1076 </span><span class="lineCov">     394092 :     if (seq == NULL) {</span></a>
+<a name="1077"><span class="lineNum">    1077 </span>            :         /*</a>
+<a name="1078"><span class="lineNum">    1078 </span>            :          * Specifically do not fail on things that look like a dictionary,</a>
+<a name="1079"><span class="lineNum">    1079 </span>            :          * instead treat them as scalar.</a>
+<a name="1080"><span class="lineNum">    1080 </span>            :          */</a>
+<a name="1081"><span class="lineNum">    1081 </span><span class="lineCov">          2 :         if (PyErr_ExceptionMatches(PyExc_KeyError)) {</span></a>
+<a name="1082"><span class="lineNum">    1082 </span><span class="lineCov">          1 :             PyErr_Clear();</span></a>
+<a name="1083"><span class="lineNum">    1083 </span><span class="lineCov">          1 :             max_dims = handle_scalar(</span></a>
+<a name="1084"><span class="lineNum">    1084 </span>            :                     obj, curr_dims, &amp;max_dims, out_descr, out_shape, fixed_DType,</a>
+<a name="1085"><span class="lineNum">    1085 </span>            :                     flags, NULL);</a>
+<a name="1086"><span class="lineNum">    1086 </span><span class="lineCov">          1 :             return max_dims;</span></a>
+<a name="1087"><span class="lineNum">    1087 </span>            :         }</a>
+<a name="1088"><span class="lineNum">    1088 </span>            :         return -1;</a>
+<a name="1089"><span class="lineNum">    1089 </span>            :     }</a>
+<a name="1090"><span class="lineNum">    1090 </span>            :     /* The cache takes ownership of the sequence here. */</a>
+<a name="1091"><span class="lineNum">    1091 </span><span class="lineCov">     394090 :     if (npy_new_coercion_cache(obj, seq, 1, coercion_cache_tail_ptr, curr_dims) &lt; 0) {</span></a>
+<a name="1092"><span class="lineNum">    1092 </span>            :         return -1;</a>
+<a name="1093"><span class="lineNum">    1093 </span>            :     }</a>
+<a name="1094"><span class="lineNum">    1094 </span>            : </a>
+<a name="1095"><span class="lineNum">    1095 </span><span class="lineCov">     394090 :     npy_intp size = PySequence_Fast_GET_SIZE(seq);</span></a>
+<a name="1096"><span class="lineNum">    1096 </span><span class="lineCov">     394090 :     PyObject **objects = PySequence_Fast_ITEMS(seq);</span></a>
+<a name="1097"><span class="lineNum">    1097 </span>            : </a>
+<a name="1098"><span class="lineNum">    1098 </span><span class="lineCov">     394090 :     if (update_shape(curr_dims, &amp;max_dims,</span></a>
+<a name="1099"><span class="lineNum">    1099 </span>            :                      out_shape, 1, &amp;size, NPY_TRUE, flags) &lt; 0) {</a>
+<a name="1100"><span class="lineNum">    1100 </span>            :         /* But do update, if there this is a ragged case */</a>
+<a name="1101"><span class="lineNum">    1101 </span><span class="lineCov">         34 :         *flags |= FOUND_RAGGED_ARRAY;</span></a>
+<a name="1102"><span class="lineNum">    1102 </span><span class="lineCov">         34 :         return max_dims;</span></a>
+<a name="1103"><span class="lineNum">    1103 </span>            :     }</a>
+<a name="1104"><span class="lineNum">    1104 </span><span class="lineCov">     394056 :     if (size == 0) {</span></a>
+<a name="1105"><span class="lineNum">    1105 </span>            :         /* If the sequence is empty, this must be the last dimension */</a>
+<a name="1106"><span class="lineNum">    1106 </span><span class="lineCov">       5028 :         *flags |= MAX_DIMS_WAS_REACHED;</span></a>
+<a name="1107"><span class="lineNum">    1107 </span><span class="lineCov">       5028 :         return curr_dims + 1;</span></a>
+<a name="1108"><span class="lineNum">    1108 </span>            :     }</a>
+<a name="1109"><span class="lineNum">    1109 </span>            : </a>
+<a name="1110"><span class="lineNum">    1110 </span>            :     /* Allow keyboard interrupts. See gh issue 18117. */</a>
+<a name="1111"><span class="lineNum">    1111 </span><span class="lineCov">     389028 :     if (PyErr_CheckSignals() &lt; 0) {</span></a>
+<a name="1112"><span class="lineNum">    1112 </span>            :         return -1;</a>
+<a name="1113"><span class="lineNum">    1113 </span>            :     }</a>
+<a name="1114"><span class="lineNum">    1114 </span>            : </a>
+<a name="1115"><span class="lineNum">    1115 </span>            :     /* Recursive call for each sequence item */</a>
+<a name="1116"><span class="lineNum">    1116 </span><span class="lineCov">    6644157 :     for (Py_ssize_t i = 0; i &lt; size; i++) {</span></a>
+<a name="1117"><span class="lineNum">    1117 </span><span class="lineCov">   12510306 :         max_dims = PyArray_DiscoverDTypeAndShape_Recursive(</span></a>
+<a name="1118"><span class="lineNum">    1118 </span><span class="lineCov">    6255153 :                 objects[i], curr_dims + 1, max_dims,</span></a>
+<a name="1119"><span class="lineNum">    1119 </span>            :                 out_descr, out_shape, coercion_cache_tail_ptr, fixed_DType,</a>
+<a name="1120"><span class="lineNum">    1120 </span>            :                 flags);</a>
+<a name="1121"><span class="lineNum">    1121 </span>            : </a>
+<a name="1122"><span class="lineNum">    1122 </span><span class="lineCov">    6255153 :         if (max_dims &lt; 0) {</span></a>
+<a name="1123"><span class="lineNum">    1123 </span>            :             return -1;</a>
+<a name="1124"><span class="lineNum">    1124 </span>            :         }</a>
+<a name="1125"><span class="lineNum">    1125 </span>            :     }</a>
+<a name="1126"><span class="lineNum">    1126 </span><span class="lineCov">     389004 :     return max_dims;</span></a>
+<a name="1127"><span class="lineNum">    1127 </span>            : }</a>
+<a name="1128"><span class="lineNum">    1128 </span>            : </a>
+<a name="1129"><span class="lineNum">    1129 </span>            : </a>
+<a name="1130"><span class="lineNum">    1130 </span>            : /**</a>
+<a name="1131"><span class="lineNum">    1131 </span>            :  * Finds the DType and shape of an arbitrary nested sequence. This is the</a>
+<a name="1132"><span class="lineNum">    1132 </span>            :  * general purpose function to find the parameters of the array (but not</a>
+<a name="1133"><span class="lineNum">    1133 </span>            :  * the array itself) as returned by `np.array()`</a>
+<a name="1134"><span class="lineNum">    1134 </span>            :  *</a>
+<a name="1135"><span class="lineNum">    1135 </span>            :  * Note: Before considering to make part of this public, we should consider</a>
+<a name="1136"><span class="lineNum">    1136 </span>            :  *       whether things such as `out_descr != NULL` should be supported in</a>
+<a name="1137"><span class="lineNum">    1137 </span>            :  *       a public API.</a>
+<a name="1138"><span class="lineNum">    1138 </span>            :  *</a>
+<a name="1139"><span class="lineNum">    1139 </span>            :  * @param obj Scalar or nested sequences.</a>
+<a name="1140"><span class="lineNum">    1140 </span>            :  * @param max_dims Maximum number of dimensions (after this scalars are forced)</a>
+<a name="1141"><span class="lineNum">    1141 </span>            :  * @param out_shape Will be filled with the output shape (more than the actual</a>
+<a name="1142"><span class="lineNum">    1142 </span>            :  *        shape may be written).</a>
+<a name="1143"><span class="lineNum">    1143 </span>            :  * @param coercion_cache NULL initialized reference to a cache pointer.</a>
+<a name="1144"><span class="lineNum">    1144 </span>            :  *        May be set to the first coercion_cache, and has to be freed using</a>
+<a name="1145"><span class="lineNum">    1145 </span>            :  *        npy_free_coercion_cache.</a>
+<a name="1146"><span class="lineNum">    1146 </span>            :  *        This should be stored in a thread-safe manner (i.e. function static)</a>
+<a name="1147"><span class="lineNum">    1147 </span>            :  *        and is designed to be consumed by `PyArray_AssignFromCache`.</a>
+<a name="1148"><span class="lineNum">    1148 </span>            :  *        If not consumed, must be freed using `npy_free_coercion_cache`.</a>
+<a name="1149"><span class="lineNum">    1149 </span>            :  * @param fixed_DType A user provided fixed DType class.</a>
+<a name="1150"><span class="lineNum">    1150 </span>            :  * @param requested_descr A user provided fixed descriptor. This is always</a>
+<a name="1151"><span class="lineNum">    1151 </span>            :  *        returned as the discovered descriptor, but currently only used</a>
+<a name="1152"><span class="lineNum">    1152 </span>            :  *        for the ``__array__`` protocol.</a>
+<a name="1153"><span class="lineNum">    1153 </span>            :  * @param out_descr Set to the discovered output descriptor. This may be</a>
+<a name="1154"><span class="lineNum">    1154 </span>            :  *        non NULL but only when fixed_DType/requested_descr are not given.</a>
+<a name="1155"><span class="lineNum">    1155 </span>            :  *        If non NULL, it is the first dtype being promoted and used if there</a>
+<a name="1156"><span class="lineNum">    1156 </span>            :  *        are no elements.</a>
+<a name="1157"><span class="lineNum">    1157 </span>            :  *        The result may be unchanged (remain NULL) when converting a</a>
+<a name="1158"><span class="lineNum">    1158 </span>            :  *        sequence with no elements. In this case it is callers responsibility</a>
+<a name="1159"><span class="lineNum">    1159 </span>            :  *        to choose a default.</a>
+<a name="1160"><span class="lineNum">    1160 </span>            :  * @return dimensions of the discovered object or -1 on error.</a>
+<a name="1161"><span class="lineNum">    1161 </span>            :  *         WARNING: If (and only if) the output is a single array, the ndim</a>
+<a name="1162"><span class="lineNum">    1162 </span>            :  *         returned _can_ exceed the maximum allowed number of dimensions.</a>
+<a name="1163"><span class="lineNum">    1163 </span>            :  *         It might be nice to deprecate this? But it allows things such as</a>
+<a name="1164"><span class="lineNum">    1164 </span>            :  *         `arr1d[...] = np.array([[1,2,3,4]])`</a>
+<a name="1165"><span class="lineNum">    1165 </span>            :  */</a>
+<a name="1166"><span class="lineNum">    1166 </span>            : NPY_NO_EXPORT int</a>
+<a name="1167"><span class="lineNum">    1167 </span><span class="lineCov">    5647923 : PyArray_DiscoverDTypeAndShape(</span></a>
+<a name="1168"><span class="lineNum">    1168 </span>            :         PyObject *obj, int max_dims,</a>
+<a name="1169"><span class="lineNum">    1169 </span>            :         npy_intp out_shape[NPY_MAXDIMS],</a>
+<a name="1170"><span class="lineNum">    1170 </span>            :         coercion_cache_obj **coercion_cache,</a>
+<a name="1171"><span class="lineNum">    1171 </span>            :         PyArray_DTypeMeta *fixed_DType, PyArray_Descr *requested_descr,</a>
+<a name="1172"><span class="lineNum">    1172 </span>            :         PyArray_Descr **out_descr)</a>
+<a name="1173"><span class="lineNum">    1173 </span>            : {</a>
+<a name="1174"><span class="lineNum">    1174 </span><span class="lineCov">    5647923 :     coercion_cache_obj **coercion_cache_head = coercion_cache;</span></a>
+<a name="1175"><span class="lineNum">    1175 </span><span class="lineCov">    5647923 :     *coercion_cache = NULL;</span></a>
+<a name="1176"><span class="lineNum">    1176 </span><span class="lineCov">    5647923 :     enum _dtype_discovery_flags flags = 0;</span></a>
+<a name="1177"><span class="lineNum">    1177 </span>            : </a>
+<a name="1178"><span class="lineNum">    1178 </span>            :     /*</a>
+<a name="1179"><span class="lineNum">    1179 </span>            :      * Support a passed in descriptor (but only if nothing was specified).</a>
+<a name="1180"><span class="lineNum">    1180 </span>            :      */</a>
+<a name="1181"><span class="lineNum">    1181 </span><span class="lineCov">    5647923 :     assert(*out_descr == NULL || fixed_DType == NULL);</span></a>
+<a name="1182"><span class="lineNum">    1182 </span>            :     /* Validate input of requested descriptor and DType */</a>
+<a name="1183"><span class="lineNum">    1183 </span><span class="lineCov">    5647923 :     if (fixed_DType != NULL) {</span></a>
+<a name="1184"><span class="lineNum">    1184 </span><span class="lineCov">    1835268 :         assert(PyObject_TypeCheck(</span></a>
+<a name="1185"><span class="lineNum">    1185 </span>            :                 (PyObject *)fixed_DType, (PyTypeObject *)&amp;PyArrayDTypeMeta_Type));</a>
+<a name="1186"><span class="lineNum">    1186 </span>            :     }</a>
+<a name="1187"><span class="lineNum">    1187 </span>            : </a>
+<a name="1188"><span class="lineNum">    1188 </span><span class="lineCov">    5647923 :     if (requested_descr != NULL) {</span></a>
+<a name="1189"><span class="lineNum">    1189 </span><span class="lineCov">    1833450 :         assert(fixed_DType == NPY_DTYPE(requested_descr));</span></a>
+<a name="1190"><span class="lineNum">    1190 </span>            :         /* The output descriptor must be the input. */</a>
+<a name="1191"><span class="lineNum">    1191 </span><span class="lineCov">    1833450 :         Py_INCREF(requested_descr);</span></a>
+<a name="1192"><span class="lineNum">    1192 </span><span class="lineCov">    1833450 :         *out_descr = requested_descr;</span></a>
+<a name="1193"><span class="lineNum">    1193 </span><span class="lineCov">    1833450 :         flags |= DESCRIPTOR_WAS_SET;</span></a>
+<a name="1194"><span class="lineNum">    1194 </span>            :     }</a>
+<a name="1195"><span class="lineNum">    1195 </span>            : </a>
+<a name="1196"><span class="lineNum">    1196 </span>            :     /*</a>
+<a name="1197"><span class="lineNum">    1197 </span>            :      * Call the recursive function, the setup for this may need expanding</a>
+<a name="1198"><span class="lineNum">    1198 </span>            :      * to handle caching better.</a>
+<a name="1199"><span class="lineNum">    1199 </span>            :      */</a>
+<a name="1200"><span class="lineNum">    1200 </span>            : </a>
+<a name="1201"><span class="lineNum">    1201 </span>            :     /* Legacy discovery flags */</a>
+<a name="1202"><span class="lineNum">    1202 </span><span class="lineCov">    5647923 :     if (requested_descr != NULL) {</span></a>
+<a name="1203"><span class="lineNum">    1203 </span><span class="lineCov">    1833450 :         if (requested_descr-&gt;type_num == NPY_STRING &amp;&amp;</span></a>
+<a name="1204"><span class="lineNum">    1204 </span>            :                 requested_descr-&gt;type == 'c') {</a>
+<a name="1205"><span class="lineNum">    1205 </span>            :             /* Character dtype variation of string (should be deprecated...) */</a>
+<a name="1206"><span class="lineNum">    1206 </span><span class="lineCov">         10 :             flags |= DISCOVER_STRINGS_AS_SEQUENCES;</span></a>
+<a name="1207"><span class="lineNum">    1207 </span>            :         }</a>
+<a name="1208"><span class="lineNum">    1208 </span><span class="lineCov">    1833440 :         else if (requested_descr-&gt;type_num == NPY_VOID &amp;&amp;</span></a>
+<a name="1209"><span class="lineNum">    1209 </span><span class="lineCov">      12848 :                     (requested_descr-&gt;names || requested_descr-&gt;subarray))  {</span></a>
+<a name="1210"><span class="lineNum">    1210 </span>            :             /* Void is a chimera, in that it may or may not be structured... */</a>
+<a name="1211"><span class="lineNum">    1211 </span><span class="lineCov">      12809 :             flags |= DISCOVER_TUPLES_AS_ELEMENTS;</span></a>
+<a name="1212"><span class="lineNum">    1212 </span>            :         }</a>
+<a name="1213"><span class="lineNum">    1213 </span>            :     }</a>
+<a name="1214"><span class="lineNum">    1214 </span>            : </a>
+<a name="1215"><span class="lineNum">    1215 </span><span class="lineCov">    5647923 :     int ndim = PyArray_DiscoverDTypeAndShape_Recursive(</span></a>
+<a name="1216"><span class="lineNum">    1216 </span>            :             obj, 0, max_dims, out_descr, out_shape, &amp;coercion_cache,</a>
+<a name="1217"><span class="lineNum">    1217 </span>            :             fixed_DType, &amp;flags);</a>
+<a name="1218"><span class="lineNum">    1218 </span><span class="lineCov">    5647923 :     if (ndim &lt; 0) {</span></a>
+<a name="1219"><span class="lineNum">    1219 </span><span class="lineCov">         58 :         goto fail;</span></a>
+<a name="1220"><span class="lineNum">    1220 </span>            :     }</a>
+<a name="1221"><span class="lineNum">    1221 </span>            : </a>
+<a name="1222"><span class="lineNum">    1222 </span><span class="lineCov">    5647865 :     if (NPY_UNLIKELY(flags &amp; FOUND_RAGGED_ARRAY)) {</span></a>
+<a name="1223"><span class="lineNum">    1223 </span>            :         /*</a>
+<a name="1224"><span class="lineNum">    1224 </span>            :          * If max-dims was reached and the dimensions reduced, this is ragged.</a>
+<a name="1225"><span class="lineNum">    1225 </span>            :          * Otherwise, we merely reached the maximum dimensions, which is</a>
+<a name="1226"><span class="lineNum">    1226 </span>            :          * slightly different. This happens for example for `[1, [2, 3]]`</a>
+<a name="1227"><span class="lineNum">    1227 </span>            :          * where the maximum dimensions is 1, but then a sequence found.</a>
+<a name="1228"><span class="lineNum">    1228 </span>            :          *</a>
+<a name="1229"><span class="lineNum">    1229 </span>            :          * In this case we need to inform the user and clean out the cache</a>
+<a name="1230"><span class="lineNum">    1230 </span>            :          * since it may be too deep.</a>
+<a name="1231"><span class="lineNum">    1231 </span>            :          */</a>
+<a name="1232"><span class="lineNum">    1232 </span>            : </a>
+<a name="1233"><span class="lineNum">    1233 </span>            :         /* Handle reaching the maximum depth differently: */</a>
+<a name="1234"><span class="lineNum">    1234 </span><span class="lineCov">        149 :         int too_deep = ndim == max_dims;</span></a>
+<a name="1235"><span class="lineNum">    1235 </span>            : </a>
+<a name="1236"><span class="lineNum">    1236 </span><span class="lineCov">        149 :         if (fixed_DType == NULL) {</span></a>
+<a name="1237"><span class="lineNum">    1237 </span>            :             /* This is discovered as object, but deprecated */</a>
+<a name="1238"><span class="lineNum">    1238 </span><span class="lineCov">         10 :             static PyObject *visibleDeprecationWarning = NULL;</span></a>
+<a name="1239"><span class="lineNum">    1239 </span><span class="lineCov">         10 :             npy_cache_import(</span></a>
+<a name="1240"><span class="lineNum">    1240 </span>            :                     &quot;numpy&quot;, &quot;VisibleDeprecationWarning&quot;,</a>
+<a name="1241"><span class="lineNum">    1241 </span>            :                     &amp;visibleDeprecationWarning);</a>
+<a name="1242"><span class="lineNum">    1242 </span><span class="lineCov">         10 :             if (visibleDeprecationWarning == NULL) {</span></a>
+<a name="1243"><span class="lineNum">    1243 </span><span class="lineNoCov">          0 :                 goto fail;</span></a>
+<a name="1244"><span class="lineNum">    1244 </span>            :             }</a>
+<a name="1245"><span class="lineNum">    1245 </span><span class="lineCov">         10 :             if (!too_deep) {</span></a>
+<a name="1246"><span class="lineNum">    1246 </span>            :                 /* NumPy 1.19, 2019-11-01 */</a>
+<a name="1247"><span class="lineNum">    1247 </span><span class="lineCov">          7 :                 if (PyErr_WarnEx(visibleDeprecationWarning,</span></a>
+<a name="1248"><span class="lineNum">    1248 </span>            :                         &quot;Creating an ndarray from ragged nested sequences (which &quot;</a>
+<a name="1249"><span class="lineNum">    1249 </span>            :                         &quot;is a list-or-tuple of lists-or-tuples-or ndarrays with &quot;</a>
+<a name="1250"><span class="lineNum">    1250 </span>            :                         &quot;different lengths or shapes) is deprecated. If you &quot;</a>
+<a name="1251"><span class="lineNum">    1251 </span>            :                         &quot;meant to do this, you must specify 'dtype=object' &quot;</a>
+<a name="1252"><span class="lineNum">    1252 </span>            :                         &quot;when creating the ndarray.&quot;, 1) &lt; 0) {</a>
+<a name="1253"><span class="lineNum">    1253 </span><span class="lineNoCov">          0 :                     goto fail;</span></a>
+<a name="1254"><span class="lineNum">    1254 </span>            :                 }</a>
+<a name="1255"><span class="lineNum">    1255 </span>            :             }</a>
+<a name="1256"><span class="lineNum">    1256 </span>            :             else {</a>
+<a name="1257"><span class="lineNum">    1257 </span>            :                 /* NumPy 1.20, 2020-05-08 */</a>
+<a name="1258"><span class="lineNum">    1258 </span>            :                 /* Note, max_dims should normally always be NPY_MAXDIMS here */</a>
+<a name="1259"><span class="lineNum">    1259 </span><span class="lineCov">          3 :                 if (PyErr_WarnFormat(visibleDeprecationWarning, 1,</span></a>
+<a name="1260"><span class="lineNum">    1260 </span>            :                         &quot;Creating an ndarray from nested sequences exceeding &quot;</a>
+<a name="1261"><span class="lineNum">    1261 </span>            :                         &quot;the maximum number of dimensions of %d is deprecated. &quot;</a>
+<a name="1262"><span class="lineNum">    1262 </span>            :                         &quot;If you mean to do this, you must specify &quot;</a>
+<a name="1263"><span class="lineNum">    1263 </span>            :                         &quot;'dtype=object' when creating the ndarray.&quot;,</a>
+<a name="1264"><span class="lineNum">    1264 </span>            :                         max_dims) &lt; 0) {</a>
+<a name="1265"><span class="lineNum">    1265 </span><span class="lineCov">          1 :                     goto fail;</span></a>
+<a name="1266"><span class="lineNum">    1266 </span>            :                 }</a>
+<a name="1267"><span class="lineNum">    1267 </span>            :             }</a>
+<a name="1268"><span class="lineNum">    1268 </span>            :             /* Ensure that ragged arrays always return object dtype */</a>
+<a name="1269"><span class="lineNum">    1269 </span><span class="lineCov">          9 :             Py_XSETREF(*out_descr, PyArray_DescrFromType(NPY_OBJECT));</span></a>
+<a name="1270"><span class="lineNum">    1270 </span>            :         }</a>
+<a name="1271"><span class="lineNum">    1271 </span><span class="lineCov">        139 :         else if (fixed_DType-&gt;type_num != NPY_OBJECT) {</span></a>
+<a name="1272"><span class="lineNum">    1272 </span>            :             /* Only object DType supports ragged cases unify error */</a>
+<a name="1273"><span class="lineNum">    1273 </span>            : </a>
+<a name="1274"><span class="lineNum">    1274 </span>            :             /*</a>
+<a name="1275"><span class="lineNum">    1275 </span>            :              * We used to let certain ragged arrays pass if they also</a>
+<a name="1276"><span class="lineNum">    1276 </span>            :              * support e.g. conversion using `float(arr)`, which currently</a>
+<a name="1277"><span class="lineNum">    1277 </span>            :              * works for arrays with only one element.</a>
+<a name="1278"><span class="lineNum">    1278 </span>            :              * Thus we catch at least most of such cases here and give a</a>
+<a name="1279"><span class="lineNum">    1279 </span>            :              * DeprecationWarning instead of an error.</a>
+<a name="1280"><span class="lineNum">    1280 </span>            :              * Note that some of these will actually error later on when</a>
+<a name="1281"><span class="lineNum">    1281 </span>            :              * attempting to do the actual assign.</a>
+<a name="1282"><span class="lineNum">    1282 </span>            :              */</a>
+<a name="1283"><span class="lineNum">    1283 </span><span class="lineCov">         18 :             int deprecate_single_element_ragged = 0;</span></a>
+<a name="1284"><span class="lineNum">    1284 </span><span class="lineCov">         18 :             coercion_cache_obj *current = *coercion_cache_head;</span></a>
+<a name="1285"><span class="lineNum">    1285 </span><span class="lineCov">        327 :             while (current != NULL) {</span></a>
+<a name="1286"><span class="lineNum">    1286 </span><span class="lineCov">        311 :                 if (current-&gt;sequence) {</span></a>
+<a name="1287"><span class="lineNum">    1287 </span><span class="lineCov">        297 :                     if (current-&gt;depth == ndim) {</span></a>
+<a name="1288"><span class="lineNum">    1288 </span>            :                         /*</a>
+<a name="1289"><span class="lineNum">    1289 </span>            :                          * Assume that only array-likes will allow the deprecated</a>
+<a name="1290"><span class="lineNum">    1290 </span>            :                          * behaviour</a>
+<a name="1291"><span class="lineNum">    1291 </span>            :                          */</a>
+<a name="1292"><span class="lineNum">    1292 </span>            :                         deprecate_single_element_ragged = 0;</a>
+<a name="1293"><span class="lineNum">    1293 </span>            :                         break;</a>
+<a name="1294"><span class="lineNum">    1294 </span>            :                     }</a>
+<a name="1295"><span class="lineNum">    1295 </span>            :                     /* check next converted sequence/array-like */</a>
+<a name="1296"><span class="lineNum">    1296 </span><span class="lineCov">        295 :                     current = current-&gt;next;</span></a>
+<a name="1297"><span class="lineNum">    1297 </span><span class="lineCov">        295 :                     continue;</span></a>
+<a name="1298"><span class="lineNum">    1298 </span>            :                 }</a>
+<a name="1299"><span class="lineNum">    1299 </span><span class="lineCov">         14 :                 PyArrayObject *arr = (PyArrayObject *)(current-&gt;arr_or_sequence);</span></a>
+<a name="1300"><span class="lineNum">    1300 </span><span class="lineCov">         14 :                 assert(PyArray_NDIM(arr) + current-&gt;depth &gt;= ndim);</span></a>
+<a name="1301"><span class="lineNum">    1301 </span><span class="lineCov">         14 :                 if (PyArray_NDIM(arr) != ndim - current-&gt;depth) {</span></a>
+<a name="1302"><span class="lineNum">    1302 </span>            :                     /* This array is not compatible with the final shape */</a>
+<a name="1303"><span class="lineNum">    1303 </span><span class="lineCov">         14 :                     if (PyArray_SIZE(arr) != 1) {</span></a>
+<a name="1304"><span class="lineNum">    1304 </span>            :                         deprecate_single_element_ragged = 0;</a>
+<a name="1305"><span class="lineNum">    1305 </span>            :                         break;</a>
+<a name="1306"><span class="lineNum">    1306 </span>            :                     }</a>
+<a name="1307"><span class="lineNum">    1307 </span>            :                     deprecate_single_element_ragged = 1;</a>
+<a name="1308"><span class="lineNum">    1308 </span>            :                 }</a>
+<a name="1309"><span class="lineNum">    1309 </span><span class="lineCov">         14 :                 current = current-&gt;next;</span></a>
+<a name="1310"><span class="lineNum">    1310 </span>            :             }</a>
+<a name="1311"><span class="lineNum">    1311 </span>            : </a>
+<a name="1312"><span class="lineNum">    1312 </span><span class="lineCov">         18 :             if (deprecate_single_element_ragged) {</span></a>
+<a name="1313"><span class="lineNum">    1313 </span>            :                 /* Deprecated 2020-07-24, NumPy 1.20 */</a>
+<a name="1314"><span class="lineNum">    1314 </span><span class="lineCov">         14 :                 if (DEPRECATE(</span></a>
+<a name="1315"><span class="lineNum">    1315 </span>            :                         &quot;setting an array element with a sequence. &quot;</a>
+<a name="1316"><span class="lineNum">    1316 </span>            :                         &quot;This was supported in some cases where the elements &quot;</a>
+<a name="1317"><span class="lineNum">    1317 </span>            :                         &quot;are arrays with a single element. For example &quot;</a>
+<a name="1318"><span class="lineNum">    1318 </span>            :                         &quot;`np.array([1, np.array([2])], dtype=int)`. &quot;</a>
+<a name="1319"><span class="lineNum">    1319 </span>            :                         &quot;In the future this will raise the same ValueError as &quot;</a>
+<a name="1320"><span class="lineNum">    1320 </span>            :                         &quot;`np.array([1, [2]], dtype=int)`.&quot;) &lt; 0) {</a>
+<a name="1321"><span class="lineNum">    1321 </span><span class="lineCov">          4 :                     goto fail;</span></a>
+<a name="1322"><span class="lineNum">    1322 </span>            :                 }</a>
+<a name="1323"><span class="lineNum">    1323 </span>            :             }</a>
+<a name="1324"><span class="lineNum">    1324 </span><span class="lineCov">          4 :             else if (!too_deep) {</span></a>
+<a name="1325"><span class="lineNum">    1325 </span><span class="lineCov">          1 :                 PyObject *shape = PyArray_IntTupleFromIntp(ndim, out_shape);</span></a>
+<a name="1326"><span class="lineNum">    1326 </span><span class="lineCov">          1 :                 PyErr_Format(PyExc_ValueError,</span></a>
+<a name="1327"><span class="lineNum">    1327 </span>            :                         &quot;setting an array element with a sequence. The &quot;</a>
+<a name="1328"><span class="lineNum">    1328 </span>            :                         &quot;requested array has an inhomogeneous shape after &quot;</a>
+<a name="1329"><span class="lineNum">    1329 </span>            :                         &quot;%d dimensions. The detected shape was &quot;</a>
+<a name="1330"><span class="lineNum">    1330 </span>            :                         &quot;%R + inhomogeneous part.&quot;,</a>
+<a name="1331"><span class="lineNum">    1331 </span>            :                         ndim, shape);</a>
+<a name="1332"><span class="lineNum">    1332 </span><span class="lineCov">          1 :                 Py_DECREF(shape);</span></a>
+<a name="1333"><span class="lineNum">    1333 </span><span class="lineCov">          1 :                 goto fail;</span></a>
+<a name="1334"><span class="lineNum">    1334 </span>            :             }</a>
+<a name="1335"><span class="lineNum">    1335 </span>            :             else {</a>
+<a name="1336"><span class="lineNum">    1336 </span><span class="lineCov">          3 :                 PyErr_Format(PyExc_ValueError,</span></a>
+<a name="1337"><span class="lineNum">    1337 </span>            :                         &quot;setting an array element with a sequence. The &quot;</a>
+<a name="1338"><span class="lineNum">    1338 </span>            :                         &quot;requested array would exceed the maximum number of &quot;</a>
+<a name="1339"><span class="lineNum">    1339 </span>            :                         &quot;dimension of %d.&quot;,</a>
+<a name="1340"><span class="lineNum">    1340 </span>            :                         max_dims);</a>
+<a name="1341"><span class="lineNum">    1341 </span><span class="lineCov">          3 :                 goto fail;</span></a>
+<a name="1342"><span class="lineNum">    1342 </span>            :             }</a>
+<a name="1343"><span class="lineNum">    1343 </span>            :         }</a>
+<a name="1344"><span class="lineNum">    1344 </span>            : </a>
+<a name="1345"><span class="lineNum">    1345 </span>            :         /*</a>
+<a name="1346"><span class="lineNum">    1346 </span>            :          * If the array is ragged, the cache may be too deep, so clean it.</a>
+<a name="1347"><span class="lineNum">    1347 </span>            :          * The cache is left at the same depth as the array though.</a>
+<a name="1348"><span class="lineNum">    1348 </span>            :          */</a>
+<a name="1349"><span class="lineNum">    1349 </span><span class="lineCov">        140 :         coercion_cache_obj **next_ptr = coercion_cache_head;</span></a>
+<a name="1350"><span class="lineNum">    1350 </span><span class="lineCov">        140 :         coercion_cache_obj *current = *coercion_cache_head;  /* item to check */</span></a>
+<a name="1351"><span class="lineNum">    1351 </span><span class="lineCov">       1035 :         while (current != NULL) {</span></a>
+<a name="1352"><span class="lineNum">    1352 </span><span class="lineCov">        895 :             if (current-&gt;depth &gt; ndim) {</span></a>
+<a name="1353"><span class="lineNum">    1353 </span>            :                 /* delete &quot;next&quot; cache item and advanced it (unlike later) */</a>
+<a name="1354"><span class="lineNum">    1354 </span><span class="lineCov">         31 :                 current = npy_unlink_coercion_cache(current);</span></a>
+<a name="1355"><span class="lineNum">    1355 </span><span class="lineCov">         31 :                 continue;</span></a>
+<a name="1356"><span class="lineNum">    1356 </span>            :             }</a>
+<a name="1357"><span class="lineNum">    1357 </span>            :             /* advance both prev and next, and set prev-&gt;next to new item */</a>
+<a name="1358"><span class="lineNum">    1358 </span><span class="lineCov">        864 :             *next_ptr = current;</span></a>
+<a name="1359"><span class="lineNum">    1359 </span><span class="lineCov">        864 :             next_ptr = &amp;(current-&gt;next);</span></a>
+<a name="1360"><span class="lineNum">    1360 </span><span class="lineCov">        864 :             current = current-&gt;next;</span></a>
+<a name="1361"><span class="lineNum">    1361 </span>            :         }</a>
+<a name="1362"><span class="lineNum">    1362 </span><span class="lineCov">        140 :         *next_ptr = NULL;</span></a>
+<a name="1363"><span class="lineNum">    1363 </span>            :     }</a>
+<a name="1364"><span class="lineNum">    1364 </span>            :     /* We could check here for max-ndims being reached as well */</a>
+<a name="1365"><span class="lineNum">    1365 </span>            : </a>
+<a name="1366"><span class="lineNum">    1366 </span><span class="lineCov">    5647856 :     if (requested_descr != NULL) {</span></a>
+<a name="1367"><span class="lineNum">    1367 </span>            :         /* descriptor was provided, we did not accidentally change it */</a>
+<a name="1368"><span class="lineNum">    1368 </span><span class="lineCov">    1833439 :         assert(*out_descr == requested_descr);</span></a>
+<a name="1369"><span class="lineNum">    1369 </span>            :     }</a>
+<a name="1370"><span class="lineNum">    1370 </span><span class="lineCov">    3814417 :     else if (NPY_UNLIKELY(*out_descr == NULL)) {</span></a>
+<a name="1371"><span class="lineNum">    1371 </span>            :         /*</a>
+<a name="1372"><span class="lineNum">    1372 </span>            :          * When the object contained no elements (sequence of length zero),</a>
+<a name="1373"><span class="lineNum">    1373 </span>            :          * the no descriptor may have been found. When a DType was requested</a>
+<a name="1374"><span class="lineNum">    1374 </span>            :          * we use it to define the output dtype.</a>
+<a name="1375"><span class="lineNum">    1375 </span>            :          * Otherwise, out_descr will remain NULL and the caller has to set</a>
+<a name="1376"><span class="lineNum">    1376 </span>            :          * the correct default.</a>
+<a name="1377"><span class="lineNum">    1377 </span>            :          */</a>
+<a name="1378"><span class="lineNum">    1378 </span><span class="lineCov">       2877 :         if (fixed_DType != NULL) {</span></a>
+<a name="1379"><span class="lineNum">    1379 </span><span class="lineCov">         30 :             *out_descr = fixed_DType-&gt;default_descr(fixed_DType);</span></a>
+<a name="1380"><span class="lineNum">    1380 </span><span class="lineCov">         30 :             if (*out_descr == NULL) {</span></a>
+<a name="1381"><span class="lineNum">    1381 </span><span class="lineNoCov">          0 :                 goto fail;</span></a>
+<a name="1382"><span class="lineNum">    1382 </span>            :             }</a>
+<a name="1383"><span class="lineNum">    1383 </span>            :         }</a>
+<a name="1384"><span class="lineNum">    1384 </span>            :     }</a>
+<a name="1385"><span class="lineNum">    1385 </span><span class="lineCov">    5647923 :     return ndim;</span></a>
+<a name="1386"><span class="lineNum">    1386 </span>            : </a>
+<a name="1387"><span class="lineNum">    1387 </span><span class="lineCov">         67 :   fail:</span></a>
+<a name="1388"><span class="lineNum">    1388 </span><span class="lineCov">         67 :     npy_free_coercion_cache(*coercion_cache_head);</span></a>
+<a name="1389"><span class="lineNum">    1389 </span><span class="lineCov">         67 :     *coercion_cache_head = NULL;</span></a>
+<a name="1390"><span class="lineNum">    1390 </span><span class="lineCov">         67 :     Py_XSETREF(*out_descr, NULL);</span></a>
+<a name="1391"><span class="lineNum">    1391 </span>            :     return -1;</a>
+<a name="1392"><span class="lineNum">    1392 </span>            : }</a>
+<a name="1393"><span class="lineNum">    1393 </span>            : </a>
+<a name="1394"><span class="lineNum">    1394 </span>            : </a>
+<a name="1395"><span class="lineNum">    1395 </span>            : </a>
+<a name="1396"><span class="lineNum">    1396 </span>            : /**</a>
+<a name="1397"><span class="lineNum">    1397 </span>            :  * Check the descriptor is a legacy &quot;flexible&quot; DType instance, this is</a>
+<a name="1398"><span class="lineNum">    1398 </span>            :  * an instance which is (normally) not attached to an array, such as a string</a>
+<a name="1399"><span class="lineNum">    1399 </span>            :  * of length 0 or a datetime with no unit.</a>
+<a name="1400"><span class="lineNum">    1400 </span>            :  * These should be largely deprecated, and represent only the DType class</a>
+<a name="1401"><span class="lineNum">    1401 </span>            :  * for most `dtype` parameters.</a>
+<a name="1402"><span class="lineNum">    1402 </span>            :  *</a>
+<a name="1403"><span class="lineNum">    1403 </span>            :  * TODO: This function should eventually recieve a deprecation warning and</a>
+<a name="1404"><span class="lineNum">    1404 </span>            :  *       be removed.</a>
+<a name="1405"><span class="lineNum">    1405 </span>            :  *</a>
+<a name="1406"><span class="lineNum">    1406 </span>            :  * @param descr</a>
+<a name="1407"><span class="lineNum">    1407 </span>            :  * @return 1 if this is not a concrete dtype instance 0 otherwise</a>
+<a name="1408"><span class="lineNum">    1408 </span>            :  */</a>
+<a name="1409"><span class="lineNum">    1409 </span>            : static int</a>
+<a name="1410"><span class="lineNum">    1410 </span><span class="lineCov">    2360368 : descr_is_legacy_parametric_instance(PyArray_Descr *descr)</span></a>
+<a name="1411"><span class="lineNum">    1411 </span>            : {</a>
+<a name="1412"><span class="lineNum">    1412 </span><span class="lineCov">    2360368 :     if (PyDataType_ISUNSIZED(descr)) {</span></a>
+<a name="1413"><span class="lineNum">    1413 </span>            :         return 1;</a>
+<a name="1414"><span class="lineNum">    1414 </span>            :     }</a>
+<a name="1415"><span class="lineNum">    1415 </span>            :     /* Flexible descr with generic time unit (which can be adapted) */</a>
+<a name="1416"><span class="lineNum">    1416 </span><span class="lineCov">    2358881 :     if (PyDataType_ISDATETIME(descr)) {</span></a>
+<a name="1417"><span class="lineNum">    1417 </span><span class="lineCov">       2799 :         PyArray_DatetimeMetaData *meta;</span></a>
+<a name="1418"><span class="lineNum">    1418 </span><span class="lineCov">       2799 :         meta = get_datetime_metadata_from_dtype(descr);</span></a>
+<a name="1419"><span class="lineNum">    1419 </span><span class="lineCov">       2799 :         if (meta-&gt;base == NPY_FR_GENERIC) {</span></a>
+<a name="1420"><span class="lineNum">    1420 </span><span class="lineCov">        582 :             return 1;</span></a>
+<a name="1421"><span class="lineNum">    1421 </span>            :         }</a>
+<a name="1422"><span class="lineNum">    1422 </span>            :     }</a>
+<a name="1423"><span class="lineNum">    1423 </span>            :     return 0;</a>
+<a name="1424"><span class="lineNum">    1424 </span>            : }</a>
+<a name="1425"><span class="lineNum">    1425 </span>            : </a>
+<a name="1426"><span class="lineNum">    1426 </span>            : </a>
+<a name="1427"><span class="lineNum">    1427 </span>            : /**</a>
+<a name="1428"><span class="lineNum">    1428 </span>            :  * Given either a DType instance or class, (or legacy flexible instance),</a>
+<a name="1429"><span class="lineNum">    1429 </span>            :  * ands sets output dtype instance and DType class. Both results may be</a>
+<a name="1430"><span class="lineNum">    1430 </span>            :  * NULL, but if `out_descr` is set `out_DType` will always be the</a>
+<a name="1431"><span class="lineNum">    1431 </span>            :  * corresponding class.</a>
+<a name="1432"><span class="lineNum">    1432 </span>            :  *</a>
+<a name="1433"><span class="lineNum">    1433 </span>            :  * @param dtype</a>
+<a name="1434"><span class="lineNum">    1434 </span>            :  * @param out_descr</a>
+<a name="1435"><span class="lineNum">    1435 </span>            :  * @param out_DType</a>
+<a name="1436"><span class="lineNum">    1436 </span>            :  * @return 0 on success -1 on failure</a>
+<a name="1437"><span class="lineNum">    1437 </span>            :  */</a>
+<a name="1438"><span class="lineNum">    1438 </span>            : NPY_NO_EXPORT int</a>
+<a name="1439"><span class="lineNum">    1439 </span><span class="lineCov">    6068015 : PyArray_ExtractDTypeAndDescriptor(PyObject *dtype,</span></a>
+<a name="1440"><span class="lineNum">    1440 </span>            :         PyArray_Descr **out_descr, PyArray_DTypeMeta **out_DType)</a>
+<a name="1441"><span class="lineNum">    1441 </span>            : {</a>
+<a name="1442"><span class="lineNum">    1442 </span><span class="lineCov">    6068015 :     *out_DType = NULL;</span></a>
+<a name="1443"><span class="lineNum">    1443 </span><span class="lineCov">    6068015 :     *out_descr = NULL;</span></a>
+<a name="1444"><span class="lineNum">    1444 </span>            : </a>
+<a name="1445"><span class="lineNum">    1445 </span><span class="lineCov">    6068015 :     if (dtype != NULL) {</span></a>
+<a name="1446"><span class="lineNum">    1446 </span><span class="lineCov">    2360394 :         if (PyObject_TypeCheck(dtype, (PyTypeObject *)&amp;PyArrayDTypeMeta_Type)) {</span></a>
+<a name="1447"><span class="lineNum">    1447 </span><span class="lineCov">         26 :             assert(dtype != (PyObject * )&amp;PyArrayDescr_Type);  /* not np.dtype */</span></a>
+<a name="1448"><span class="lineNum">    1448 </span><span class="lineCov">         26 :             *out_DType = (PyArray_DTypeMeta *)dtype;</span></a>
+<a name="1449"><span class="lineNum">    1449 </span><span class="lineCov">         26 :             Py_INCREF(*out_DType);</span></a>
+<a name="1450"><span class="lineNum">    1450 </span>            :         }</a>
+<a name="1451"><span class="lineNum">    1451 </span><span class="lineCov">    2360368 :         else if (PyObject_TypeCheck((PyObject *)Py_TYPE(dtype),</span></a>
+<a name="1452"><span class="lineNum">    1452 </span>            :                     (PyTypeObject *)&amp;PyArrayDTypeMeta_Type)) {</a>
+<a name="1453"><span class="lineNum">    1453 </span><span class="lineCov">    2360368 :             *out_DType = NPY_DTYPE(dtype);</span></a>
+<a name="1454"><span class="lineNum">    1454 </span><span class="lineCov">    2360368 :             Py_INCREF(*out_DType);</span></a>
+<a name="1455"><span class="lineNum">    1455 </span><span class="lineCov">    2360368 :             if (!descr_is_legacy_parametric_instance((PyArray_Descr *)dtype)) {</span></a>
+<a name="1456"><span class="lineNum">    1456 </span><span class="lineCov">    2358299 :                 *out_descr = (PyArray_Descr *)dtype;</span></a>
+<a name="1457"><span class="lineNum">    1457 </span><span class="lineCov">    2358299 :                 Py_INCREF(*out_descr);</span></a>
+<a name="1458"><span class="lineNum">    1458 </span>            :             }</a>
+<a name="1459"><span class="lineNum">    1459 </span>            :         }</a>
+<a name="1460"><span class="lineNum">    1460 </span>            :         else {</a>
+<a name="1461"><span class="lineNum">    1461 </span><span class="lineNoCov">          0 :             PyErr_SetString(PyExc_TypeError,</span></a>
+<a name="1462"><span class="lineNum">    1462 </span>            :                     &quot;dtype parameter must be a DType instance or class.&quot;);</a>
+<a name="1463"><span class="lineNum">    1463 </span><span class="lineNoCov">          0 :             return -1;</span></a>
+<a name="1464"><span class="lineNum">    1464 </span>            :         }</a>
+<a name="1465"><span class="lineNum">    1465 </span>            :     }</a>
+<a name="1466"><span class="lineNum">    1466 </span>            :     return 0;</a>
+<a name="1467"><span class="lineNum">    1467 </span>            : }</a>
+<a name="1468"><span class="lineNum">    1468 </span>            : </a>
+<a name="1469"><span class="lineNum">    1469 </span>            : </a>
+<a name="1470"><span class="lineNum">    1470 </span>            : /*</a>
+<a name="1471"><span class="lineNum">    1471 </span>            :  * Python API function to expose the dtype+shape discovery functionality</a>
+<a name="1472"><span class="lineNum">    1472 </span>            :  * directly.</a>
+<a name="1473"><span class="lineNum">    1473 </span>            :  */</a>
+<a name="1474"><span class="lineNum">    1474 </span>            : NPY_NO_EXPORT PyObject *</a>
+<a name="1475"><span class="lineNum">    1475 </span><span class="lineCov">         28 : _discover_array_parameters(PyObject *NPY_UNUSED(self),</span></a>
+<a name="1476"><span class="lineNum">    1476 </span>            :                            PyObject *args, PyObject *kwargs)</a>
+<a name="1477"><span class="lineNum">    1477 </span>            : {</a>
+<a name="1478"><span class="lineNum">    1478 </span><span class="lineCov">         28 :     static char *kwlist[] = {&quot;obj&quot;, &quot;dtype&quot;, NULL};</span></a>
+<a name="1479"><span class="lineNum">    1479 </span>            : </a>
+<a name="1480"><span class="lineNum">    1480 </span><span class="lineCov">         28 :     PyObject *obj;</span></a>
+<a name="1481"><span class="lineNum">    1481 </span><span class="lineCov">         28 :     PyObject *dtype = NULL;</span></a>
+<a name="1482"><span class="lineNum">    1482 </span><span class="lineCov">         28 :     PyArray_Descr *fixed_descriptor = NULL;</span></a>
+<a name="1483"><span class="lineNum">    1483 </span><span class="lineCov">         28 :     PyArray_DTypeMeta *fixed_DType = NULL;</span></a>
+<a name="1484"><span class="lineNum">    1484 </span><span class="lineCov">         28 :     npy_intp shape[NPY_MAXDIMS];</span></a>
+<a name="1485"><span class="lineNum">    1485 </span>            : </a>
+<a name="1486"><span class="lineNum">    1486 </span><span class="lineCov">         28 :     if (!PyArg_ParseTupleAndKeywords(</span></a>
+<a name="1487"><span class="lineNum">    1487 </span>            :             args, kwargs, &quot;O|O:_discover_array_parameters&quot;, kwlist,</a>
+<a name="1488"><span class="lineNum">    1488 </span>            :             &amp;obj, &amp;dtype)) {</a>
+<a name="1489"><span class="lineNum">    1489 </span><span class="lineCov">         28 :         return NULL;</span></a>
+<a name="1490"><span class="lineNum">    1490 </span>            :     }</a>
+<a name="1491"><span class="lineNum">    1491 </span>            : </a>
+<a name="1492"><span class="lineNum">    1492 </span><span class="lineCov">         28 :     if (PyArray_ExtractDTypeAndDescriptor(dtype,</span></a>
+<a name="1493"><span class="lineNum">    1493 </span>            :             &amp;fixed_descriptor, &amp;fixed_DType) &lt; 0) {</a>
+<a name="1494"><span class="lineNum">    1494 </span>            :         return NULL;</a>
+<a name="1495"><span class="lineNum">    1495 </span>            :     }</a>
+<a name="1496"><span class="lineNum">    1496 </span>            : </a>
+<a name="1497"><span class="lineNum">    1497 </span><span class="lineCov">         28 :     coercion_cache_obj *coercion_cache = NULL;</span></a>
+<a name="1498"><span class="lineNum">    1498 </span><span class="lineCov">         28 :     PyObject *out_dtype = NULL;</span></a>
+<a name="1499"><span class="lineNum">    1499 </span><span class="lineCov">         28 :     int ndim = PyArray_DiscoverDTypeAndShape(</span></a>
+<a name="1500"><span class="lineNum">    1500 </span>            :             obj, NPY_MAXDIMS, shape,</a>
+<a name="1501"><span class="lineNum">    1501 </span>            :             &amp;coercion_cache,</a>
+<a name="1502"><span class="lineNum">    1502 </span>            :             fixed_DType, fixed_descriptor, (PyArray_Descr **)&amp;out_dtype);</a>
+<a name="1503"><span class="lineNum">    1503 </span><span class="lineCov">         28 :     Py_XDECREF(fixed_DType);</span></a>
+<a name="1504"><span class="lineNum">    1504 </span><span class="lineCov">         28 :     Py_XDECREF(fixed_descriptor);</span></a>
+<a name="1505"><span class="lineNum">    1505 </span><span class="lineCov">         28 :     if (ndim &lt; 0) {</span></a>
+<a name="1506"><span class="lineNum">    1506 </span>            :         return NULL;</a>
+<a name="1507"><span class="lineNum">    1507 </span>            :     }</a>
+<a name="1508"><span class="lineNum">    1508 </span><span class="lineCov">         28 :     npy_free_coercion_cache(coercion_cache);</span></a>
+<a name="1509"><span class="lineNum">    1509 </span><span class="lineCov">         28 :     if (out_dtype == NULL) {</span></a>
+<a name="1510"><span class="lineNum">    1510 </span>            :         /* Empty sequence, report this as None. */</a>
+<a name="1511"><span class="lineNum">    1511 </span><span class="lineNoCov">          0 :         out_dtype = Py_None;</span></a>
+<a name="1512"><span class="lineNum">    1512 </span><span class="lineNoCov">          0 :         Py_INCREF(Py_None);</span></a>
+<a name="1513"><span class="lineNum">    1513 </span>            :     }</a>
+<a name="1514"><span class="lineNum">    1514 </span>            : </a>
+<a name="1515"><span class="lineNum">    1515 </span><span class="lineCov">         28 :     PyObject *shape_tuple = PyArray_IntTupleFromIntp(ndim, shape);</span></a>
+<a name="1516"><span class="lineNum">    1516 </span><span class="lineCov">         28 :     if (shape_tuple == NULL) {</span></a>
+<a name="1517"><span class="lineNum">    1517 </span>            :         return NULL;</a>
+<a name="1518"><span class="lineNum">    1518 </span>            :     }</a>
+<a name="1519"><span class="lineNum">    1519 </span>            : </a>
+<a name="1520"><span class="lineNum">    1520 </span><span class="lineCov">         28 :     PyObject *res = PyTuple_Pack(2, (PyObject *)out_dtype, shape_tuple);</span></a>
+<a name="1521"><span class="lineNum">    1521 </span><span class="lineCov">         28 :     Py_DECREF(out_dtype);</span></a>
+<a name="1522"><span class="lineNum">    1522 </span><span class="lineCov">         28 :     Py_DECREF(shape_tuple);</span></a>
+<a name="1523"><span class="lineNum">    1523 </span>            :     return res;</a>
+<a name="1524"><span class="lineNum">    1524 </span>            : }</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

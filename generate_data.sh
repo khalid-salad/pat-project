@@ -19,12 +19,14 @@ function build {
             if [ -d $DIR ]; then
                 rm -rf $DIR
             fi
-            cp -r $NUMPYDIR/build/$DIR ./
+            cp -r $NUMPYDIR/build/$DIR $REPORTDIR
 	done
 }
 
 DIR=/tmp
 NUMPYDIR=$DIR/numpy
+SRCDIR=$NUMPYDIR/numpy
+REPORTDIR=./report
 optstring=":m:b"
 MODE="fast"
 BUILD=false
@@ -70,16 +72,21 @@ for FILE in $TESTCSV $PRODCSV; do
 	fi
 done
 
-TESTFILES=$(find "$NUMPYDIR" -type f -wholename "*/tests/*.py")
+TESTFILES=$(find "$SRCDIR" -type f ! -wholename "*/build/*" -wholename "*/tests/*.py")
 echo "There are $(echo "$TESTFILES" | wc --lines) test files"
 
 while IFS= read -r file ; do
 	echo "$(basename $file), $(cat $file | grep assert | wc --lines)" >> $TESTCSV
 done < <(echo "$TESTFILES")
 
-PRODFILES=$(find "$NUMPYDIR" -type f ! -wholename "*/tests/*" -wholename "*.py")
+PRODFILES=$(find "$SRCDIR" -type f ! -wholename "*/build/*" ! -wholename "*/tests/*" -wholename "*.py")
 echo "There are $(echo "$PRODFILES" | wc --lines) production (Python) files"
 
 while IFS= read -r file ; do
 	echo "$(basename $file), $(cat $file | grep assert | wc --lines)" >> $PRODCSV
 done < <(echo "$PRODFILES")
+
+python generate_plots.py
+mv *.svg ./report/data
+cd report
+latexmk main.tex -pdf -shell-escape

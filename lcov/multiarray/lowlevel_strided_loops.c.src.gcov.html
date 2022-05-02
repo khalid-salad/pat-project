@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">966</td>
@@ -186,15 +186,15 @@
 <a name="116"><span class="lineNum">     116 </span>            : #if @is_aligned@ &amp;&amp; @is_swap@ == 0 &amp;&amp; @elsize@ &lt;= NPY_SIZEOF_INTP</a>
 <a name="117"><span class="lineNum">     117 </span>            :     NPY_GCC_UNROLL_LOOPS</a>
 <a name="118"><span class="lineNum">     118 </span>            : #endif</a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">    1673837 : @prefix@_@oper@_size@elsize@(</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">    1673875 : @prefix@_@oper@_size@elsize@(</span></a>
 <a name="120"><span class="lineNum">     120 </span>            :         PyArrayMethod_Context *context, char *const *args,</a>
 <a name="121"><span class="lineNum">     121 </span>            :         const npy_intp *dimensions, const npy_intp *strides,</a>
 <a name="122"><span class="lineNum">     122 </span>            :         NpyAuxData *NPY_UNUSED(auxdata))</a>
 <a name="123"><span class="lineNum">     123 </span>            : {</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">    1673837 :     npy_intp N = dimensions[0];</span></a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineCov">    1673837 :     char *src = args[0], *dst = args[1];</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">    1673875 :     npy_intp N = dimensions[0];</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">    1673875 :     char *src = args[0], *dst = args[1];</span></a>
 <a name="126"><span class="lineNum">     126 </span>            : #if !@src_contig@</a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">    1508071 :     npy_intp src_stride = strides[0];</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">    1508109 :     npy_intp src_stride = strides[0];</span></a>
 <a name="128"><span class="lineNum">     128 </span>            : #endif</a>
 <a name="129"><span class="lineNum">     129 </span>            : #if !@dst_contig@</a>
 <a name="130"><span class="lineNum">     130 </span><span class="lineCov">     270750 :     npy_intp dst_stride = strides[1];</span></a>
@@ -202,16 +202,16 @@
 <a name="132"><span class="lineNum">     132 </span>            : </a>
 <a name="133"><span class="lineNum">     133 </span>            : #if @is_aligned@</a>
 <a name="134"><span class="lineNum">     134 </span>            :     /* sanity check */</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">    1441047 :     assert(N == 0 || npy_is_aligned(dst, _UINT_ALIGN(@type@)));</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    1441047 :     assert(N == 0 || npy_is_aligned(src, _UINT_ALIGN(@type@)));</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">    1471047 :     assert(N == 0 || npy_is_aligned(dst, _UINT_ALIGN(@type@)));</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    1471047 :     assert(N == 0 || npy_is_aligned(src, _UINT_ALIGN(@type@)));</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : #endif</a>
 <a name="138"><span class="lineNum">     138 </span>            :     /*printf(&quot;fn @prefix@_@oper@_size@elsize@\n&quot;);*/</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">   74830726 :     while (N &gt; 0) {</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">   73728197 :     while (N &gt; 0) {</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : #if @is_aligned@</a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
 <a name="142"><span class="lineNum">     142 </span>            :         /* aligned copy and swap */</a>
 <a name="143"><span class="lineNum">     143 </span>            : #  if @elsize@ != 16</a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">   59541812 :         (*((@type@ *)dst)) = @swap@@elsize@(*((@type@ *)src));</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">   58686812 :         (*((@type@ *)dst)) = @swap@@elsize@(*((@type@ *)src));</span></a>
 <a name="145"><span class="lineNum">     145 </span>            : #  else</a>
 <a name="146"><span class="lineNum">     146 </span>            : #    if @is_swap@ == 0</a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineCov">       3061 :         (*((npy_uint64 *)dst)) = (*((npy_uint64 *)src));</span></a>
@@ -228,7 +228,7 @@
 <a name="158"><span class="lineNum">     158 </span>            : #else</a>
 <a name="159"><span class="lineNum">     159 </span>            : </a>
 <a name="160"><span class="lineNum">     160 </span>            :         /* unaligned copy and swap */</a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">   13531930 :         memmove(dst, src, @elsize@);</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">   13284363 :         memmove(dst, src, @elsize@);</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : #  if @is_swap@ == 1</a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineCov">     110475 :         @swap@@elsize@(dst);</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : #  elif @is_swap@ == 2</a>
@@ -239,7 +239,7 @@
 <a name="169"><span class="lineNum">     169 </span>            : #endif</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
 <a name="171"><span class="lineNum">     171 </span>            : #if @dst_contig@</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">   63819339 :         dst += @elsize@;</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">   62716772 :         dst += @elsize@;</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : #else</a>
 <a name="174"><span class="lineNum">     174 </span><span class="lineCov">    9337550 :         dst += dst_stride;</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : #endif</a>
@@ -247,12 +247,12 @@
 <a name="177"><span class="lineNum">     177 </span>            : #if @src_contig@</a>
 <a name="178"><span class="lineNum">     178 </span><span class="lineCov">    8158983 :         src += @elsize@;</span></a>
 <a name="179"><span class="lineNum">     179 </span>            : #else</a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">   64997906 :         src += src_stride;</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">   63895339 :         src += src_stride;</span></a>
 <a name="181"><span class="lineNum">     181 </span>            : #endif</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">   73156889 :         --N;</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">   72054322 :         --N;</span></a>
 <a name="184"><span class="lineNum">     184 </span>            :     }</a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">    1673837 :     return 0;</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">    1673875 :     return 0;</span></a>
 <a name="186"><span class="lineNum">     186 </span>            : }</a>
 <a name="187"><span class="lineNum">     187 </span>            : #endif</a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
@@ -265,38 +265,38 @@
 <a name="195"><span class="lineNum">     195 </span>            :  */</a>
 <a name="196"><span class="lineNum">     196 </span>            : #if (@src_contig@ == 0) &amp;&amp; @is_aligned@</a>
 <a name="197"><span class="lineNum">     197 </span>            : static NPY_GCC_OPT_3 int</a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">    2263822 : @prefix@_@oper@_size@elsize@_srcstride0(</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">    2263880 : @prefix@_@oper@_size@elsize@_srcstride0(</span></a>
 <a name="199"><span class="lineNum">     199 </span>            :         PyArrayMethod_Context *context, char *const *args,</a>
 <a name="200"><span class="lineNum">     200 </span>            :         const npy_intp *dimensions, const npy_intp *strides,</a>
 <a name="201"><span class="lineNum">     201 </span>            :         NpyAuxData *NPY_UNUSED(auxdata))</a>
 <a name="202"><span class="lineNum">     202 </span>            : {</a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineCov">    2263822 :     npy_intp N = dimensions[0];</span></a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">    2263822 :     char *src = args[0], *dst = args[1];</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">    2263880 :     npy_intp N = dimensions[0];</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">    2263880 :     char *src = args[0], *dst = args[1];</span></a>
 <a name="205"><span class="lineNum">     205 </span>            : #if !@dst_contig@</a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">     709142 :     npy_intp dst_stride = strides[1];</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">     709130 :     npy_intp dst_stride = strides[1];</span></a>
 <a name="207"><span class="lineNum">     207 </span>            : #endif</a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
 <a name="209"><span class="lineNum">     209 </span>            : #if @elsize@ != 16</a>
 <a name="210"><span class="lineNum">     210 </span>            : #  if !(@elsize@ == 1 &amp;&amp; @dst_contig@)</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">    2145485 :     @type@ temp;</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">    2145544 :     @type@ temp;</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : #  endif</a>
 <a name="213"><span class="lineNum">     213 </span>            : #else</a>
 <a name="214"><span class="lineNum">     214 </span><span class="lineCov">       4097 :     npy_uint64 temp0, temp1;</span></a>
 <a name="215"><span class="lineNum">     215 </span>            : #endif</a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineCov">    2263822 :     if (N == 0) {</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">    2263880 :     if (N == 0) {</span></a>
 <a name="217"><span class="lineNum">     217 </span>            :         return 0;</a>
 <a name="218"><span class="lineNum">     218 </span>            :     }</a>
 <a name="219"><span class="lineNum">     219 </span>            : #if @is_aligned@ &amp;&amp; @elsize@ != 16</a>
 <a name="220"><span class="lineNum">     220 </span>            :     /* sanity check */</a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">    2245346 :     assert(N == 0 || npy_is_aligned(dst, _UINT_ALIGN(@type@)));</span></a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">    2245346 :     assert(N == 0 || npy_is_aligned(src, _UINT_ALIGN(@type@)));</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">    2245404 :     assert(N == 0 || npy_is_aligned(dst, _UINT_ALIGN(@type@)));</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">    2245404 :     assert(N == 0 || npy_is_aligned(src, _UINT_ALIGN(@type@)));</span></a>
 <a name="223"><span class="lineNum">     223 </span>            : #endif</a>
 <a name="224"><span class="lineNum">     224 </span>            : #if @elsize@ == 1 &amp;&amp; @dst_contig@</a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">     108925 :     memset(dst, *src, N);</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">     108924 :     memset(dst, *src, N);</span></a>
 <a name="226"><span class="lineNum">     226 </span>            : #else</a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
 <a name="228"><span class="lineNum">     228 </span>            : #  if @elsize@ != 16</a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineCov">    2136421 :     temp = @swap@@elsize@(*((@type@ *)src));</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">    2136480 :     temp = @swap@@elsize@(*((@type@ *)src));</span></a>
 <a name="230"><span class="lineNum">     230 </span>            : #  else</a>
 <a name="231"><span class="lineNum">     231 </span>            : #    if @is_swap@ == 0</a>
 <a name="232"><span class="lineNum">     232 </span><span class="lineCov">       4097 :         temp0 = (*((npy_uint64 *)src));</span></a>
@@ -310,22 +310,22 @@
 <a name="240"><span class="lineNum">     240 </span>            : #    endif</a>
 <a name="241"><span class="lineNum">     241 </span>            : #  endif</a>
 <a name="242"><span class="lineNum">     242 </span>            : </a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">   33686352 :     while (N &gt; 0) {</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">   33688855 :     while (N &gt; 0) {</span></a>
 <a name="244"><span class="lineNum">     244 </span>            : #  if @elsize@ != 16</a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">   31364742 :         *((@type@ *)dst) = temp;</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">   31367186 :         *((@type@ *)dst) = temp;</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : #  else</a>
 <a name="247"><span class="lineNum">     247 </span><span class="lineCov">     181092 :         *((npy_uint64 *)dst) = temp0;</span></a>
 <a name="248"><span class="lineNum">     248 </span><span class="lineCov">     181092 :         *((npy_uint64 *)dst + 1) = temp1;</span></a>
 <a name="249"><span class="lineNum">     249 </span>            : #  endif</a>
 <a name="250"><span class="lineNum">     250 </span>            : #  if @dst_contig@</a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineCov">   30779295 :         dst += @elsize@;</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">   30781751 :         dst += @elsize@;</span></a>
 <a name="252"><span class="lineNum">     252 </span>            : #  else</a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineCov">     766539 :         dst += dst_stride;</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">     766527 :         dst += dst_stride;</span></a>
 <a name="254"><span class="lineNum">     254 </span>            : #  endif</a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">   31545834 :         --N;</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">   31548278 :         --N;</span></a>
 <a name="256"><span class="lineNum">     256 </span>            :     }</a>
 <a name="257"><span class="lineNum">     257 </span>            : #endif/* @elsize == 1 &amp;&amp; @dst_contig@ -- else */</a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">     108925 :     return 0;</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">     108924 :     return 0;</span></a>
 <a name="259"><span class="lineNum">     259 </span>            : }</a>
 <a name="260"><span class="lineNum">     260 </span>            : #endif/* (@src_contig@ == 0) &amp;&amp; @is_aligned@ */</a>
 <a name="261"><span class="lineNum">     261 </span>            : </a>
@@ -433,22 +433,22 @@
 <a name="363"><span class="lineNum">     363 </span>            : }</a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span>            : static int</a>
-<a name="366"><span class="lineNum">     366 </span><span class="lineCov">    9816446 : _contig_to_contig(</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">    9817338 : _contig_to_contig(</span></a>
 <a name="367"><span class="lineNum">     367 </span>            :         PyArrayMethod_Context *context, char *const *args,</a>
 <a name="368"><span class="lineNum">     368 </span>            :         const npy_intp *dimensions, const npy_intp *NPY_UNUSED(strides),</a>
 <a name="369"><span class="lineNum">     369 </span>            :         NpyAuxData *NPY_UNUSED(data))</a>
 <a name="370"><span class="lineNum">     370 </span>            : {</a>
-<a name="371"><span class="lineNum">     371 </span><span class="lineCov">    9816446 :     npy_intp N = dimensions[0];</span></a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineCov">    9816446 :     char *src = args[0], *dst = args[1];</span></a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineCov">    9816446 :     npy_intp src_itemsize = context-&gt;descriptors[0]-&gt;elsize;</span></a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineCov">    9817338 :     npy_intp N = dimensions[0];</span></a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineCov">    9817338 :     char *src = args[0], *dst = args[1];</span></a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineCov">    9817338 :     npy_intp src_itemsize = context-&gt;descriptors[0]-&gt;elsize;</span></a>
 <a name="374"><span class="lineNum">     374 </span>            : </a>
-<a name="375"><span class="lineNum">     375 </span><span class="lineCov">    9816446 :     memmove(dst, src, src_itemsize*N);</span></a>
-<a name="376"><span class="lineNum">     376 </span><span class="lineCov">    9816446 :     return 0;</span></a>
+<a name="375"><span class="lineNum">     375 </span><span class="lineCov">    9817338 :     memmove(dst, src, src_itemsize*N);</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineCov">    9817338 :     return 0;</span></a>
 <a name="377"><span class="lineNum">     377 </span>            : }</a>
 <a name="378"><span class="lineNum">     378 </span>            : </a>
 <a name="379"><span class="lineNum">     379 </span>            : </a>
 <a name="380"><span class="lineNum">     380 </span>            : NPY_NO_EXPORT PyArrayMethod_StridedLoop *</a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineCov">    1624432 : PyArray_GetStridedCopyFn(int aligned, npy_intp src_stride,</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineCov">    1624471 : PyArray_GetStridedCopyFn(int aligned, npy_intp src_stride,</span></a>
 <a name="382"><span class="lineNum">     382 </span>            :                          npy_intp dst_stride, npy_intp itemsize)</a>
 <a name="383"><span class="lineNum">     383 </span>            : {</a>
 <a name="384"><span class="lineNum">     384 </span>            : /*</a>
@@ -456,35 +456,35 @@
 <a name="386"><span class="lineNum">     386 </span>            :  * memory accesses.</a>
 <a name="387"><span class="lineNum">     387 </span>            :  */</a>
 <a name="388"><span class="lineNum">     388 </span>            : #if !NPY_USE_UNALIGNED_ACCESS</a>
-<a name="389"><span class="lineNum">     389 </span><span class="lineCov">    1624432 :     if (aligned) {</span></a>
+<a name="389"><span class="lineNum">     389 </span><span class="lineCov">    1624471 :     if (aligned) {</span></a>
 <a name="390"><span class="lineNum">     390 </span>            : #endif/*!NPY_USE_UNALIGNED_ACCESS*/</a>
 <a name="391"><span class="lineNum">     391 </span>            : </a>
 <a name="392"><span class="lineNum">     392 </span>            :         /* contiguous dst */</a>
-<a name="393"><span class="lineNum">     393 </span><span class="lineCov">    1533851 :         if (itemsize != 0 &amp;&amp; dst_stride == itemsize) {</span></a>
+<a name="393"><span class="lineNum">     393 </span><span class="lineCov">    1533970 :         if (itemsize != 0 &amp;&amp; dst_stride == itemsize) {</span></a>
 <a name="394"><span class="lineNum">     394 </span>            :             /* constant src */</a>
-<a name="395"><span class="lineNum">     395 </span><span class="lineCov">     680237 :             if (src_stride == 0) {</span></a>
-<a name="396"><span class="lineNum">     396 </span><span class="lineCov">     185656 :                 switch (itemsize) {</span></a>
+<a name="395"><span class="lineNum">     395 </span><span class="lineCov">     680368 :             if (src_stride == 0) {</span></a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineCov">     185726 :                 switch (itemsize) {</span></a>
 <a name="397"><span class="lineNum">     397 </span>            : /**begin repeat</a>
 <a name="398"><span class="lineNum">     398 </span>            :  * #elsize = 1, 2, 4, 8, 16#</a>
 <a name="399"><span class="lineNum">     399 </span>            :  */</a>
-<a name="400"><span class="lineNum">     400 </span><span class="lineCov">     154015 :                     case @elsize@:</span></a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineCov">     154015 :                         return</span></a>
-<a name="402"><span class="lineNum">     402 </span><span class="lineCov">     154015 :                           &amp;_aligned_strided_to_contig_size@elsize@_srcstride0;</span></a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineCov">     154086 :                     case @elsize@:</span></a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineCov">     154086 :                         return</span></a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineCov">     154086 :                           &amp;_aligned_strided_to_contig_size@elsize@_srcstride0;</span></a>
 <a name="403"><span class="lineNum">     403 </span>            : /**end repeat**/</a>
 <a name="404"><span class="lineNum">     404 </span>            :                 }</a>
 <a name="405"><span class="lineNum">     405 </span>            :             }</a>
 <a name="406"><span class="lineNum">     406 </span>            :             /* contiguous src */</a>
-<a name="407"><span class="lineNum">     407 </span><span class="lineCov">     494581 :             else if (src_stride == itemsize) {</span></a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineCov">     494642 :             else if (src_stride == itemsize) {</span></a>
 <a name="408"><span class="lineNum">     408 </span>            :                 return &amp;_contig_to_contig;</a>
 <a name="409"><span class="lineNum">     409 </span>            :             }</a>
 <a name="410"><span class="lineNum">     410 </span>            :             /* general src */</a>
 <a name="411"><span class="lineNum">     411 </span>            :             else {</a>
-<a name="412"><span class="lineNum">     412 </span><span class="lineCov">     186135 :                 switch (itemsize) {</span></a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineCov">     186139 :                 switch (itemsize) {</span></a>
 <a name="413"><span class="lineNum">     413 </span>            : /**begin repeat</a>
 <a name="414"><span class="lineNum">     414 </span>            :  * #elsize = 1, 2, 4, 8, 16#</a>
 <a name="415"><span class="lineNum">     415 </span>            :  */</a>
-<a name="416"><span class="lineNum">     416 </span><span class="lineCov">      72587 :                     case @elsize@:</span></a>
-<a name="417"><span class="lineNum">     417 </span><span class="lineCov">      72587 :                         return &amp;_aligned_strided_to_contig_size@elsize@;</span></a>
+<a name="416"><span class="lineNum">     416 </span><span class="lineCov">      72591 :                     case @elsize@:</span></a>
+<a name="417"><span class="lineNum">     417 </span><span class="lineCov">      72591 :                         return &amp;_aligned_strided_to_contig_size@elsize@;</span></a>
 <a name="418"><span class="lineNum">     418 </span>            : /**end repeat**/</a>
 <a name="419"><span class="lineNum">     419 </span>            :                 }</a>
 <a name="420"><span class="lineNum">     420 </span>            :             }</a>
@@ -494,14 +494,14 @@
 <a name="424"><span class="lineNum">     424 </span>            :         /* general dst */</a>
 <a name="425"><span class="lineNum">     425 </span>            :         else {</a>
 <a name="426"><span class="lineNum">     426 </span>            :             /* constant src */</a>
-<a name="427"><span class="lineNum">     427 </span><span class="lineCov">     853614 :             if (src_stride == 0) {</span></a>
-<a name="428"><span class="lineNum">     428 </span><span class="lineCov">     704056 :                 switch (itemsize) {</span></a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineCov">     853602 :             if (src_stride == 0) {</span></a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineCov">     704044 :                 switch (itemsize) {</span></a>
 <a name="429"><span class="lineNum">     429 </span>            : /**begin repeat</a>
 <a name="430"><span class="lineNum">     430 </span>            :  * #elsize = 1, 2, 4, 8, 16#</a>
 <a name="431"><span class="lineNum">     431 </span>            :  */</a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineCov">     704056 :                     case @elsize@:</span></a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineCov">     704056 :                         return</span></a>
-<a name="434"><span class="lineNum">     434 </span><span class="lineCov">     704056 :                           &amp;_aligned_strided_to_strided_size@elsize@_srcstride0;</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineCov">     704044 :                     case @elsize@:</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineCov">     704044 :                         return</span></a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineCov">     704044 :                           &amp;_aligned_strided_to_strided_size@elsize@_srcstride0;</span></a>
 <a name="435"><span class="lineNum">     435 </span>            : /**end repeat**/</a>
 <a name="436"><span class="lineNum">     436 </span>            :                 }</a>
 <a name="437"><span class="lineNum">     437 </span>            :             }</a>
@@ -533,23 +533,23 @@
 <a name="463"><span class="lineNum">     463 </span>            : #if !NPY_USE_UNALIGNED_ACCESS</a>
 <a name="464"><span class="lineNum">     464 </span>            :     }</a>
 <a name="465"><span class="lineNum">     465 </span>            :     else {</a>
-<a name="466"><span class="lineNum">     466 </span><span class="lineCov">      90581 :         if (itemsize != 0) {</span></a>
-<a name="467"><span class="lineNum">     467 </span><span class="lineCov">      89593 :             if (dst_stride == itemsize) {</span></a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineCov">      90501 :         if (itemsize != 0) {</span></a>
+<a name="467"><span class="lineNum">     467 </span><span class="lineCov">      89513 :             if (dst_stride == itemsize) {</span></a>
 <a name="468"><span class="lineNum">     468 </span>            :                 /* contiguous dst */</a>
-<a name="469"><span class="lineNum">     469 </span><span class="lineCov">      60261 :                 if (src_stride == itemsize) {</span></a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineCov">      60181 :                 if (src_stride == itemsize) {</span></a>
 <a name="470"><span class="lineNum">     470 </span>            :                     /* contiguous src, dst */</a>
 <a name="471"><span class="lineNum">     471 </span>            :                     return &amp;_contig_to_contig;</a>
 <a name="472"><span class="lineNum">     472 </span>            :                 }</a>
 <a name="473"><span class="lineNum">     473 </span>            :                 else {</a>
 <a name="474"><span class="lineNum">     474 </span>            :                     /* general src */</a>
-<a name="475"><span class="lineNum">     475 </span><span class="lineCov">      31123 :                     switch (itemsize) {</span></a>
+<a name="475"><span class="lineNum">     475 </span><span class="lineCov">      31047 :                     switch (itemsize) {</span></a>
 <a name="476"><span class="lineNum">     476 </span>            :                         case 1:</a>
 <a name="477"><span class="lineNum">     477 </span>            :                             return &amp;_aligned_strided_to_contig_size1;</a>
 <a name="478"><span class="lineNum">     478 </span>            : /**begin repeat</a>
 <a name="479"><span class="lineNum">     479 </span>            :  * #elsize = 2, 4, 8, 16#</a>
 <a name="480"><span class="lineNum">     480 </span>            :  */</a>
-<a name="481"><span class="lineNum">     481 </span><span class="lineCov">      27256 :                         case @elsize@:</span></a>
-<a name="482"><span class="lineNum">     482 </span><span class="lineCov">      27256 :                             return &amp;_strided_to_contig_size@elsize@;</span></a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineCov">      27180 :                         case @elsize@:</span></a>
+<a name="482"><span class="lineNum">     482 </span><span class="lineCov">      27180 :                             return &amp;_strided_to_contig_size@elsize@;</span></a>
 <a name="483"><span class="lineNum">     483 </span>            : /**end repeat**/</a>
 <a name="484"><span class="lineNum">     484 </span>            :                     }</a>
 <a name="485"><span class="lineNum">     485 </span>            :                 }</a>
@@ -918,30 +918,30 @@
 <a name="848"><span class="lineNum">     848 </span>            : #if @is_complex1@</a>
 <a name="849"><span class="lineNum">     849 </span><span class="lineCov">      22167 :     _TYPE1 src_value[2];</span></a>
 <a name="850"><span class="lineNum">     850 </span>            : #elif !@aligned@</a>
-<a name="851"><span class="lineNum">     851 </span><span class="lineCov">      18893 :     _TYPE1 src_value;</span></a>
+<a name="851"><span class="lineNum">     851 </span><span class="lineCov">      19003 :     _TYPE1 src_value;</span></a>
 <a name="852"><span class="lineNum">     852 </span>            : #endif</a>
 <a name="853"><span class="lineNum">     853 </span>            : #if @is_complex2@</a>
 <a name="854"><span class="lineNum">     854 </span><span class="lineCov">      90500 :     _TYPE2 dst_value[2];</span></a>
 <a name="855"><span class="lineNum">     855 </span>            : #elif !@aligned@</a>
-<a name="856"><span class="lineNum">     856 </span><span class="lineCov">      12353 :     _TYPE2 dst_value;</span></a>
+<a name="856"><span class="lineNum">     856 </span><span class="lineCov">      12463 :     _TYPE2 dst_value;</span></a>
 <a name="857"><span class="lineNum">     857 </span>            : #endif</a>
 <a name="858"><span class="lineNum">     858 </span>            : </a>
 <a name="859"><span class="lineNum">     859 </span>            : #if @aligned@</a>
 <a name="860"><span class="lineNum">     860 </span>            :    /* sanity check */</a>
-<a name="861"><span class="lineNum">     861 </span><span class="lineCov">    2425607 :     assert(N == 0 || npy_is_aligned(src, _ALIGN(_TYPE1)));</span></a>
-<a name="862"><span class="lineNum">     862 </span><span class="lineCov">    2425607 :     assert(N == 0 || npy_is_aligned(dst, _ALIGN(_TYPE2)));</span></a>
+<a name="861"><span class="lineNum">     861 </span><span class="lineCov">    2425497 :     assert(N == 0 || npy_is_aligned(src, _ALIGN(_TYPE1)));</span></a>
+<a name="862"><span class="lineNum">     862 </span><span class="lineCov">    2425497 :     assert(N == 0 || npy_is_aligned(dst, _ALIGN(_TYPE2)));</span></a>
 <a name="863"><span class="lineNum">     863 </span>            : #endif</a>
 <a name="864"><span class="lineNum">     864 </span>            : </a>
 <a name="865"><span class="lineNum">     865 </span>            :     /*printf(&quot;@prefix@_cast_@name1@_to_@name2@\n&quot;);*/</a>
 <a name="866"><span class="lineNum">     866 </span>            : </a>
-<a name="867"><span class="lineNum">     867 </span><span class="lineCov">  118988781 :     while (N--) {</span></a>
+<a name="867"><span class="lineNum">     867 </span><span class="lineCov">  118868781 :     while (N--) {</span></a>
 <a name="868"><span class="lineNum">     868 </span>            : #if @aligned@</a>
 <a name="869"><span class="lineNum">     869 </span>            : #  if @is_complex1@</a>
 <a name="870"><span class="lineNum">     870 </span><span class="lineCov">     260911 :         src_value[0] = ((_TYPE1 *)src)[0];</span></a>
 <a name="871"><span class="lineNum">     871 </span><span class="lineCov">     260911 :         src_value[1] = ((_TYPE1 *)src)[1];</span></a>
 <a name="872"><span class="lineNum">     872 </span>            : #  endif</a>
 <a name="873"><span class="lineNum">     873 </span>            : #else</a>
-<a name="874"><span class="lineNum">     874 </span><span class="lineCov">    4128424 :         memmove(&amp;src_value, src, sizeof(src_value));</span></a>
+<a name="874"><span class="lineNum">     874 </span><span class="lineCov">    4348313 :         memmove(&amp;src_value, src, sizeof(src_value));</span></a>
 <a name="875"><span class="lineNum">     875 </span>            : #endif</a>
 <a name="876"><span class="lineNum">     876 </span>            : </a>
 <a name="877"><span class="lineNum">     877 </span>            : /* Do the cast */</a>
@@ -971,9 +971,9 @@
 <a name="901"><span class="lineNum">     901 </span>            : #    endif</a>
 <a name="902"><span class="lineNum">     902 </span><span class="lineCov">    1205655 :     dst_value[1] = 0;</span></a>
 <a name="903"><span class="lineNum">     903 </span>            : #  elif !@aligned@</a>
-<a name="904"><span class="lineNum">     904 </span><span class="lineCov">    4011850 :     dst_value = _CONVERT_FN(src_value);</span></a>
+<a name="904"><span class="lineNum">     904 </span><span class="lineCov">    4231739 :     dst_value = _CONVERT_FN(src_value);</span></a>
 <a name="905"><span class="lineNum">     905 </span>            : #  else</a>
-<a name="906"><span class="lineNum">     906 </span><span class="lineCov">  110978671 :     *(_TYPE2 *)dst = _CONVERT_FN(*(_TYPE1 *)src);</span></a>
+<a name="906"><span class="lineNum">     906 </span><span class="lineCov">  110638782 :     *(_TYPE2 *)dst = _CONVERT_FN(*(_TYPE1 *)src);</span></a>
 <a name="907"><span class="lineNum">     907 </span>            : #  endif</a>
 <a name="908"><span class="lineNum">     908 </span>            : #endif</a>
 <a name="909"><span class="lineNum">     909 </span>            : </a>
@@ -983,12 +983,12 @@
 <a name="913"><span class="lineNum">     913 </span><span class="lineCov">    1277513 :         ((_TYPE2 *)dst)[1] = dst_value[1];</span></a>
 <a name="914"><span class="lineNum">     914 </span>            : #  endif</a>
 <a name="915"><span class="lineNum">     915 </span>            : #else</a>
-<a name="916"><span class="lineNum">     916 </span><span class="lineCov">    4128424 :         memmove(dst, &amp;dst_value, sizeof(dst_value));</span></a>
+<a name="916"><span class="lineNum">     916 </span><span class="lineCov">    4348313 :         memmove(dst, &amp;dst_value, sizeof(dst_value));</span></a>
 <a name="917"><span class="lineNum">     917 </span>            : #endif</a>
 <a name="918"><span class="lineNum">     918 </span>            : </a>
 <a name="919"><span class="lineNum">     919 </span>            : #if @contig@</a>
-<a name="920"><span class="lineNum">     920 </span><span class="lineCov">  104499027 :         dst += sizeof(@type2@);</span></a>
-<a name="921"><span class="lineNum">     921 </span><span class="lineCov">  104499027 :         src += sizeof(@type1@);</span></a>
+<a name="920"><span class="lineNum">     920 </span><span class="lineCov">  104379027 :         dst += sizeof(@type2@);</span></a>
+<a name="921"><span class="lineNum">     921 </span><span class="lineCov">  104379027 :         src += sizeof(@type1@);</span></a>
 <a name="922"><span class="lineNum">     922 </span>            : #else</a>
 <a name="923"><span class="lineNum">     923 </span><span class="lineCov">   12041093 :         dst += dst_stride;</span></a>
 <a name="924"><span class="lineNum">     924 </span><span class="lineCov">   12041093 :         src += src_stride;</span></a>
@@ -1542,12 +1542,12 @@
 <a name="1472"><span class="lineNum">    1472 </span>            :     }</a>
 <a name="1473"><span class="lineNum">    1473 </span>            : #if !@isget@</a>
 <a name="1474"><span class="lineNum">    1474 </span>            :     /* Check the indices beforehand */</a>
-<a name="1475"><span class="lineNum">    1475 </span><span class="lineCov">      63173 :     while (itersize--) {</span></a>
-<a name="1476"><span class="lineNum">    1476 </span><span class="lineCov">      62211 :         npy_intp indval = *((npy_intp*)ind_ptr);</span></a>
-<a name="1477"><span class="lineNum">    1477 </span><span class="lineCov">      62211 :         if (check_and_adjust_index(&amp;indval, fancy_dim, 0, _save) &lt; 0 ) {</span></a>
+<a name="1475"><span class="lineNum">    1475 </span><span class="lineCov">      63172 :     while (itersize--) {</span></a>
+<a name="1476"><span class="lineNum">    1476 </span><span class="lineCov">      62210 :         npy_intp indval = *((npy_intp*)ind_ptr);</span></a>
+<a name="1477"><span class="lineNum">    1477 </span><span class="lineCov">      62210 :         if (check_and_adjust_index(&amp;indval, fancy_dim, 0, _save) &lt; 0 ) {</span></a>
 <a name="1478"><span class="lineNum">    1478 </span><span class="lineCov">          5 :             return -1;</span></a>
 <a name="1479"><span class="lineNum">    1479 </span>            :         }</a>
-<a name="1480"><span class="lineNum">    1480 </span><span class="lineCov">      62206 :         ind_ptr += ind_stride;</span></a>
+<a name="1480"><span class="lineNum">    1480 </span><span class="lineCov">      62205 :         ind_ptr += ind_stride;</span></a>
 <a name="1481"><span class="lineNum">    1481 </span>            :     }</a>
 <a name="1482"><span class="lineNum">    1482 </span>            : </a>
 <a name="1483"><span class="lineNum">    1483 </span>            :     /*</a>
@@ -1571,42 +1571,42 @@
 <a name="1501"><span class="lineNum">    1501 </span>            : #else</a>
 <a name="1502"><span class="lineNum">    1502 </span>            :     default:</a>
 <a name="1503"><span class="lineNum">    1503 </span>            : #endif</a>
-<a name="1504"><span class="lineNum">    1504 </span><span class="lineCov">    3932350 :         while (itersize--) {</span></a>
-<a name="1505"><span class="lineNum">    1505 </span><span class="lineCov">    3918356 :             char * self_ptr;</span></a>
-<a name="1506"><span class="lineNum">    1506 </span><span class="lineCov">    3918356 :             npy_intp indval = *((npy_intp*)ind_ptr);</span></a>
-<a name="1507"><span class="lineNum">    1507 </span><span class="lineCov">    3918356 :             assert(npy_is_aligned(ind_ptr, _UINT_ALIGN(npy_intp)));</span></a>
+<a name="1504"><span class="lineNum">    1504 </span><span class="lineCov">    3941161 :         while (itersize--) {</span></a>
+<a name="1505"><span class="lineNum">    1505 </span><span class="lineCov">    3927167 :             char * self_ptr;</span></a>
+<a name="1506"><span class="lineNum">    1506 </span><span class="lineCov">    3927167 :             npy_intp indval = *((npy_intp*)ind_ptr);</span></a>
+<a name="1507"><span class="lineNum">    1507 </span><span class="lineCov">    3927167 :             assert(npy_is_aligned(ind_ptr, _UINT_ALIGN(npy_intp)));</span></a>
 <a name="1508"><span class="lineNum">    1508 </span>            : #if @isget@</a>
-<a name="1509"><span class="lineNum">    1509 </span><span class="lineCov">    3856169 :             if (check_and_adjust_index(&amp;indval, fancy_dim, 0, _save) &lt; 0 ) {</span></a>
+<a name="1509"><span class="lineNum">    1509 </span><span class="lineCov">    3864981 :             if (check_and_adjust_index(&amp;indval, fancy_dim, 0, _save) &lt; 0 ) {</span></a>
 <a name="1510"><span class="lineNum">    1510 </span><span class="lineCov">          2 :                 return -1;</span></a>
 <a name="1511"><span class="lineNum">    1511 </span>            :             }</a>
 <a name="1512"><span class="lineNum">    1512 </span>            : #else</a>
-<a name="1513"><span class="lineNum">    1513 </span><span class="lineCov">      62187 :             if (indval &lt; 0) {</span></a>
+<a name="1513"><span class="lineNum">    1513 </span><span class="lineCov">      62186 :             if (indval &lt; 0) {</span></a>
 <a name="1514"><span class="lineNum">    1514 </span><span class="lineCov">          7 :                 indval += fancy_dim;</span></a>
 <a name="1515"><span class="lineNum">    1515 </span>            :             }</a>
 <a name="1516"><span class="lineNum">    1516 </span>            : #endif</a>
-<a name="1517"><span class="lineNum">    1517 </span><span class="lineCov">    3918598 :             self_ptr = base_ptr + indval * self_stride;</span></a>
+<a name="1517"><span class="lineNum">    1517 </span><span class="lineCov">    3927279 :             self_ptr = base_ptr + indval * self_stride;</span></a>
 <a name="1518"><span class="lineNum">    1518 </span>            : </a>
 <a name="1519"><span class="lineNum">    1519 </span>            : #if @isget@</a>
 <a name="1520"><span class="lineNum">    1520 </span>            : #if @elsize@</a>
-<a name="1521"><span class="lineNum">    1521 </span><span class="lineCov">    3804409 :             assert(npy_is_aligned(result_ptr, _UINT_ALIGN(@copytype@)));</span></a>
-<a name="1522"><span class="lineNum">    1522 </span><span class="lineCov">    3792534 :             assert(npy_is_aligned(self_ptr, _UINT_ALIGN(@copytype@)));</span></a>
-<a name="1523"><span class="lineNum">    1523 </span><span class="lineCov">    3804409 :             *(@copytype@ *)result_ptr = *(@copytype@ *)self_ptr;</span></a>
+<a name="1521"><span class="lineNum">    1521 </span><span class="lineCov">    3804410 :             assert(npy_is_aligned(result_ptr, _UINT_ALIGN(@copytype@)));</span></a>
+<a name="1522"><span class="lineNum">    1522 </span><span class="lineCov">    3792535 :             assert(npy_is_aligned(self_ptr, _UINT_ALIGN(@copytype@)));</span></a>
+<a name="1523"><span class="lineNum">    1523 </span><span class="lineCov">    3804410 :             *(@copytype@ *)result_ptr = *(@copytype@ *)self_ptr;</span></a>
 <a name="1524"><span class="lineNum">    1524 </span>            : #else</a>
-<a name="1525"><span class="lineNum">    1525 </span><span class="lineCov">      52002 :             copyswap(result_ptr, self_ptr, 0, self);</span></a>
+<a name="1525"><span class="lineNum">    1525 </span><span class="lineCov">      60683 :             copyswap(result_ptr, self_ptr, 0, self);</span></a>
 <a name="1526"><span class="lineNum">    1526 </span>            : #endif</a>
 <a name="1527"><span class="lineNum">    1527 </span>            : </a>
 <a name="1528"><span class="lineNum">    1528 </span>            : #else /* !@isget@ */</a>
 <a name="1529"><span class="lineNum">    1529 </span>            : #if @elsize@</a>
-<a name="1530"><span class="lineNum">    1530 </span><span class="lineCov">      62153 :             assert(npy_is_aligned(result_ptr, _UINT_ALIGN(@copytype@)));</span></a>
-<a name="1531"><span class="lineNum">    1531 </span><span class="lineCov">      61679 :             assert(npy_is_aligned(self_ptr, _UINT_ALIGN(@copytype@)));</span></a>
-<a name="1532"><span class="lineNum">    1532 </span><span class="lineCov">      62153 :             *(@copytype@ *)self_ptr = *(@copytype@ *)result_ptr;</span></a>
+<a name="1530"><span class="lineNum">    1530 </span><span class="lineCov">      62152 :             assert(npy_is_aligned(result_ptr, _UINT_ALIGN(@copytype@)));</span></a>
+<a name="1531"><span class="lineNum">    1531 </span><span class="lineCov">      61678 :             assert(npy_is_aligned(self_ptr, _UINT_ALIGN(@copytype@)));</span></a>
+<a name="1532"><span class="lineNum">    1532 </span><span class="lineCov">      62152 :             *(@copytype@ *)self_ptr = *(@copytype@ *)result_ptr;</span></a>
 <a name="1533"><span class="lineNum">    1533 </span>            : #else</a>
 <a name="1534"><span class="lineNum">    1534 </span><span class="lineCov">         34 :             copyswap(self_ptr, result_ptr, 0, self);</span></a>
 <a name="1535"><span class="lineNum">    1535 </span>            : #endif</a>
 <a name="1536"><span class="lineNum">    1536 </span>            : #endif</a>
 <a name="1537"><span class="lineNum">    1537 </span>            : </a>
-<a name="1538"><span class="lineNum">    1538 </span><span class="lineCov">    3918354 :             ind_ptr += ind_stride;</span></a>
-<a name="1539"><span class="lineNum">    1539 </span><span class="lineCov">    3918354 :             result_ptr += result_stride;</span></a>
+<a name="1538"><span class="lineNum">    1538 </span><span class="lineCov">    3927165 :             ind_ptr += ind_stride;</span></a>
+<a name="1539"><span class="lineNum">    1539 </span><span class="lineCov">    3927165 :             result_ptr += result_stride;</span></a>
 <a name="1540"><span class="lineNum">    1540 </span>            :         }</a>
 <a name="1541"><span class="lineNum">    1541 </span>            :         break;</a>
 <a name="1542"><span class="lineNum">    1542 </span>            : </a>

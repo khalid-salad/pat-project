@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">52</td>
@@ -728,23 +728,23 @@
 <a name="658"><span class="lineNum">     658 </span>            :  * be decrefed.</a>
 <a name="659"><span class="lineNum">     659 </span>            :  */</a>
 <a name="660"><span class="lineNum">     660 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="661"><span class="lineNum">     661 </span><span class="lineCov">   12697807 : PyArray_NewFromDescr_int(</span></a>
+<a name="661"><span class="lineNum">     661 </span><span class="lineCov">   12697976 : PyArray_NewFromDescr_int(</span></a>
 <a name="662"><span class="lineNum">     662 </span>            :         PyTypeObject *subtype, PyArray_Descr *descr, int nd,</a>
 <a name="663"><span class="lineNum">     663 </span>            :         npy_intp const *dims, npy_intp const *strides, void *data,</a>
 <a name="664"><span class="lineNum">     664 </span>            :         int flags, PyObject *obj, PyObject *base, int zeroed,</a>
 <a name="665"><span class="lineNum">     665 </span>            :         int allow_emptystring)</a>
 <a name="666"><span class="lineNum">     666 </span>            : {</a>
-<a name="667"><span class="lineNum">     667 </span><span class="lineCov">   12697807 :     PyArrayObject_fields *fa;</span></a>
-<a name="668"><span class="lineNum">     668 </span><span class="lineCov">   12697807 :     npy_intp nbytes;</span></a>
+<a name="667"><span class="lineNum">     667 </span><span class="lineCov">   12697976 :     PyArrayObject_fields *fa;</span></a>
+<a name="668"><span class="lineNum">     668 </span><span class="lineCov">   12697976 :     npy_intp nbytes;</span></a>
 <a name="669"><span class="lineNum">     669 </span>            : </a>
-<a name="670"><span class="lineNum">     670 </span><span class="lineCov">   12697807 :     if (nd &gt; NPY_MAXDIMS || nd &lt; 0) {</span></a>
+<a name="670"><span class="lineNum">     670 </span><span class="lineCov">   12697976 :     if (nd &gt; NPY_MAXDIMS || nd &lt; 0) {</span></a>
 <a name="671"><span class="lineNum">     671 </span><span class="lineNoCov">          0 :         PyErr_Format(PyExc_ValueError,</span></a>
 <a name="672"><span class="lineNum">     672 </span>            :                 &quot;number of dimensions must be within [0, %d]&quot;, NPY_MAXDIMS);</a>
 <a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 :         Py_DECREF(descr);</span></a>
 <a name="674"><span class="lineNum">     674 </span><span class="lineNoCov">          0 :         return NULL;</span></a>
 <a name="675"><span class="lineNum">     675 </span>            :     }</a>
 <a name="676"><span class="lineNum">     676 </span>            : </a>
-<a name="677"><span class="lineNum">     677 </span><span class="lineCov">   12697807 :     if (descr-&gt;subarray) {</span></a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineCov">   12697976 :     if (descr-&gt;subarray) {</span></a>
 <a name="678"><span class="lineNum">     678 </span><span class="lineCov">       1074 :         PyObject *ret;</span></a>
 <a name="679"><span class="lineNum">     679 </span><span class="lineCov">       1074 :         npy_intp newdims[2*NPY_MAXDIMS];</span></a>
 <a name="680"><span class="lineNum">     680 </span><span class="lineCov">       1074 :         npy_intp *newstrides = NULL;</span></a>
@@ -764,8 +764,8 @@
 <a name="694"><span class="lineNum">     694 </span>            :     }</a>
 <a name="695"><span class="lineNum">     695 </span>            : </a>
 <a name="696"><span class="lineNum">     696 </span>            :     /* Check datatype element size */</a>
-<a name="697"><span class="lineNum">     697 </span><span class="lineCov">   12696733 :     nbytes = descr-&gt;elsize;</span></a>
-<a name="698"><span class="lineNum">     698 </span><span class="lineCov">   12696733 :     if (PyDataType_ISUNSIZED(descr)) {</span></a>
+<a name="697"><span class="lineNum">     697 </span><span class="lineCov">   12696902 :     nbytes = descr-&gt;elsize;</span></a>
+<a name="698"><span class="lineNum">     698 </span><span class="lineCov">   12696902 :     if (PyDataType_ISUNSIZED(descr)) {</span></a>
 <a name="699"><span class="lineNum">     699 </span><span class="lineCov">       6528 :         if (!PyDataType_ISFLEXIBLE(descr)) {</span></a>
 <a name="700"><span class="lineNum">     700 </span><span class="lineNoCov">          0 :             PyErr_SetString(PyExc_TypeError, &quot;Empty data-type&quot;);</span></a>
 <a name="701"><span class="lineNum">     701 </span><span class="lineNoCov">          0 :             Py_DECREF(descr);</span></a>
@@ -786,19 +786,19 @@
 <a name="716"><span class="lineNum">     716 </span>            :         }</a>
 <a name="717"><span class="lineNum">     717 </span>            :     }</a>
 <a name="718"><span class="lineNum">     718 </span>            : </a>
-<a name="719"><span class="lineNum">     719 </span><span class="lineCov">   12696733 :     fa = (PyArrayObject_fields *) subtype-&gt;tp_alloc(subtype, 0);</span></a>
-<a name="720"><span class="lineNum">     720 </span><span class="lineCov">   12696733 :     if (fa == NULL) {</span></a>
+<a name="719"><span class="lineNum">     719 </span><span class="lineCov">   12696902 :     fa = (PyArrayObject_fields *) subtype-&gt;tp_alloc(subtype, 0);</span></a>
+<a name="720"><span class="lineNum">     720 </span><span class="lineCov">   12696902 :     if (fa == NULL) {</span></a>
 <a name="721"><span class="lineNum">     721 </span><span class="lineNoCov">          0 :         Py_DECREF(descr);</span></a>
 <a name="722"><span class="lineNum">     722 </span><span class="lineNoCov">          0 :         return NULL;</span></a>
 <a name="723"><span class="lineNum">     723 </span>            :     }</a>
-<a name="724"><span class="lineNum">     724 </span><span class="lineCov">   12696733 :     fa-&gt;_buffer_info = NULL;</span></a>
-<a name="725"><span class="lineNum">     725 </span><span class="lineCov">   12696733 :     fa-&gt;nd = nd;</span></a>
-<a name="726"><span class="lineNum">     726 </span><span class="lineCov">   12696733 :     fa-&gt;dimensions = NULL;</span></a>
-<a name="727"><span class="lineNum">     727 </span><span class="lineCov">   12696733 :     fa-&gt;data = NULL;</span></a>
+<a name="724"><span class="lineNum">     724 </span><span class="lineCov">   12696902 :     fa-&gt;_buffer_info = NULL;</span></a>
+<a name="725"><span class="lineNum">     725 </span><span class="lineCov">   12696902 :     fa-&gt;nd = nd;</span></a>
+<a name="726"><span class="lineNum">     726 </span><span class="lineCov">   12696902 :     fa-&gt;dimensions = NULL;</span></a>
+<a name="727"><span class="lineNum">     727 </span><span class="lineCov">   12696902 :     fa-&gt;data = NULL;</span></a>
 <a name="728"><span class="lineNum">     728 </span>            : </a>
-<a name="729"><span class="lineNum">     729 </span><span class="lineCov">   12696733 :     if (data == NULL) {</span></a>
-<a name="730"><span class="lineNum">     730 </span><span class="lineCov">    8877279 :         fa-&gt;flags = NPY_ARRAY_DEFAULT;</span></a>
-<a name="731"><span class="lineNum">     731 </span><span class="lineCov">    8877279 :         if (flags) {</span></a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineCov">   12696902 :     if (data == NULL) {</span></a>
+<a name="730"><span class="lineNum">     730 </span><span class="lineCov">    8877290 :         fa-&gt;flags = NPY_ARRAY_DEFAULT;</span></a>
+<a name="731"><span class="lineNum">     731 </span><span class="lineCov">    8877290 :         if (flags) {</span></a>
 <a name="732"><span class="lineNum">     732 </span><span class="lineCov">      23408 :             fa-&gt;flags |= NPY_ARRAY_F_CONTIGUOUS;</span></a>
 <a name="733"><span class="lineNum">     733 </span><span class="lineCov">      23408 :             if (nd &gt; 1) {</span></a>
 <a name="734"><span class="lineNum">     734 </span><span class="lineCov">      17355 :                 fa-&gt;flags &amp;= ~NPY_ARRAY_C_CONTIGUOUS;</span></a>
@@ -807,26 +807,26 @@
 <a name="737"><span class="lineNum">     737 </span>            :         }</a>
 <a name="738"><span class="lineNum">     738 </span>            :     }</a>
 <a name="739"><span class="lineNum">     739 </span>            :     else {</a>
-<a name="740"><span class="lineNum">     740 </span><span class="lineCov">    3819454 :         fa-&gt;flags = (flags &amp; ~NPY_ARRAY_WRITEBACKIFCOPY);</span></a>
-<a name="741"><span class="lineNum">     741 </span><span class="lineCov">    3819454 :         fa-&gt;flags &amp;= ~NPY_ARRAY_UPDATEIFCOPY;</span></a>
+<a name="740"><span class="lineNum">     740 </span><span class="lineCov">    3819612 :         fa-&gt;flags = (flags &amp; ~NPY_ARRAY_WRITEBACKIFCOPY);</span></a>
+<a name="741"><span class="lineNum">     741 </span><span class="lineCov">    3819612 :         fa-&gt;flags &amp;= ~NPY_ARRAY_UPDATEIFCOPY;</span></a>
 <a name="742"><span class="lineNum">     742 </span>            :     }</a>
-<a name="743"><span class="lineNum">     743 </span><span class="lineCov">   12696733 :     fa-&gt;descr = descr;</span></a>
-<a name="744"><span class="lineNum">     744 </span><span class="lineCov">   12696733 :     fa-&gt;base = (PyObject *)NULL;</span></a>
-<a name="745"><span class="lineNum">     745 </span><span class="lineCov">   12696733 :     fa-&gt;weakreflist = (PyObject *)NULL;</span></a>
+<a name="743"><span class="lineNum">     743 </span><span class="lineCov">   12696902 :     fa-&gt;descr = descr;</span></a>
+<a name="744"><span class="lineNum">     744 </span><span class="lineCov">   12696902 :     fa-&gt;base = (PyObject *)NULL;</span></a>
+<a name="745"><span class="lineNum">     745 </span><span class="lineCov">   12696902 :     fa-&gt;weakreflist = (PyObject *)NULL;</span></a>
 <a name="746"><span class="lineNum">     746 </span>            : </a>
-<a name="747"><span class="lineNum">     747 </span><span class="lineCov">   12696733 :     if (nd &gt; 0) {</span></a>
-<a name="748"><span class="lineNum">     748 </span><span class="lineCov">    4296829 :         fa-&gt;dimensions = npy_alloc_cache_dim(2 * nd);</span></a>
-<a name="749"><span class="lineNum">     749 </span><span class="lineCov">    4296829 :         if (fa-&gt;dimensions == NULL) {</span></a>
+<a name="747"><span class="lineNum">     747 </span><span class="lineCov">   12696902 :     if (nd &gt; 0) {</span></a>
+<a name="748"><span class="lineNum">     748 </span><span class="lineCov">    4296998 :         fa-&gt;dimensions = npy_alloc_cache_dim(2 * nd);</span></a>
+<a name="749"><span class="lineNum">     749 </span><span class="lineCov">    4296998 :         if (fa-&gt;dimensions == NULL) {</span></a>
 <a name="750"><span class="lineNum">     750 </span><span class="lineNoCov">          0 :             PyErr_NoMemory();</span></a>
 <a name="751"><span class="lineNum">     751 </span><span class="lineNoCov">          0 :             goto fail;</span></a>
 <a name="752"><span class="lineNum">     752 </span>            :         }</a>
-<a name="753"><span class="lineNum">     753 </span><span class="lineCov">    4296829 :         fa-&gt;strides = fa-&gt;dimensions + nd;</span></a>
+<a name="753"><span class="lineNum">     753 </span><span class="lineCov">    4296998 :         fa-&gt;strides = fa-&gt;dimensions + nd;</span></a>
 <a name="754"><span class="lineNum">     754 </span>            : </a>
 <a name="755"><span class="lineNum">     755 </span>            :         /* Copy dimensions, check them, and find total array size `nbytes` */</a>
-<a name="756"><span class="lineNum">     756 </span><span class="lineCov">    9687564 :         for (int i = 0; i &lt; nd; i++) {</span></a>
-<a name="757"><span class="lineNum">     757 </span><span class="lineCov">    5390742 :             fa-&gt;dimensions[i] = dims[i];</span></a>
+<a name="756"><span class="lineNum">     756 </span><span class="lineCov">    9687937 :         for (int i = 0; i &lt; nd; i++) {</span></a>
+<a name="757"><span class="lineNum">     757 </span><span class="lineCov">    5390946 :             fa-&gt;dimensions[i] = dims[i];</span></a>
 <a name="758"><span class="lineNum">     758 </span>            : </a>
-<a name="759"><span class="lineNum">     759 </span><span class="lineCov">    5390742 :             if (fa-&gt;dimensions[i] == 0) {</span></a>
+<a name="759"><span class="lineNum">     759 </span><span class="lineCov">    5390946 :             if (fa-&gt;dimensions[i] == 0) {</span></a>
 <a name="760"><span class="lineNum">     760 </span>            :                 /*</a>
 <a name="761"><span class="lineNum">     761 </span>            :                  * Compare to PyArray_OverflowMultiplyList that</a>
 <a name="762"><span class="lineNum">     762 </span>            :                  * returns 0 in this case.</a>
@@ -834,7 +834,7 @@
 <a name="764"><span class="lineNum">     764 </span><span class="lineCov">     177183 :                 continue;</span></a>
 <a name="765"><span class="lineNum">     765 </span>            :             }</a>
 <a name="766"><span class="lineNum">     766 </span>            : </a>
-<a name="767"><span class="lineNum">     767 </span><span class="lineCov">    5213559 :             if (fa-&gt;dimensions[i] &lt; 0) {</span></a>
+<a name="767"><span class="lineNum">     767 </span><span class="lineCov">    5213763 :             if (fa-&gt;dimensions[i] &lt; 0) {</span></a>
 <a name="768"><span class="lineNum">     768 </span><span class="lineNoCov">          0 :                 PyErr_SetString(PyExc_ValueError,</span></a>
 <a name="769"><span class="lineNum">     769 </span>            :                         &quot;negative dimensions are not allowed&quot;);</a>
 <a name="770"><span class="lineNum">     770 </span><span class="lineNoCov">          0 :                 goto fail;</span></a>
@@ -844,7 +844,7 @@
 <a name="774"><span class="lineNum">     774 </span>            :              * Care needs to be taken to avoid integer overflow when multiplying</a>
 <a name="775"><span class="lineNum">     775 </span>            :              * the dimensions together to get the total size of the array.</a>
 <a name="776"><span class="lineNum">     776 </span>            :              */</a>
-<a name="777"><span class="lineNum">     777 </span><span class="lineCov">    5213559 :             if (npy_mul_with_overflow_intp(&amp;nbytes, nbytes, fa-&gt;dimensions[i])) {</span></a>
+<a name="777"><span class="lineNum">     777 </span><span class="lineCov">    5213763 :             if (npy_mul_with_overflow_intp(&amp;nbytes, nbytes, fa-&gt;dimensions[i])) {</span></a>
 <a name="778"><span class="lineNum">     778 </span><span class="lineCov">          7 :                 PyErr_SetString(PyExc_ValueError,</span></a>
 <a name="779"><span class="lineNum">     779 </span>            :                         &quot;array is too big; `arr.size * arr.dtype.itemsize` &quot;</a>
 <a name="780"><span class="lineNum">     780 </span>            :                         &quot;is larger than the maximum possible size.&quot;);</a>
@@ -853,18 +853,18 @@
 <a name="783"><span class="lineNum">     783 </span>            :         }</a>
 <a name="784"><span class="lineNum">     784 </span>            : </a>
 <a name="785"><span class="lineNum">     785 </span>            :         /* Fill the strides (or copy them if they were passed in) */</a>
-<a name="786"><span class="lineNum">     786 </span><span class="lineCov">    4296822 :         if (strides == NULL) {</span></a>
+<a name="786"><span class="lineNum">     786 </span><span class="lineCov">    4296991 :         if (strides == NULL) {</span></a>
 <a name="787"><span class="lineNum">     787 </span>            :             /* fill the strides and set the contiguity flags */</a>
-<a name="788"><span class="lineNum">     788 </span><span class="lineCov">    2755846 :             _array_fill_strides(fa-&gt;strides, dims, nd, descr-&gt;elsize,</span></a>
+<a name="788"><span class="lineNum">     788 </span><span class="lineCov">    2755848 :             _array_fill_strides(fa-&gt;strides, dims, nd, descr-&gt;elsize,</span></a>
 <a name="789"><span class="lineNum">     789 </span>            :                                 flags, &amp;(fa-&gt;flags));</a>
 <a name="790"><span class="lineNum">     790 </span>            :         }</a>
 <a name="791"><span class="lineNum">     791 </span>            :         else {</a>
 <a name="792"><span class="lineNum">     792 </span>            :             /* User to provided strides (user is responsible for correctness) */</a>
-<a name="793"><span class="lineNum">     793 </span><span class="lineCov">    3539035 :             for (int i = 0; i &lt; nd; i++) {</span></a>
-<a name="794"><span class="lineNum">     794 </span><span class="lineCov">    1998059 :                 fa-&gt;strides[i] = strides[i];</span></a>
+<a name="793"><span class="lineNum">     793 </span><span class="lineCov">    3539400 :             for (int i = 0; i &lt; nd; i++) {</span></a>
+<a name="794"><span class="lineNum">     794 </span><span class="lineCov">    1998257 :                 fa-&gt;strides[i] = strides[i];</span></a>
 <a name="795"><span class="lineNum">     795 </span>            :             }</a>
 <a name="796"><span class="lineNum">     796 </span>            :             /* Since the strides were passed in must update contiguity */</a>
-<a name="797"><span class="lineNum">     797 </span><span class="lineCov">    1540976 :             PyArray_UpdateFlags((PyArrayObject *)fa,</span></a>
+<a name="797"><span class="lineNum">     797 </span><span class="lineCov">    1541143 :             PyArray_UpdateFlags((PyArrayObject *)fa,</span></a>
 <a name="798"><span class="lineNum">     798 </span>            :                     NPY_ARRAY_C_CONTIGUOUS|NPY_ARRAY_F_CONTIGUOUS);</a>
 <a name="799"><span class="lineNum">     799 </span>            :         }</a>
 <a name="800"><span class="lineNum">     800 </span>            :     }</a>
@@ -874,54 +874,54 @@
 <a name="804"><span class="lineNum">     804 </span><span class="lineCov">    8399904 :         fa-&gt;flags |= NPY_ARRAY_C_CONTIGUOUS|NPY_ARRAY_F_CONTIGUOUS;</span></a>
 <a name="805"><span class="lineNum">     805 </span>            :     }</a>
 <a name="806"><span class="lineNum">     806 </span>            : </a>
-<a name="807"><span class="lineNum">     807 </span><span class="lineCov">   12696726 :     if (data == NULL) {</span></a>
+<a name="807"><span class="lineNum">     807 </span><span class="lineCov">   12696895 :     if (data == NULL) {</span></a>
 <a name="808"><span class="lineNum">     808 </span>            :         /*</a>
 <a name="809"><span class="lineNum">     809 </span>            :          * Allocate something even for zero-space arrays</a>
 <a name="810"><span class="lineNum">     810 </span>            :          * e.g. shape=(0,) -- otherwise buffer exposure</a>
 <a name="811"><span class="lineNum">     811 </span>            :          * (a.data) doesn't work as it should.</a>
 <a name="812"><span class="lineNum">     812 </span>            :          * Could probably just allocate a few bytes here. -- Chuck</a>
 <a name="813"><span class="lineNum">     813 </span>            :          */</a>
-<a name="814"><span class="lineNum">     814 </span><span class="lineCov">    8877274 :         if (nbytes == 0) {</span></a>
+<a name="814"><span class="lineNum">     814 </span><span class="lineCov">    8877285 :         if (nbytes == 0) {</span></a>
 <a name="815"><span class="lineNum">     815 </span><span class="lineCov">       4213 :             nbytes = descr-&gt;elsize ? descr-&gt;elsize : 1;</span></a>
 <a name="816"><span class="lineNum">     816 </span>            :         }</a>
 <a name="817"><span class="lineNum">     817 </span>            :         /*</a>
 <a name="818"><span class="lineNum">     818 </span>            :          * It is bad to have uninitialized OBJECT pointers</a>
 <a name="819"><span class="lineNum">     819 </span>            :          * which could also be sub-fields of a VOID array</a>
 <a name="820"><span class="lineNum">     820 </span>            :          */</a>
-<a name="821"><span class="lineNum">     821 </span><span class="lineCov">    8877274 :         if (zeroed || PyDataType_FLAGCHK(descr, NPY_NEEDS_INIT)) {</span></a>
+<a name="821"><span class="lineNum">     821 </span><span class="lineCov">    8877285 :         if (zeroed || PyDataType_FLAGCHK(descr, NPY_NEEDS_INIT)) {</span></a>
 <a name="822"><span class="lineNum">     822 </span><span class="lineCov">     169452 :             data = npy_alloc_cache_zero(nbytes);</span></a>
 <a name="823"><span class="lineNum">     823 </span>            :         }</a>
 <a name="824"><span class="lineNum">     824 </span>            :         else {</a>
-<a name="825"><span class="lineNum">     825 </span><span class="lineCov">    8707822 :             data = npy_alloc_cache(nbytes);</span></a>
+<a name="825"><span class="lineNum">     825 </span><span class="lineCov">    8707833 :             data = npy_alloc_cache(nbytes);</span></a>
 <a name="826"><span class="lineNum">     826 </span>            :         }</a>
-<a name="827"><span class="lineNum">     827 </span><span class="lineCov">    8877274 :         if (data == NULL) {</span></a>
+<a name="827"><span class="lineNum">     827 </span><span class="lineCov">    8877285 :         if (data == NULL) {</span></a>
 <a name="828"><span class="lineNum">     828 </span><span class="lineCov">         11 :             raise_memory_error(fa-&gt;nd, fa-&gt;dimensions, descr);</span></a>
 <a name="829"><span class="lineNum">     829 </span><span class="lineCov">         11 :             goto fail;</span></a>
 <a name="830"><span class="lineNum">     830 </span>            :         }</a>
-<a name="831"><span class="lineNum">     831 </span><span class="lineCov">    8877263 :         fa-&gt;flags |= NPY_ARRAY_OWNDATA;</span></a>
+<a name="831"><span class="lineNum">     831 </span><span class="lineCov">    8877274 :         fa-&gt;flags |= NPY_ARRAY_OWNDATA;</span></a>
 <a name="832"><span class="lineNum">     832 </span>            :     }</a>
 <a name="833"><span class="lineNum">     833 </span>            :     else {</a>
 <a name="834"><span class="lineNum">     834 </span>            :         /*</a>
 <a name="835"><span class="lineNum">     835 </span>            :          * If data is passed in, this object won't own it by default.</a>
 <a name="836"><span class="lineNum">     836 </span>            :          * Caller must arrange for this to be reset if truly desired</a>
 <a name="837"><span class="lineNum">     837 </span>            :          */</a>
-<a name="838"><span class="lineNum">     838 </span><span class="lineCov">    3819452 :         fa-&gt;flags &amp;= ~NPY_ARRAY_OWNDATA;</span></a>
+<a name="838"><span class="lineNum">     838 </span><span class="lineCov">    3819610 :         fa-&gt;flags &amp;= ~NPY_ARRAY_OWNDATA;</span></a>
 <a name="839"><span class="lineNum">     839 </span>            :     }</a>
-<a name="840"><span class="lineNum">     840 </span><span class="lineCov">   12696715 :     fa-&gt;data = data;</span></a>
+<a name="840"><span class="lineNum">     840 </span><span class="lineCov">   12696884 :     fa-&gt;data = data;</span></a>
 <a name="841"><span class="lineNum">     841 </span>            : </a>
 <a name="842"><span class="lineNum">     842 </span>            :     /*</a>
 <a name="843"><span class="lineNum">     843 </span>            :      * Always update the aligned flag.  Not owned data or input strides may</a>
 <a name="844"><span class="lineNum">     844 </span>            :      * not be aligned. Also on some platforms (debian sparc) malloc does not</a>
 <a name="845"><span class="lineNum">     845 </span>            :      * provide enough alignment for long double types.</a>
 <a name="846"><span class="lineNum">     846 </span>            :      */</a>
-<a name="847"><span class="lineNum">     847 </span><span class="lineCov">   12696715 :     PyArray_UpdateFlags((PyArrayObject *)fa, NPY_ARRAY_ALIGNED);</span></a>
+<a name="847"><span class="lineNum">     847 </span><span class="lineCov">   12696884 :     PyArray_UpdateFlags((PyArrayObject *)fa, NPY_ARRAY_ALIGNED);</span></a>
 <a name="848"><span class="lineNum">     848 </span>            : </a>
 <a name="849"><span class="lineNum">     849 </span>            :     /* Set the base object. It's important to do it here so that</a>
 <a name="850"><span class="lineNum">     850 </span>            :      * __array_finalize__ below receives it</a>
 <a name="851"><span class="lineNum">     851 </span>            :      */</a>
-<a name="852"><span class="lineNum">     852 </span><span class="lineCov">   12696715 :     if (base != NULL) {</span></a>
-<a name="853"><span class="lineNum">     853 </span><span class="lineCov">    3791902 :         Py_INCREF(base);</span></a>
-<a name="854"><span class="lineNum">     854 </span><span class="lineCov">    3791902 :         if (PyArray_SetBaseObject((PyArrayObject *)fa, base) &lt; 0) {</span></a>
+<a name="852"><span class="lineNum">     852 </span><span class="lineCov">   12696884 :     if (base != NULL) {</span></a>
+<a name="853"><span class="lineNum">     853 </span><span class="lineCov">    3792060 :         Py_INCREF(base);</span></a>
+<a name="854"><span class="lineNum">     854 </span><span class="lineCov">    3792060 :         if (PyArray_SetBaseObject((PyArrayObject *)fa, base) &lt; 0) {</span></a>
 <a name="855"><span class="lineNum">     855 </span><span class="lineNoCov">          0 :             goto fail;</span></a>
 <a name="856"><span class="lineNum">     856 </span>            :         }</a>
 <a name="857"><span class="lineNum">     857 </span>            :     }</a>
@@ -930,18 +930,18 @@
 <a name="860"><span class="lineNum">     860 </span>            :      * call the __array_finalize__ method if a subtype was requested.</a>
 <a name="861"><span class="lineNum">     861 </span>            :      * If obj is NULL use Py_None for the Python callback.</a>
 <a name="862"><span class="lineNum">     862 </span>            :      */</a>
-<a name="863"><span class="lineNum">     863 </span><span class="lineCov">   12696715 :     if (subtype != &amp;PyArray_Type) {</span></a>
-<a name="864"><span class="lineNum">     864 </span><span class="lineCov">      90558 :         PyObject *res, *func;</span></a>
+<a name="863"><span class="lineNum">     863 </span><span class="lineCov">   12696884 :     if (subtype != &amp;PyArray_Type) {</span></a>
+<a name="864"><span class="lineNum">     864 </span><span class="lineCov">      90576 :         PyObject *res, *func;</span></a>
 <a name="865"><span class="lineNum">     865 </span>            : </a>
-<a name="866"><span class="lineNum">     866 </span><span class="lineCov">      90558 :         func = PyObject_GetAttr((PyObject *)fa, npy_ma_str_array_finalize);</span></a>
-<a name="867"><span class="lineNum">     867 </span><span class="lineCov">      90558 :         if (func == NULL) {</span></a>
+<a name="866"><span class="lineNum">     866 </span><span class="lineCov">      90576 :         func = PyObject_GetAttr((PyObject *)fa, npy_ma_str_array_finalize);</span></a>
+<a name="867"><span class="lineNum">     867 </span><span class="lineCov">      90576 :         if (func == NULL) {</span></a>
 <a name="868"><span class="lineNum">     868 </span><span class="lineCov">          1 :             goto fail;</span></a>
 <a name="869"><span class="lineNum">     869 </span>            :         }</a>
-<a name="870"><span class="lineNum">     870 </span><span class="lineCov">      90557 :         else if (func == Py_None) {</span></a>
-<a name="871"><span class="lineNum">     871 </span><span class="lineCov">       2469 :             Py_DECREF(func);</span></a>
+<a name="870"><span class="lineNum">     870 </span><span class="lineCov">      90575 :         else if (func == Py_None) {</span></a>
+<a name="871"><span class="lineNum">     871 </span><span class="lineCov">       2473 :             Py_DECREF(func);</span></a>
 <a name="872"><span class="lineNum">     872 </span>            :         }</a>
 <a name="873"><span class="lineNum">     873 </span>            :         else {</a>
-<a name="874"><span class="lineNum">     874 </span><span class="lineCov">      88088 :             if (PyCapsule_CheckExact(func)) {</span></a>
+<a name="874"><span class="lineNum">     874 </span><span class="lineCov">      88102 :             if (PyCapsule_CheckExact(func)) {</span></a>
 <a name="875"><span class="lineNum">     875 </span>            :                 /* A C-function is stored here */</a>
 <a name="876"><span class="lineNum">     876 </span><span class="lineNoCov">          0 :                 PyArray_FinalizeFunc *cfunc;</span></a>
 <a name="877"><span class="lineNum">     877 </span><span class="lineNoCov">          0 :                 cfunc = PyCapsule_GetPointer(func, NULL);</span></a>
@@ -954,16 +954,16 @@
 <a name="884"><span class="lineNum">     884 </span>            :                 }</a>
 <a name="885"><span class="lineNum">     885 </span>            :             }</a>
 <a name="886"><span class="lineNum">     886 </span>            :             else {</a>
-<a name="887"><span class="lineNum">     887 </span><span class="lineCov">      88088 :                 if (obj == NULL) {</span></a>
+<a name="887"><span class="lineNum">     887 </span><span class="lineCov">      88102 :                 if (obj == NULL) {</span></a>
 <a name="888"><span class="lineNum">     888 </span><span class="lineCov">        577 :                     obj = Py_None;</span></a>
 <a name="889"><span class="lineNum">     889 </span>            :                 }</a>
-<a name="890"><span class="lineNum">     890 </span><span class="lineCov">      88088 :                 res = PyObject_CallFunctionObjArgs(func, obj, NULL);</span></a>
-<a name="891"><span class="lineNum">     891 </span><span class="lineCov">      88088 :                 Py_DECREF(func);</span></a>
-<a name="892"><span class="lineNum">     892 </span><span class="lineCov">      88088 :                 if (res == NULL) {</span></a>
+<a name="890"><span class="lineNum">     890 </span><span class="lineCov">      88102 :                 res = PyObject_CallFunctionObjArgs(func, obj, NULL);</span></a>
+<a name="891"><span class="lineNum">     891 </span><span class="lineCov">      88102 :                 Py_DECREF(func);</span></a>
+<a name="892"><span class="lineNum">     892 </span><span class="lineCov">      88102 :                 if (res == NULL) {</span></a>
 <a name="893"><span class="lineNum">     893 </span><span class="lineCov">          2 :                     goto fail;</span></a>
 <a name="894"><span class="lineNum">     894 </span>            :                 }</a>
 <a name="895"><span class="lineNum">     895 </span>            :                 else {</a>
-<a name="896"><span class="lineNum">     896 </span><span class="lineCov">      88086 :                     Py_DECREF(res);</span></a>
+<a name="896"><span class="lineNum">     896 </span><span class="lineCov">      88100 :                     Py_DECREF(res);</span></a>
 <a name="897"><span class="lineNum">     897 </span>            :                 }</a>
 <a name="898"><span class="lineNum">     898 </span>            :             }</a>
 <a name="899"><span class="lineNum">     899 </span>            :         }</a>
@@ -983,12 +983,12 @@
 <a name="913"><span class="lineNum">     913 </span>            :  * true, dtype will be decrefed.</a>
 <a name="914"><span class="lineNum">     914 </span>            :  */</a>
 <a name="915"><span class="lineNum">     915 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="916"><span class="lineNum">     916 </span><span class="lineCov">    8839108 : PyArray_NewFromDescr(</span></a>
+<a name="916"><span class="lineNum">     916 </span><span class="lineCov">    8839119 : PyArray_NewFromDescr(</span></a>
 <a name="917"><span class="lineNum">     917 </span>            :         PyTypeObject *subtype, PyArray_Descr *descr,</a>
 <a name="918"><span class="lineNum">     918 </span>            :         int nd, npy_intp const *dims, npy_intp const *strides, void *data,</a>
 <a name="919"><span class="lineNum">     919 </span>            :         int flags, PyObject *obj)</a>
 <a name="920"><span class="lineNum">     920 </span>            : {</a>
-<a name="921"><span class="lineNum">     921 </span><span class="lineCov">   17425939 :     return PyArray_NewFromDescrAndBase(</span></a>
+<a name="921"><span class="lineNum">     921 </span><span class="lineCov">   17425959 :     return PyArray_NewFromDescrAndBase(</span></a>
 <a name="922"><span class="lineNum">     922 </span>            :             subtype, descr,</a>
 <a name="923"><span class="lineNum">     923 </span>            :             nd, dims, strides, data,</a>
 <a name="924"><span class="lineNum">     924 </span>            :             flags, obj, NULL);</a>
@@ -998,12 +998,12 @@
 <a name="928"><span class="lineNum">     928 </span>            :  * Sets the base object using PyArray_SetBaseObject</a>
 <a name="929"><span class="lineNum">     929 </span>            :  */</a>
 <a name="930"><span class="lineNum">     930 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="931"><span class="lineNum">     931 </span><span class="lineCov">   12099723 : PyArray_NewFromDescrAndBase(</span></a>
+<a name="931"><span class="lineNum">     931 </span><span class="lineCov">   12099794 : PyArray_NewFromDescrAndBase(</span></a>
 <a name="932"><span class="lineNum">     932 </span>            :         PyTypeObject *subtype, PyArray_Descr *descr,</a>
 <a name="933"><span class="lineNum">     933 </span>            :         int nd, npy_intp const *dims, npy_intp const *strides, void *data,</a>
 <a name="934"><span class="lineNum">     934 </span>            :         int flags, PyObject *obj, PyObject *base)</a>
 <a name="935"><span class="lineNum">     935 </span>            : {</a>
-<a name="936"><span class="lineNum">     936 </span><span class="lineCov">    8523458 :     return PyArray_NewFromDescr_int(subtype, descr, nd,</span></a>
+<a name="936"><span class="lineNum">     936 </span><span class="lineCov">    8523527 :     return PyArray_NewFromDescr_int(subtype, descr, nd,</span></a>
 <a name="937"><span class="lineNum">     937 </span>            :                                     dims, strides, data,</a>
 <a name="938"><span class="lineNum">     938 </span>            :                                     flags, obj, base, 0, 0);</a>
 <a name="939"><span class="lineNum">     939 </span>            : }</a>
@@ -1027,37 +1027,37 @@
 <a name="957"><span class="lineNum">     957 </span>            :  * dtype-&gt;subarray is true, dtype will be decrefed.</a>
 <a name="958"><span class="lineNum">     958 </span>            :  */</a>
 <a name="959"><span class="lineNum">     959 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="960"><span class="lineNum">     960 </span><span class="lineCov">     221193 : PyArray_NewLikeArrayWithShape(PyArrayObject *prototype, NPY_ORDER order,</span></a>
+<a name="960"><span class="lineNum">     960 </span><span class="lineCov">     221190 : PyArray_NewLikeArrayWithShape(PyArrayObject *prototype, NPY_ORDER order,</span></a>
 <a name="961"><span class="lineNum">     961 </span>            :                               PyArray_Descr *dtype, int ndim, npy_intp const *dims, int subok)</a>
 <a name="962"><span class="lineNum">     962 </span>            : {</a>
-<a name="963"><span class="lineNum">     963 </span><span class="lineCov">     221193 :     PyObject *ret = NULL;</span></a>
+<a name="963"><span class="lineNum">     963 </span><span class="lineCov">     221190 :     PyObject *ret = NULL;</span></a>
 <a name="964"><span class="lineNum">     964 </span>            : </a>
-<a name="965"><span class="lineNum">     965 </span><span class="lineCov">     221193 :     if (ndim == -1) {</span></a>
-<a name="966"><span class="lineNum">     966 </span><span class="lineCov">     219395 :         ndim = PyArray_NDIM(prototype);</span></a>
-<a name="967"><span class="lineNum">     967 </span><span class="lineCov">     219395 :         dims = PyArray_DIMS(prototype);</span></a>
+<a name="965"><span class="lineNum">     965 </span><span class="lineCov">     221190 :     if (ndim == -1) {</span></a>
+<a name="966"><span class="lineNum">     966 </span><span class="lineCov">     219392 :         ndim = PyArray_NDIM(prototype);</span></a>
+<a name="967"><span class="lineNum">     967 </span><span class="lineCov">     219392 :         dims = PyArray_DIMS(prototype);</span></a>
 <a name="968"><span class="lineNum">     968 </span>            :     }</a>
 <a name="969"><span class="lineNum">     969 </span><span class="lineCov">       1798 :     else if (order == NPY_KEEPORDER &amp;&amp; (ndim != PyArray_NDIM(prototype))) {</span></a>
 <a name="970"><span class="lineNum">     970 </span><span class="lineCov">        339 :         order = NPY_CORDER;</span></a>
 <a name="971"><span class="lineNum">     971 </span>            :     }</a>
 <a name="972"><span class="lineNum">     972 </span>            : </a>
 <a name="973"><span class="lineNum">     973 </span>            :     /* If no override data type, use the one from the prototype */</a>
-<a name="974"><span class="lineNum">     974 </span><span class="lineCov">     221193 :     if (dtype == NULL) {</span></a>
-<a name="975"><span class="lineNum">     975 </span><span class="lineCov">     131572 :         dtype = PyArray_DESCR(prototype);</span></a>
-<a name="976"><span class="lineNum">     976 </span><span class="lineCov">     131572 :         Py_INCREF(dtype);</span></a>
+<a name="974"><span class="lineNum">     974 </span><span class="lineCov">     221190 :     if (dtype == NULL) {</span></a>
+<a name="975"><span class="lineNum">     975 </span><span class="lineCov">     131577 :         dtype = PyArray_DESCR(prototype);</span></a>
+<a name="976"><span class="lineNum">     976 </span><span class="lineCov">     131577 :         Py_INCREF(dtype);</span></a>
 <a name="977"><span class="lineNum">     977 </span>            :     }</a>
 <a name="978"><span class="lineNum">     978 </span>            : </a>
 <a name="979"><span class="lineNum">     979 </span>            :     /* Handle ANYORDER and simple KEEPORDER cases */</a>
-<a name="980"><span class="lineNum">     980 </span><span class="lineCov">     221193 :     switch (order) {</span></a>
+<a name="980"><span class="lineNum">     980 </span><span class="lineCov">     221190 :     switch (order) {</span></a>
 <a name="981"><span class="lineNum">     981 </span>            :         case NPY_ANYORDER:</a>
 <a name="982"><span class="lineNum">     982 </span><span class="lineCov">       2780 :             order = PyArray_ISFORTRAN(prototype) ?</span></a>
 <a name="983"><span class="lineNum">     983 </span><span class="lineCov">       2780 :                                     NPY_FORTRANORDER : NPY_CORDER;</span></a>
 <a name="984"><span class="lineNum">     984 </span>            :             break;</a>
 <a name="985"><span class="lineNum">     985 </span>            :         case NPY_KEEPORDER:</a>
-<a name="986"><span class="lineNum">     986 </span><span class="lineCov">     157490 :             if (PyArray_IS_C_CONTIGUOUS(prototype) || ndim &lt;= 1) {</span></a>
+<a name="986"><span class="lineNum">     986 </span><span class="lineCov">     157482 :             if (PyArray_IS_C_CONTIGUOUS(prototype) || ndim &lt;= 1) {</span></a>
 <a name="987"><span class="lineNum">     987 </span>            :                 order = NPY_CORDER;</a>
 <a name="988"><span class="lineNum">     988 </span>            :                 break;</a>
 <a name="989"><span class="lineNum">     989 </span>            :             }</a>
-<a name="990"><span class="lineNum">     990 </span><span class="lineCov">       3174 :             else if (PyArray_IS_F_CONTIGUOUS(prototype)) {</span></a>
+<a name="990"><span class="lineNum">     990 </span><span class="lineCov">       3169 :             else if (PyArray_IS_F_CONTIGUOUS(prototype)) {</span></a>
 <a name="991"><span class="lineNum">     991 </span>            :                 order = NPY_FORTRANORDER;</a>
 <a name="992"><span class="lineNum">     992 </span>            :                 break;</a>
 <a name="993"><span class="lineNum">     993 </span>            :             }</a>
@@ -1068,7 +1068,7 @@
 <a name="998"><span class="lineNum">     998 </span>            : </a>
 <a name="999"><span class="lineNum">     999 </span>            :     /* If it's not KEEPORDER, this is simple */</a>
 <a name="1000"><span class="lineNum">    1000 </span><span class="lineCov">      62745 :     if (order != NPY_KEEPORDER) {</span></a>
-<a name="1001"><span class="lineNum">    1001 </span><span class="lineCov">     233297 :         ret = PyArray_NewFromDescr(subok ? Py_TYPE(prototype) : &amp;PyArray_Type,</span></a>
+<a name="1001"><span class="lineNum">    1001 </span><span class="lineCov">     233299 :         ret = PyArray_NewFromDescr(subok ? Py_TYPE(prototype) : &amp;PyArray_Type,</span></a>
 <a name="1002"><span class="lineNum">    1002 </span>            :                                         dtype,</a>
 <a name="1003"><span class="lineNum">    1003 </span>            :                                         ndim,</a>
 <a name="1004"><span class="lineNum">    1004 </span>            :                                         dims,</a>
@@ -1079,24 +1079,24 @@
 <a name="1009"><span class="lineNum">    1009 </span>            :     }</a>
 <a name="1010"><span class="lineNum">    1010 </span>            :     /* KEEPORDER needs some analysis of the strides */</a>
 <a name="1011"><span class="lineNum">    1011 </span>            :     else {</a>
-<a name="1012"><span class="lineNum">    1012 </span><span class="lineCov">       1822 :         npy_intp strides[NPY_MAXDIMS], stride;</span></a>
-<a name="1013"><span class="lineNum">    1013 </span><span class="lineCov">       1822 :         npy_stride_sort_item strideperm[NPY_MAXDIMS];</span></a>
-<a name="1014"><span class="lineNum">    1014 </span><span class="lineCov">       1822 :         int idim;</span></a>
+<a name="1012"><span class="lineNum">    1012 </span><span class="lineCov">       1817 :         npy_intp strides[NPY_MAXDIMS], stride;</span></a>
+<a name="1013"><span class="lineNum">    1013 </span><span class="lineCov">       1817 :         npy_stride_sort_item strideperm[NPY_MAXDIMS];</span></a>
+<a name="1014"><span class="lineNum">    1014 </span><span class="lineCov">       1817 :         int idim;</span></a>
 <a name="1015"><span class="lineNum">    1015 </span>            : </a>
-<a name="1016"><span class="lineNum">    1016 </span><span class="lineCov">       1822 :         PyArray_CreateSortedStridePerm(ndim,</span></a>
-<a name="1017"><span class="lineNum">    1017 </span><span class="lineCov">       1822 :                                         PyArray_STRIDES(prototype),</span></a>
+<a name="1016"><span class="lineNum">    1016 </span><span class="lineCov">       1817 :         PyArray_CreateSortedStridePerm(ndim,</span></a>
+<a name="1017"><span class="lineNum">    1017 </span><span class="lineCov">       1817 :                                         PyArray_STRIDES(prototype),</span></a>
 <a name="1018"><span class="lineNum">    1018 </span>            :                                         strideperm);</a>
 <a name="1019"><span class="lineNum">    1019 </span>            : </a>
 <a name="1020"><span class="lineNum">    1020 </span>            :         /* Build the new strides */</a>
-<a name="1021"><span class="lineNum">    1021 </span><span class="lineCov">       1822 :         stride = dtype-&gt;elsize;</span></a>
-<a name="1022"><span class="lineNum">    1022 </span><span class="lineCov">       5836 :         for (idim = ndim-1; idim &gt;= 0; --idim) {</span></a>
-<a name="1023"><span class="lineNum">    1023 </span><span class="lineCov">       4014 :             npy_intp i_perm = strideperm[idim].perm;</span></a>
-<a name="1024"><span class="lineNum">    1024 </span><span class="lineCov">       4014 :             strides[i_perm] = stride;</span></a>
-<a name="1025"><span class="lineNum">    1025 </span><span class="lineCov">       4014 :             stride *= dims[i_perm];</span></a>
+<a name="1021"><span class="lineNum">    1021 </span><span class="lineCov">       1817 :         stride = dtype-&gt;elsize;</span></a>
+<a name="1022"><span class="lineNum">    1022 </span><span class="lineCov">       5821 :         for (idim = ndim-1; idim &gt;= 0; --idim) {</span></a>
+<a name="1023"><span class="lineNum">    1023 </span><span class="lineCov">       4004 :             npy_intp i_perm = strideperm[idim].perm;</span></a>
+<a name="1024"><span class="lineNum">    1024 </span><span class="lineCov">       4004 :             strides[i_perm] = stride;</span></a>
+<a name="1025"><span class="lineNum">    1025 </span><span class="lineCov">       4004 :             stride *= dims[i_perm];</span></a>
 <a name="1026"><span class="lineNum">    1026 </span>            :         }</a>
 <a name="1027"><span class="lineNum">    1027 </span>            : </a>
 <a name="1028"><span class="lineNum">    1028 </span>            :         /* Finally, allocate the array */</a>
-<a name="1029"><span class="lineNum">    1029 </span><span class="lineCov">       4939 :         ret = PyArray_NewFromDescr(subok ? Py_TYPE(prototype) : &amp;PyArray_Type,</span></a>
+<a name="1029"><span class="lineNum">    1029 </span><span class="lineCov">       4929 :         ret = PyArray_NewFromDescr(subok ? Py_TYPE(prototype) : &amp;PyArray_Type,</span></a>
 <a name="1030"><span class="lineNum">    1030 </span>            :                                         dtype,</a>
 <a name="1031"><span class="lineNum">    1031 </span>            :                                         ndim,</a>
 <a name="1032"><span class="lineNum">    1032 </span>            :                                         dims,</a>
@@ -1106,7 +1106,7 @@
 <a name="1036"><span class="lineNum">    1036 </span>            :                                         subok ? (PyObject *)prototype : NULL);</a>
 <a name="1037"><span class="lineNum">    1037 </span>            :     }</a>
 <a name="1038"><span class="lineNum">    1038 </span>            : </a>
-<a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">     221193 :     return ret;</span></a>
+<a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">     221190 :     return ret;</span></a>
 <a name="1040"><span class="lineNum">    1040 </span>            : }</a>
 <a name="1041"><span class="lineNum">    1041 </span>            : </a>
 <a name="1042"><span class="lineNum">    1042 </span>            : /*NUMPY_API</a>
@@ -1126,10 +1126,10 @@
 <a name="1056"><span class="lineNum">    1056 </span>            :  * dtype-&gt;subarray is true, dtype will be decrefed.</a>
 <a name="1057"><span class="lineNum">    1057 </span>            :  */</a>
 <a name="1058"><span class="lineNum">    1058 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="1059"><span class="lineNum">    1059 </span><span class="lineCov">     212378 : PyArray_NewLikeArray(PyArrayObject *prototype, NPY_ORDER order,</span></a>
+<a name="1059"><span class="lineNum">    1059 </span><span class="lineCov">     212375 : PyArray_NewLikeArray(PyArrayObject *prototype, NPY_ORDER order,</span></a>
 <a name="1060"><span class="lineNum">    1060 </span>            :                      PyArray_Descr *dtype, int subok)</a>
 <a name="1061"><span class="lineNum">    1061 </span>            : {</a>
-<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">     178546 :     return PyArray_NewLikeArrayWithShape(prototype, order, dtype, -1, NULL, subok);</span></a>
+<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">     178551 :     return PyArray_NewLikeArrayWithShape(prototype, order, dtype, -1, NULL, subok);</span></a>
 <a name="1063"><span class="lineNum">    1063 </span>            : }</a>
 <a name="1064"><span class="lineNum">    1064 </span>            : </a>
 <a name="1065"><span class="lineNum">    1065 </span>            : /*NUMPY_API</a>
@@ -1337,19 +1337,19 @@
 <a name="1267"><span class="lineNum">    1267 </span>            :  *          is returned.)</a>
 <a name="1268"><span class="lineNum">    1268 </span>            :  */</a>
 <a name="1269"><span class="lineNum">    1269 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="1270"><span class="lineNum">    1270 </span><span class="lineCov">     524829 : _array_from_array_like(PyObject *op,</span></a>
+<a name="1270"><span class="lineNum">    1270 </span><span class="lineCov">     524828 : _array_from_array_like(PyObject *op,</span></a>
 <a name="1271"><span class="lineNum">    1271 </span>            :         PyArray_Descr *requested_dtype, npy_bool writeable, PyObject *context) {</a>
-<a name="1272"><span class="lineNum">    1272 </span><span class="lineCov">     524829 :     PyObject* tmp;</span></a>
+<a name="1272"><span class="lineNum">    1272 </span><span class="lineCov">     524828 :     PyObject* tmp;</span></a>
 <a name="1273"><span class="lineNum">    1273 </span>            : </a>
 <a name="1274"><span class="lineNum">    1274 </span>            :     /*</a>
 <a name="1275"><span class="lineNum">    1275 </span>            :      * If op supports the PEP 3118 buffer interface.</a>
 <a name="1276"><span class="lineNum">    1276 </span>            :      * We skip bytes and unicode since they are considered scalars. Unicode</a>
 <a name="1277"><span class="lineNum">    1277 </span>            :      * would fail but bytes would be incorrectly converted to a uint8 array.</a>
 <a name="1278"><span class="lineNum">    1278 </span>            :      */</a>
-<a name="1279"><span class="lineNum">    1279 </span><span class="lineCov">     524829 :     if (!PyBytes_Check(op) &amp;&amp; !PyUnicode_Check(op)) {</span></a>
-<a name="1280"><span class="lineNum">    1280 </span><span class="lineCov">     524829 :         PyObject *memoryview = PyMemoryView_FromObject(op);</span></a>
-<a name="1281"><span class="lineNum">    1281 </span><span class="lineCov">     524829 :         if (memoryview == NULL) {</span></a>
-<a name="1282"><span class="lineNum">    1282 </span><span class="lineCov">     524057 :             PyErr_Clear();</span></a>
+<a name="1279"><span class="lineNum">    1279 </span><span class="lineCov">     524828 :     if (!PyBytes_Check(op) &amp;&amp; !PyUnicode_Check(op)) {</span></a>
+<a name="1280"><span class="lineNum">    1280 </span><span class="lineCov">     524828 :         PyObject *memoryview = PyMemoryView_FromObject(op);</span></a>
+<a name="1281"><span class="lineNum">    1281 </span><span class="lineCov">     524828 :         if (memoryview == NULL) {</span></a>
+<a name="1282"><span class="lineNum">    1282 </span><span class="lineCov">     524056 :             PyErr_Clear();</span></a>
 <a name="1283"><span class="lineNum">    1283 </span>            :         }</a>
 <a name="1284"><span class="lineNum">    1284 </span>            :         else {</a>
 <a name="1285"><span class="lineNum">    1285 </span><span class="lineCov">        772 :             tmp = _array_from_buffer_3118(memoryview);</span></a>
@@ -1372,14 +1372,14 @@
 <a name="1302"><span class="lineNum">    1302 </span>            :     /*</a>
 <a name="1303"><span class="lineNum">    1303 </span>            :      * If op supports the __array_struct__ or __array_interface__ interface.</a>
 <a name="1304"><span class="lineNum">    1304 </span>            :      */</a>
-<a name="1305"><span class="lineNum">    1305 </span><span class="lineCov">     524057 :     tmp = PyArray_FromStructInterface(op);</span></a>
-<a name="1306"><span class="lineNum">    1306 </span><span class="lineCov">     524057 :     if (tmp == NULL) {</span></a>
+<a name="1305"><span class="lineNum">    1305 </span><span class="lineCov">     524056 :     tmp = PyArray_FromStructInterface(op);</span></a>
+<a name="1306"><span class="lineNum">    1306 </span><span class="lineCov">     524056 :     if (tmp == NULL) {</span></a>
 <a name="1307"><span class="lineNum">    1307 </span>            :         return NULL;</a>
 <a name="1308"><span class="lineNum">    1308 </span>            :     }</a>
-<a name="1309"><span class="lineNum">    1309 </span><span class="lineCov">     524054 :     if (tmp == Py_NotImplemented) {</span></a>
+<a name="1309"><span class="lineNum">    1309 </span><span class="lineCov">     524053 :     if (tmp == Py_NotImplemented) {</span></a>
 <a name="1310"><span class="lineNum">    1310 </span>            :         /* Until the return, NotImplemented is always a borrowed reference*/</a>
-<a name="1311"><span class="lineNum">    1311 </span><span class="lineCov">     524025 :         tmp = PyArray_FromInterface(op);</span></a>
-<a name="1312"><span class="lineNum">    1312 </span><span class="lineCov">     524025 :         if (tmp == NULL) {</span></a>
+<a name="1311"><span class="lineNum">    1311 </span><span class="lineCov">     524024 :         tmp = PyArray_FromInterface(op);</span></a>
+<a name="1312"><span class="lineNum">    1312 </span><span class="lineCov">     524024 :         if (tmp == NULL) {</span></a>
 <a name="1313"><span class="lineNum">    1313 </span>            :             return NULL;</a>
 <a name="1314"><span class="lineNum">    1314 </span>            :         }</a>
 <a name="1315"><span class="lineNum">    1315 </span>            :     }</a>
@@ -1393,14 +1393,14 @@
 <a name="1323"><span class="lineNum">    1323 </span>            :      *      usage requires this behave differently,</a>
 <a name="1324"><span class="lineNum">    1324 </span>            :      *      this should be changed!</a>
 <a name="1325"><span class="lineNum">    1325 </span>            :      */</a>
-<a name="1326"><span class="lineNum">    1326 </span><span class="lineCov">     524045 :     if (!writeable &amp;&amp; tmp == Py_NotImplemented) {</span></a>
-<a name="1327"><span class="lineNum">    1327 </span><span class="lineCov">     516663 :         tmp = PyArray_FromArrayAttr(op, requested_dtype, context);</span></a>
-<a name="1328"><span class="lineNum">    1328 </span><span class="lineCov">     516663 :         if (tmp == NULL) {</span></a>
+<a name="1326"><span class="lineNum">    1326 </span><span class="lineCov">     524044 :     if (!writeable &amp;&amp; tmp == Py_NotImplemented) {</span></a>
+<a name="1327"><span class="lineNum">    1327 </span><span class="lineCov">     516662 :         tmp = PyArray_FromArrayAttr(op, requested_dtype, context);</span></a>
+<a name="1328"><span class="lineNum">    1328 </span><span class="lineCov">     516662 :         if (tmp == NULL) {</span></a>
 <a name="1329"><span class="lineNum">    1329 </span>            :             return NULL;</a>
 <a name="1330"><span class="lineNum">    1330 </span>            :         }</a>
 <a name="1331"><span class="lineNum">    1331 </span>            :     }</a>
 <a name="1332"><span class="lineNum">    1332 </span>            : </a>
-<a name="1333"><span class="lineNum">    1333 </span><span class="lineCov">     524029 :     if (tmp != Py_NotImplemented) {</span></a>
+<a name="1333"><span class="lineNum">    1333 </span><span class="lineCov">     524028 :     if (tmp != Py_NotImplemented) {</span></a>
 <a name="1334"><span class="lineNum">    1334 </span><span class="lineCov">       7664 :         if (writeable &amp;&amp;</span></a>
 <a name="1335"><span class="lineNum">    1335 </span><span class="lineNoCov">          0 :                 PyArray_FailUnlessWriteable((PyArrayObject *)tmp,</span></a>
 <a name="1336"><span class="lineNum">    1336 </span>            :                         &quot;array interface object&quot;) &lt; 0) {</a>
@@ -1411,8 +1411,8 @@
 <a name="1341"><span class="lineNum">    1341 </span>            :     }</a>
 <a name="1342"><span class="lineNum">    1342 </span>            : </a>
 <a name="1343"><span class="lineNum">    1343 </span>            :     /* Until here Py_NotImplemented was borrowed */</a>
-<a name="1344"><span class="lineNum">    1344 </span><span class="lineCov">     516365 :     Py_INCREF(Py_NotImplemented);</span></a>
-<a name="1345"><span class="lineNum">    1345 </span><span class="lineCov">     516365 :     return Py_NotImplemented;</span></a>
+<a name="1344"><span class="lineNum">    1344 </span><span class="lineCov">     516364 :     Py_INCREF(Py_NotImplemented);</span></a>
+<a name="1345"><span class="lineNum">    1345 </span><span class="lineCov">     516364 :     return Py_NotImplemented;</span></a>
 <a name="1346"><span class="lineNum">    1346 </span>            : }</a>
 <a name="1347"><span class="lineNum">    1347 </span>            : </a>
 <a name="1348"><span class="lineNum">    1348 </span>            : </a>
@@ -1978,40 +1978,40 @@
 <a name="1908"><span class="lineNum">    1908 </span><span class="lineCov">    1231577 :            ((flags &amp; NPY_ARRAY_ALIGNED) &amp;&amp;</span></a>
 <a name="1909"><span class="lineNum">    1909 </span><span class="lineCov">     107298 :                    (!(arrflags &amp; NPY_ARRAY_ALIGNED))) ||</span></a>
 <a name="1910"><span class="lineNum">    1910 </span>            :            /* If a Fortran contiguous array was requested, and arr is not */</a>
-<a name="1911"><span class="lineNum">    1911 </span><span class="lineCov">    1231498 :            ((flags &amp; NPY_ARRAY_F_CONTIGUOUS) &amp;&amp;</span></a>
+<a name="1911"><span class="lineNum">    1911 </span><span class="lineCov">    1231506 :            ((flags &amp; NPY_ARRAY_F_CONTIGUOUS) &amp;&amp;</span></a>
 <a name="1912"><span class="lineNum">    1912 </span><span class="lineCov">       3232 :                    (!(arrflags &amp; NPY_ARRAY_F_CONTIGUOUS))) ||</span></a>
 <a name="1913"><span class="lineNum">    1913 </span>            :            /* If a writeable array was requested, and arr is not */</a>
-<a name="1914"><span class="lineNum">    1914 </span><span class="lineCov">    1231489 :            ((flags &amp; NPY_ARRAY_WRITEABLE) &amp;&amp;</span></a>
-<a name="1915"><span class="lineNum">    1915 </span><span class="lineCov">    2500362 :                    (!(arrflags &amp; NPY_ARRAY_WRITEABLE))) ||</span></a>
-<a name="1916"><span class="lineNum">    1916 </span><span class="lineCov">    1231488 :            !PyArray_EquivTypes(oldtype, newtype);</span></a>
+<a name="1914"><span class="lineNum">    1914 </span><span class="lineCov">    1231497 :            ((flags &amp; NPY_ARRAY_WRITEABLE) &amp;&amp;</span></a>
+<a name="1915"><span class="lineNum">    1915 </span><span class="lineCov">    2500370 :                    (!(arrflags &amp; NPY_ARRAY_WRITEABLE))) ||</span></a>
+<a name="1916"><span class="lineNum">    1916 </span><span class="lineCov">    1231496 :            !PyArray_EquivTypes(oldtype, newtype);</span></a>
 <a name="1917"><span class="lineNum">    1917 </span>            : </a>
 <a name="1918"><span class="lineNum">    1918 </span><span class="lineCov">    1242737 :     if (copy) {</span></a>
-<a name="1919"><span class="lineNum">    1919 </span><span class="lineCov">      33832 :         NPY_ORDER order = NPY_KEEPORDER;</span></a>
-<a name="1920"><span class="lineNum">    1920 </span><span class="lineCov">      33832 :         int subok = 1;</span></a>
+<a name="1919"><span class="lineNum">    1919 </span><span class="lineCov">      33824 :         NPY_ORDER order = NPY_KEEPORDER;</span></a>
+<a name="1920"><span class="lineNum">    1920 </span><span class="lineCov">      33824 :         int subok = 1;</span></a>
 <a name="1921"><span class="lineNum">    1921 </span>            : </a>
 <a name="1922"><span class="lineNum">    1922 </span>            :         /* Set the order for the copy being made based on the flags */</a>
-<a name="1923"><span class="lineNum">    1923 </span><span class="lineCov">      33832 :         if (flags &amp; NPY_ARRAY_F_CONTIGUOUS) {</span></a>
+<a name="1923"><span class="lineNum">    1923 </span><span class="lineCov">      33824 :         if (flags &amp; NPY_ARRAY_F_CONTIGUOUS) {</span></a>
 <a name="1924"><span class="lineNum">    1924 </span>            :             order = NPY_FORTRANORDER;</a>
 <a name="1925"><span class="lineNum">    1925 </span>            :         }</a>
-<a name="1926"><span class="lineNum">    1926 </span><span class="lineCov">      33639 :         else if (flags &amp; NPY_ARRAY_C_CONTIGUOUS) {</span></a>
+<a name="1926"><span class="lineNum">    1926 </span><span class="lineCov">      33631 :         else if (flags &amp; NPY_ARRAY_C_CONTIGUOUS) {</span></a>
 <a name="1927"><span class="lineNum">    1927 </span><span class="lineCov">       3574 :             order = NPY_CORDER;</span></a>
 <a name="1928"><span class="lineNum">    1928 </span>            :         }</a>
 <a name="1929"><span class="lineNum">    1929 </span>            : </a>
-<a name="1930"><span class="lineNum">    1930 </span><span class="lineCov">      33832 :         if ((flags &amp; NPY_ARRAY_ENSUREARRAY)) {</span></a>
+<a name="1930"><span class="lineNum">    1930 </span><span class="lineCov">      33824 :         if ((flags &amp; NPY_ARRAY_ENSUREARRAY)) {</span></a>
 <a name="1931"><span class="lineNum">    1931 </span><span class="lineCov">      13857 :             subok = 0;</span></a>
 <a name="1932"><span class="lineNum">    1932 </span>            :         }</a>
-<a name="1933"><span class="lineNum">    1933 </span><span class="lineCov">      33832 :         ret = (PyArrayObject *)PyArray_NewLikeArray(arr, order,</span></a>
+<a name="1933"><span class="lineNum">    1933 </span><span class="lineCov">      33824 :         ret = (PyArrayObject *)PyArray_NewLikeArray(arr, order,</span></a>
 <a name="1934"><span class="lineNum">    1934 </span>            :                                                     newtype, subok);</a>
-<a name="1935"><span class="lineNum">    1935 </span><span class="lineCov">      33832 :         if (ret == NULL) {</span></a>
+<a name="1935"><span class="lineNum">    1935 </span><span class="lineCov">      33824 :         if (ret == NULL) {</span></a>
 <a name="1936"><span class="lineNum">    1936 </span>            :             return NULL;</a>
 <a name="1937"><span class="lineNum">    1937 </span>            :         }</a>
 <a name="1938"><span class="lineNum">    1938 </span>            : </a>
-<a name="1939"><span class="lineNum">    1939 </span><span class="lineCov">      33832 :         if (PyArray_CopyInto(ret, arr) &lt; 0) {</span></a>
+<a name="1939"><span class="lineNum">    1939 </span><span class="lineCov">      33824 :         if (PyArray_CopyInto(ret, arr) &lt; 0) {</span></a>
 <a name="1940"><span class="lineNum">    1940 </span><span class="lineCov">         24 :             Py_DECREF(ret);</span></a>
 <a name="1941"><span class="lineNum">    1941 </span><span class="lineCov">         24 :             return NULL;</span></a>
 <a name="1942"><span class="lineNum">    1942 </span>            :         }</a>
 <a name="1943"><span class="lineNum">    1943 </span>            : </a>
-<a name="1944"><span class="lineNum">    1944 </span><span class="lineCov">      33808 :         if (flags &amp; NPY_ARRAY_UPDATEIFCOPY) {</span></a>
+<a name="1944"><span class="lineNum">    1944 </span><span class="lineCov">      33800 :         if (flags &amp; NPY_ARRAY_UPDATEIFCOPY) {</span></a>
 <a name="1945"><span class="lineNum">    1945 </span>            :             /* This is the ONLY place the NPY_ARRAY_UPDATEIFCOPY flag</a>
 <a name="1946"><span class="lineNum">    1946 </span>            :              * is still used.</a>
 <a name="1947"><span class="lineNum">    1947 </span>            :              * Can be deleted once the flag itself is removed</a>
@@ -2035,7 +2035,7 @@
 <a name="1965"><span class="lineNum">    1965 </span><span class="lineCov">          1 :             PyArray_ENABLEFLAGS(ret, NPY_ARRAY_UPDATEIFCOPY);</span></a>
 <a name="1966"><span class="lineNum">    1966 </span><span class="lineCov">          1 :             PyArray_CLEARFLAGS(ret, NPY_ARRAY_WRITEBACKIFCOPY);</span></a>
 <a name="1967"><span class="lineNum">    1967 </span>            :         }</a>
-<a name="1968"><span class="lineNum">    1968 </span><span class="lineCov">      33806 :         else if (flags &amp; NPY_ARRAY_WRITEBACKIFCOPY) {</span></a>
+<a name="1968"><span class="lineNum">    1968 </span><span class="lineCov">      33798 :         else if (flags &amp; NPY_ARRAY_WRITEBACKIFCOPY) {</span></a>
 <a name="1969"><span class="lineNum">    1969 </span><span class="lineCov">         60 :             Py_INCREF(arr);</span></a>
 <a name="1970"><span class="lineNum">    1970 </span><span class="lineCov">         60 :             if (PyArray_SetWritebackIfCopyBase(ret, arr) &lt; 0) {</span></a>
 <a name="1971"><span class="lineNum">    1971 </span><span class="lineNoCov">          0 :                 Py_DECREF(ret);</span></a>
@@ -2048,11 +2048,11 @@
 <a name="1978"><span class="lineNum">    1978 </span>            :      * just return a reference to ret itself.</a>
 <a name="1979"><span class="lineNum">    1979 </span>            :      */</a>
 <a name="1980"><span class="lineNum">    1980 </span>            :     else {</a>
-<a name="1981"><span class="lineNum">    1981 </span><span class="lineCov">    1208905 :         int needview = ((flags &amp; NPY_ARRAY_ENSUREARRAY) &amp;&amp;</span></a>
+<a name="1981"><span class="lineNum">    1981 </span><span class="lineCov">    1208913 :         int needview = ((flags &amp; NPY_ARRAY_ENSUREARRAY) &amp;&amp;</span></a>
 <a name="1982"><span class="lineNum">    1982 </span><span class="lineCov">      36697 :                         !PyArray_CheckExact(arr));</span></a>
 <a name="1983"><span class="lineNum">    1983 </span>            : </a>
-<a name="1984"><span class="lineNum">    1984 </span><span class="lineCov">    1208905 :         Py_DECREF(newtype);</span></a>
-<a name="1985"><span class="lineNum">    1985 </span><span class="lineCov">    1208905 :         if (needview) {</span></a>
+<a name="1984"><span class="lineNum">    1984 </span><span class="lineCov">    1208913 :         Py_DECREF(newtype);</span></a>
+<a name="1985"><span class="lineNum">    1985 </span><span class="lineCov">    1208913 :         if (needview) {</span></a>
 <a name="1986"><span class="lineNum">    1986 </span><span class="lineCov">       1173 :             PyTypeObject *subtype = NULL;</span></a>
 <a name="1987"><span class="lineNum">    1987 </span>            : </a>
 <a name="1988"><span class="lineNum">    1988 </span><span class="lineCov">       1173 :             if (flags &amp; NPY_ARRAY_ENSUREARRAY) {</span></a>
@@ -2065,8 +2065,8 @@
 <a name="1995"><span class="lineNum">    1995 </span>            :             }</a>
 <a name="1996"><span class="lineNum">    1996 </span>            :         }</a>
 <a name="1997"><span class="lineNum">    1997 </span>            :         else {</a>
-<a name="1998"><span class="lineNum">    1998 </span><span class="lineCov">    1207732 :             Py_INCREF(arr);</span></a>
-<a name="1999"><span class="lineNum">    1999 </span><span class="lineCov">    1207732 :             ret = arr;</span></a>
+<a name="1998"><span class="lineNum">    1998 </span><span class="lineCov">    1207740 :             Py_INCREF(arr);</span></a>
+<a name="1999"><span class="lineNum">    1999 </span><span class="lineCov">    1207740 :             ret = arr;</span></a>
 <a name="2000"><span class="lineNum">    2000 </span>            :         }</a>
 <a name="2001"><span class="lineNum">    2001 </span>            :     }</a>
 <a name="2002"><span class="lineNum">    2002 </span>            : </a>
@@ -2075,19 +2075,19 @@
 <a name="2005"><span class="lineNum">    2005 </span>            : </a>
 <a name="2006"><span class="lineNum">    2006 </span>            : /*NUMPY_API */</a>
 <a name="2007"><span class="lineNum">    2007 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="2008"><span class="lineNum">    2008 </span><span class="lineCov">     524057 : PyArray_FromStructInterface(PyObject *input)</span></a>
+<a name="2008"><span class="lineNum">    2008 </span><span class="lineCov">     524056 : PyArray_FromStructInterface(PyObject *input)</span></a>
 <a name="2009"><span class="lineNum">    2009 </span>            : {</a>
-<a name="2010"><span class="lineNum">    2010 </span><span class="lineCov">     524057 :     PyArray_Descr *thetype = NULL;</span></a>
-<a name="2011"><span class="lineNum">    2011 </span><span class="lineCov">     524057 :     PyArrayInterface *inter;</span></a>
-<a name="2012"><span class="lineNum">    2012 </span><span class="lineCov">     524057 :     PyObject *attr;</span></a>
-<a name="2013"><span class="lineNum">    2013 </span><span class="lineCov">     524057 :     char endian = NPY_NATBYTE;</span></a>
+<a name="2010"><span class="lineNum">    2010 </span><span class="lineCov">     524056 :     PyArray_Descr *thetype = NULL;</span></a>
+<a name="2011"><span class="lineNum">    2011 </span><span class="lineCov">     524056 :     PyArrayInterface *inter;</span></a>
+<a name="2012"><span class="lineNum">    2012 </span><span class="lineCov">     524056 :     PyObject *attr;</span></a>
+<a name="2013"><span class="lineNum">    2013 </span><span class="lineCov">     524056 :     char endian = NPY_NATBYTE;</span></a>
 <a name="2014"><span class="lineNum">    2014 </span>            : </a>
-<a name="2015"><span class="lineNum">    2015 </span><span class="lineCov">     524057 :     attr = PyArray_LookupSpecial_OnInstance(input, &quot;__array_struct__&quot;);</span></a>
-<a name="2016"><span class="lineNum">    2016 </span><span class="lineCov">     524057 :     if (attr == NULL) {</span></a>
-<a name="2017"><span class="lineNum">    2017 </span><span class="lineCov">     520091 :         if (PyErr_Occurred()) {</span></a>
-<a name="2018"><span class="lineNum">    2018 </span><span class="lineCov">     524057 :             return NULL;</span></a>
+<a name="2015"><span class="lineNum">    2015 </span><span class="lineCov">     524056 :     attr = PyArray_LookupSpecial_OnInstance(input, &quot;__array_struct__&quot;);</span></a>
+<a name="2016"><span class="lineNum">    2016 </span><span class="lineCov">     524056 :     if (attr == NULL) {</span></a>
+<a name="2017"><span class="lineNum">    2017 </span><span class="lineCov">     520090 :         if (PyErr_Occurred()) {</span></a>
+<a name="2018"><span class="lineNum">    2018 </span><span class="lineCov">     524056 :             return NULL;</span></a>
 <a name="2019"><span class="lineNum">    2019 </span>            :         } else {</a>
-<a name="2020"><span class="lineNum">    2020 </span><span class="lineCov">     520088 :             return Py_NotImplemented;</span></a>
+<a name="2020"><span class="lineNum">    2020 </span><span class="lineCov">     520087 :             return Py_NotImplemented;</span></a>
 <a name="2021"><span class="lineNum">    2021 </span>            :         }</a>
 <a name="2022"><span class="lineNum">    2022 </span>            :     }</a>
 <a name="2023"><span class="lineNum">    2023 </span><span class="lineCov">       3966 :     if (!PyCapsule_CheckExact(attr)) {</span></a>
@@ -2205,23 +2205,23 @@
 <a name="2135"><span class="lineNum">    2135 </span>            : </a>
 <a name="2136"><span class="lineNum">    2136 </span>            : /*NUMPY_API*/</a>
 <a name="2137"><span class="lineNum">    2137 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="2138"><span class="lineNum">    2138 </span><span class="lineCov">     524025 : PyArray_FromInterface(PyObject *origin)</span></a>
+<a name="2138"><span class="lineNum">    2138 </span><span class="lineCov">     524024 : PyArray_FromInterface(PyObject *origin)</span></a>
 <a name="2139"><span class="lineNum">    2139 </span>            : {</a>
-<a name="2140"><span class="lineNum">    2140 </span><span class="lineCov">     524025 :     PyObject *iface = NULL;</span></a>
-<a name="2141"><span class="lineNum">    2141 </span><span class="lineCov">     524025 :     PyObject *attr = NULL;</span></a>
-<a name="2142"><span class="lineNum">    2142 </span><span class="lineCov">     524025 :     PyObject *base = NULL;</span></a>
-<a name="2143"><span class="lineNum">    2143 </span><span class="lineCov">     524025 :     PyArrayObject *ret;</span></a>
-<a name="2144"><span class="lineNum">    2144 </span><span class="lineCov">     524025 :     PyArray_Descr *dtype = NULL;</span></a>
-<a name="2145"><span class="lineNum">    2145 </span><span class="lineCov">     524025 :     char *data = NULL;</span></a>
-<a name="2146"><span class="lineNum">    2146 </span><span class="lineCov">     524025 :     Py_buffer view;</span></a>
-<a name="2147"><span class="lineNum">    2147 </span><span class="lineCov">     524025 :     int i, n;</span></a>
-<a name="2148"><span class="lineNum">    2148 </span><span class="lineCov">     524025 :     npy_intp dims[NPY_MAXDIMS], strides[NPY_MAXDIMS];</span></a>
-<a name="2149"><span class="lineNum">    2149 </span><span class="lineCov">     524025 :     int dataflags = NPY_ARRAY_BEHAVED;</span></a>
+<a name="2140"><span class="lineNum">    2140 </span><span class="lineCov">     524024 :     PyObject *iface = NULL;</span></a>
+<a name="2141"><span class="lineNum">    2141 </span><span class="lineCov">     524024 :     PyObject *attr = NULL;</span></a>
+<a name="2142"><span class="lineNum">    2142 </span><span class="lineCov">     524024 :     PyObject *base = NULL;</span></a>
+<a name="2143"><span class="lineNum">    2143 </span><span class="lineCov">     524024 :     PyArrayObject *ret;</span></a>
+<a name="2144"><span class="lineNum">    2144 </span><span class="lineCov">     524024 :     PyArray_Descr *dtype = NULL;</span></a>
+<a name="2145"><span class="lineNum">    2145 </span><span class="lineCov">     524024 :     char *data = NULL;</span></a>
+<a name="2146"><span class="lineNum">    2146 </span><span class="lineCov">     524024 :     Py_buffer view;</span></a>
+<a name="2147"><span class="lineNum">    2147 </span><span class="lineCov">     524024 :     int i, n;</span></a>
+<a name="2148"><span class="lineNum">    2148 </span><span class="lineCov">     524024 :     npy_intp dims[NPY_MAXDIMS], strides[NPY_MAXDIMS];</span></a>
+<a name="2149"><span class="lineNum">    2149 </span><span class="lineCov">     524024 :     int dataflags = NPY_ARRAY_BEHAVED;</span></a>
 <a name="2150"><span class="lineNum">    2150 </span>            : </a>
-<a name="2151"><span class="lineNum">    2151 </span><span class="lineCov">     524025 :     iface = PyArray_LookupSpecial_OnInstance(origin, &quot;__array_interface__&quot;);</span></a>
+<a name="2151"><span class="lineNum">    2151 </span><span class="lineCov">     524024 :     iface = PyArray_LookupSpecial_OnInstance(origin, &quot;__array_interface__&quot;);</span></a>
 <a name="2152"><span class="lineNum">    2152 </span>            : </a>
-<a name="2153"><span class="lineNum">    2153 </span><span class="lineCov">     524025 :     if (iface == NULL) {</span></a>
-<a name="2154"><span class="lineNum">    2154 </span><span class="lineCov">     512729 :         if (PyErr_Occurred()) {</span></a>
+<a name="2153"><span class="lineNum">    2153 </span><span class="lineCov">     524024 :     if (iface == NULL) {</span></a>
+<a name="2154"><span class="lineNum">    2154 </span><span class="lineCov">     512728 :         if (PyErr_Occurred()) {</span></a>
 <a name="2155"><span class="lineNum">    2155 </span><span class="lineCov">          7 :             if (PyErr_ExceptionMatches(PyExc_RecursionError) ||</span></a>
 <a name="2156"><span class="lineNum">    2156 </span><span class="lineCov">          3 :                     PyErr_ExceptionMatches(PyExc_MemoryError)) {</span></a>
 <a name="2157"><span class="lineNum">    2157 </span>            :                 /* RecursionError and MemoryError are considered fatal */</a>
@@ -2232,7 +2232,7 @@
 <a name="2162"><span class="lineNum">    2162 </span>            :                 return NULL;</a>
 <a name="2163"><span class="lineNum">    2163 </span>            :             }</a>
 <a name="2164"><span class="lineNum">    2164 </span>            :         }</a>
-<a name="2165"><span class="lineNum">    2165 </span><span class="lineCov">     512726 :         return Py_NotImplemented;</span></a>
+<a name="2165"><span class="lineNum">    2165 </span><span class="lineCov">     512725 :         return Py_NotImplemented;</span></a>
 <a name="2166"><span class="lineNum">    2166 </span>            :     }</a>
 <a name="2167"><span class="lineNum">    2167 </span><span class="lineCov">      11296 :     if (!PyDict_Check(iface)) {</span></a>
 <a name="2168"><span class="lineNum">    2168 </span><span class="lineCov">       3937 :         if (PyType_Check(origin) &amp;&amp; PyObject_HasAttrString(iface, &quot;__get__&quot;)) {</span></a>
@@ -2486,18 +2486,18 @@
 <a name="2416"><span class="lineNum">    2416 </span>            : /*NUMPY_API</a>
 <a name="2417"><span class="lineNum">    2417 </span>            :  */</a>
 <a name="2418"><span class="lineNum">    2418 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="2419"><span class="lineNum">    2419 </span><span class="lineCov">     516663 : PyArray_FromArrayAttr(PyObject *op, PyArray_Descr *typecode, PyObject *context)</span></a>
+<a name="2419"><span class="lineNum">    2419 </span><span class="lineCov">     516662 : PyArray_FromArrayAttr(PyObject *op, PyArray_Descr *typecode, PyObject *context)</span></a>
 <a name="2420"><span class="lineNum">    2420 </span>            : {</a>
-<a name="2421"><span class="lineNum">    2421 </span><span class="lineCov">     516663 :     PyObject *new;</span></a>
-<a name="2422"><span class="lineNum">    2422 </span><span class="lineCov">     516663 :     PyObject *array_meth;</span></a>
+<a name="2421"><span class="lineNum">    2421 </span><span class="lineCov">     516662 :     PyObject *new;</span></a>
+<a name="2422"><span class="lineNum">    2422 </span><span class="lineCov">     516662 :     PyObject *array_meth;</span></a>
 <a name="2423"><span class="lineNum">    2423 </span>            : </a>
-<a name="2424"><span class="lineNum">    2424 </span><span class="lineCov">     516663 :     if (context != NULL) {</span></a>
+<a name="2424"><span class="lineNum">    2424 </span><span class="lineCov">     516662 :     if (context != NULL) {</span></a>
 <a name="2425"><span class="lineNum">    2425 </span><span class="lineNoCov">          0 :         PyErr_SetString(PyExc_RuntimeError, &quot;'context' must be NULL&quot;);</span></a>
 <a name="2426"><span class="lineNum">    2426 </span><span class="lineNoCov">          0 :         return NULL;</span></a>
 <a name="2427"><span class="lineNum">    2427 </span>            :     }</a>
-<a name="2428"><span class="lineNum">    2428 </span><span class="lineCov">     516663 :     array_meth = PyArray_LookupSpecial_OnInstance(op, &quot;__array__&quot;);</span></a>
-<a name="2429"><span class="lineNum">    2429 </span><span class="lineCov">     516663 :     if (array_meth == NULL) {</span></a>
-<a name="2430"><span class="lineNum">    2430 </span><span class="lineCov">     512431 :         if (PyErr_Occurred()) {</span></a>
+<a name="2428"><span class="lineNum">    2428 </span><span class="lineCov">     516662 :     array_meth = PyArray_LookupSpecial_OnInstance(op, &quot;__array__&quot;);</span></a>
+<a name="2429"><span class="lineNum">    2429 </span><span class="lineCov">     516662 :     if (array_meth == NULL) {</span></a>
+<a name="2430"><span class="lineNum">    2430 </span><span class="lineCov">     512430 :         if (PyErr_Occurred()) {</span></a>
 <a name="2431"><span class="lineNum">    2431 </span><span class="lineCov">          7 :             if (PyErr_ExceptionMatches(PyExc_RecursionError) ||</span></a>
 <a name="2432"><span class="lineNum">    2432 </span><span class="lineCov">          3 :                 PyErr_ExceptionMatches(PyExc_MemoryError)) {</span></a>
 <a name="2433"><span class="lineNum">    2433 </span>            :                 /* RecursionError and MemoryError are considered fatal */</a>
@@ -2508,7 +2508,7 @@
 <a name="2438"><span class="lineNum">    2438 </span>            :                 return NULL;</a>
 <a name="2439"><span class="lineNum">    2439 </span>            :             }</a>
 <a name="2440"><span class="lineNum">    2440 </span>            :         }</a>
-<a name="2441"><span class="lineNum">    2441 </span><span class="lineCov">     512428 :         return Py_NotImplemented;</span></a>
+<a name="2441"><span class="lineNum">    2441 </span><span class="lineCov">     512427 :         return Py_NotImplemented;</span></a>
 <a name="2442"><span class="lineNum">    2442 </span>            :     }</a>
 <a name="2443"><span class="lineNum">    2443 </span><span class="lineCov">       4232 :     if (PyType_Check(op) &amp;&amp; PyObject_HasAttrString(array_meth, &quot;__get__&quot;)) {</span></a>
 <a name="2444"><span class="lineNum">    2444 </span>            :         /*</a>
@@ -2837,9 +2837,9 @@
 <a name="2767"><span class="lineNum">    2767 </span>            :  * Returns 0 on success, -1 on failure.</a>
 <a name="2768"><span class="lineNum">    2768 </span>            :  */</a>
 <a name="2769"><span class="lineNum">    2769 </span>            : NPY_NO_EXPORT int</a>
-<a name="2770"><span class="lineNum">    2770 </span><span class="lineCov">     706097 : PyArray_CopyInto(PyArrayObject *dst, PyArrayObject *src)</span></a>
+<a name="2770"><span class="lineNum">    2770 </span><span class="lineCov">     706089 : PyArray_CopyInto(PyArrayObject *dst, PyArrayObject *src)</span></a>
 <a name="2771"><span class="lineNum">    2771 </span>            : {</a>
-<a name="2772"><span class="lineNum">    2772 </span><span class="lineCov">     706097 :     return PyArray_AssignArray(dst, src, NULL, NPY_UNSAFE_CASTING);</span></a>
+<a name="2772"><span class="lineNum">    2772 </span><span class="lineCov">     706089 :     return PyArray_AssignArray(dst, src, NULL, NPY_UNSAFE_CASTING);</span></a>
 <a name="2773"><span class="lineNum">    2773 </span>            : }</a>
 <a name="2774"><span class="lineNum">    2774 </span>            : </a>
 <a name="2775"><span class="lineNum">    2775 </span>            : /*NUMPY_API</a>
@@ -3961,18 +3961,18 @@
 <a name="3891"><span class="lineNum">    3891 </span>            :  */</a>
 <a name="3892"><span class="lineNum">    3892 </span>            : </a>
 <a name="3893"><span class="lineNum">    3893 </span>            : NPY_NO_EXPORT void</a>
-<a name="3894"><span class="lineNum">    3894 </span><span class="lineCov">    2756248 : _array_fill_strides(npy_intp *strides, npy_intp const *dims, int nd, size_t itemsize,</span></a>
+<a name="3894"><span class="lineNum">    3894 </span><span class="lineCov">    2756250 : _array_fill_strides(npy_intp *strides, npy_intp const *dims, int nd, size_t itemsize,</span></a>
 <a name="3895"><span class="lineNum">    3895 </span>            :                     int inflag, int *objflags)</a>
 <a name="3896"><span class="lineNum">    3896 </span>            : {</a>
-<a name="3897"><span class="lineNum">    3897 </span><span class="lineCov">    2756248 :     int i;</span></a>
+<a name="3897"><span class="lineNum">    3897 </span><span class="lineCov">    2756250 :     int i;</span></a>
 <a name="3898"><span class="lineNum">    3898 </span>            : #if NPY_RELAXED_STRIDES_CHECKING</a>
-<a name="3899"><span class="lineNum">    3899 </span><span class="lineCov">    2756248 :     npy_bool not_cf_contig = 0;</span></a>
-<a name="3900"><span class="lineNum">    3900 </span><span class="lineCov">    2756248 :     npy_bool nod = 0; /* A dim != 1 was found */</span></a>
+<a name="3899"><span class="lineNum">    3899 </span><span class="lineCov">    2756250 :     npy_bool not_cf_contig = 0;</span></a>
+<a name="3900"><span class="lineNum">    3900 </span><span class="lineCov">    2756250 :     npy_bool nod = 0; /* A dim != 1 was found */</span></a>
 <a name="3901"><span class="lineNum">    3901 </span>            : </a>
 <a name="3902"><span class="lineNum">    3902 </span>            :     /* Check if new array is both F- and C-contiguous */</a>
-<a name="3903"><span class="lineNum">    3903 </span><span class="lineCov">    5669374 :     for (i = 0; i &lt; nd; i++) {</span></a>
-<a name="3904"><span class="lineNum">    3904 </span><span class="lineCov">    3243544 :         if (dims[i] != 1) {</span></a>
-<a name="3905"><span class="lineNum">    3905 </span><span class="lineCov">    2759557 :             if (nod) {</span></a>
+<a name="3903"><span class="lineNum">    3903 </span><span class="lineCov">    5669378 :     for (i = 0; i &lt; nd; i++) {</span></a>
+<a name="3904"><span class="lineNum">    3904 </span><span class="lineCov">    3243550 :         if (dims[i] != 1) {</span></a>
+<a name="3905"><span class="lineNum">    3905 </span><span class="lineCov">    2759567 :             if (nod) {</span></a>
 <a name="3906"><span class="lineNum">    3906 </span>            :                 not_cf_contig = 1;</a>
 <a name="3907"><span class="lineNum">    3907 </span>            :                 break;</a>
 <a name="3908"><span class="lineNum">    3908 </span>            :             }</a>
@@ -3982,7 +3982,7 @@
 <a name="3912"><span class="lineNum">    3912 </span>            : #endif /* NPY_RELAXED_STRIDES_CHECKING */</a>
 <a name="3913"><span class="lineNum">    3913 </span>            : </a>
 <a name="3914"><span class="lineNum">    3914 </span>            :     /* Only make Fortran strides if not contiguous as well */</a>
-<a name="3915"><span class="lineNum">    3915 </span><span class="lineCov">    2756248 :     if ((inflag &amp; (NPY_ARRAY_F_CONTIGUOUS|NPY_ARRAY_C_CONTIGUOUS)) ==</span></a>
+<a name="3915"><span class="lineNum">    3915 </span><span class="lineCov">    2756250 :     if ((inflag &amp; (NPY_ARRAY_F_CONTIGUOUS|NPY_ARRAY_C_CONTIGUOUS)) ==</span></a>
 <a name="3916"><span class="lineNum">    3916 </span>            :                                             NPY_ARRAY_F_CONTIGUOUS) {</a>
 <a name="3917"><span class="lineNum">    3917 </span><span class="lineCov">      93510 :         for (i = 0; i &lt; nd; i++) {</span></a>
 <a name="3918"><span class="lineNum">    3918 </span><span class="lineCov">      70277 :             strides[i] = itemsize;</span></a>
@@ -4014,10 +4014,10 @@
 <a name="3944"><span class="lineNum">    3944 </span>            :         }</a>
 <a name="3945"><span class="lineNum">    3945 </span>            :     }</a>
 <a name="3946"><span class="lineNum">    3946 </span>            :     else {</a>
-<a name="3947"><span class="lineNum">    3947 </span><span class="lineCov">    6055953 :         for (i = nd - 1; i &gt;= 0; i--) {</span></a>
-<a name="3948"><span class="lineNum">    3948 </span><span class="lineCov">    3322938 :             strides[i] = itemsize;</span></a>
-<a name="3949"><span class="lineNum">    3949 </span><span class="lineCov">    3322938 :             if (dims[i]) {</span></a>
-<a name="3950"><span class="lineNum">    3950 </span><span class="lineCov">    3181256 :                 itemsize *= dims[i];</span></a>
+<a name="3947"><span class="lineNum">    3947 </span><span class="lineCov">    6055961 :         for (i = nd - 1; i &gt;= 0; i--) {</span></a>
+<a name="3948"><span class="lineNum">    3948 </span><span class="lineCov">    3322944 :             strides[i] = itemsize;</span></a>
+<a name="3949"><span class="lineNum">    3949 </span><span class="lineCov">    3322944 :             if (dims[i]) {</span></a>
+<a name="3950"><span class="lineNum">    3950 </span><span class="lineCov">    3181262 :                 itemsize *= dims[i];</span></a>
 <a name="3951"><span class="lineNum">    3951 </span>            :             }</a>
 <a name="3952"><span class="lineNum">    3952 </span>            : #if NPY_RELAXED_STRIDES_CHECKING</a>
 <a name="3953"><span class="lineNum">    3953 </span>            :             else {</a>
@@ -4032,18 +4032,18 @@
 <a name="3962"><span class="lineNum">    3962 </span>            : #endif /* NPY_RELAXED_STRIDES_CHECKING */</a>
 <a name="3963"><span class="lineNum">    3963 </span>            :         }</a>
 <a name="3964"><span class="lineNum">    3964 </span>            : #if NPY_RELAXED_STRIDES_CHECKING</a>
-<a name="3965"><span class="lineNum">    3965 </span><span class="lineCov">    2733015 :         if (not_cf_contig) {</span></a>
+<a name="3965"><span class="lineNum">    3965 </span><span class="lineCov">    2733017 :         if (not_cf_contig) {</span></a>
 <a name="3966"><span class="lineNum">    3966 </span>            : #else /* not NPY_RELAXED_STRIDES_CHECKING */</a>
 <a name="3967"><span class="lineNum">    3967 </span>            :         if ((nd &gt; 1) &amp;&amp; ((strides[0] != strides[nd-1]) || (dims[0] &gt; 1))) {</a>
 <a name="3968"><span class="lineNum">    3968 </span>            : #endif /* not NPY_RELAXED_STRIDES_CHECKING */</a>
-<a name="3969"><span class="lineNum">    3969 </span><span class="lineCov">     282926 :             *objflags = ((*objflags)|NPY_ARRAY_C_CONTIGUOUS) &amp;</span></a>
+<a name="3969"><span class="lineNum">    3969 </span><span class="lineCov">     282930 :             *objflags = ((*objflags)|NPY_ARRAY_C_CONTIGUOUS) &amp;</span></a>
 <a name="3970"><span class="lineNum">    3970 </span>            :                                             ~NPY_ARRAY_F_CONTIGUOUS;</a>
 <a name="3971"><span class="lineNum">    3971 </span>            :         }</a>
 <a name="3972"><span class="lineNum">    3972 </span>            :         else {</a>
-<a name="3973"><span class="lineNum">    3973 </span><span class="lineCov">    2450089 :             *objflags |= (NPY_ARRAY_C_CONTIGUOUS|NPY_ARRAY_F_CONTIGUOUS);</span></a>
+<a name="3973"><span class="lineNum">    3973 </span><span class="lineCov">    2450087 :             *objflags |= (NPY_ARRAY_C_CONTIGUOUS|NPY_ARRAY_F_CONTIGUOUS);</span></a>
 <a name="3974"><span class="lineNum">    3974 </span>            :         }</a>
 <a name="3975"><span class="lineNum">    3975 </span>            :     }</a>
-<a name="3976"><span class="lineNum">    3976 </span><span class="lineCov">    2756248 :     return;</span></a>
+<a name="3976"><span class="lineNum">    3976 </span><span class="lineCov">    2756250 :     return;</span></a>
 <a name="3977"><span class="lineNum">    3977 </span>            : }</a>
 <a name="3978"><span class="lineNum">    3978 </span>            : </a>
 <a name="3979"><span class="lineNum">    3979 </span>            : /*</a>

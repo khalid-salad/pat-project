@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -334,14 +334,14 @@
 <a name="264"><span class="lineNum">     264 </span>            :  * @return Returns 0 on success and -1 on failure.</a>
 <a name="265"><span class="lineNum">     265 </span>            :  */</a>
 <a name="266"><span class="lineNum">     266 </span>            : NPY_NO_EXPORT int</a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">    2027551 : _npy_parse_arguments(const char *funcname,</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">    2027635 : _npy_parse_arguments(const char *funcname,</span></a>
 <a name="268"><span class="lineNum">     268 </span>            :          /* cache_ptr is a NULL initialized persistent storage for data */</a>
 <a name="269"><span class="lineNum">     269 </span>            :         _NpyArgParserCache *cache,</a>
 <a name="270"><span class="lineNum">     270 </span>            :         PyObject *const *args, Py_ssize_t len_args, PyObject *kwnames,</a>
 <a name="271"><span class="lineNum">     271 </span>            :         /* ... is NULL, NULL, NULL terminated: name, converter, value */</a>
 <a name="272"><span class="lineNum">     272 </span>            :         ...)</a>
 <a name="273"><span class="lineNum">     273 </span>            : {</a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineCov">    2027551 :     if (NPY_UNLIKELY(cache-&gt;npositional == -1)) {</span></a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineCov">    2027635 :     if (NPY_UNLIKELY(cache-&gt;npositional == -1)) {</span></a>
 <a name="275"><span class="lineNum">     275 </span><span class="lineCov">         34 :         va_list va;</span></a>
 <a name="276"><span class="lineNum">     276 </span><span class="lineCov">         34 :         va_start(va, kwnames);</span></a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
@@ -352,7 +352,7 @@
 <a name="282"><span class="lineNum">     282 </span>            :         }</a>
 <a name="283"><span class="lineNum">     283 </span>            :     }</a>
 <a name="284"><span class="lineNum">     284 </span>            : </a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineCov">    2027551 :     if (NPY_UNLIKELY(len_args &gt; cache-&gt;npositional)) {</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">    2027635 :     if (NPY_UNLIKELY(len_args &gt; cache-&gt;npositional)) {</span></a>
 <a name="286"><span class="lineNum">     286 </span><span class="lineCov">          6 :         return raise_incorrect_number_of_positional_args(</span></a>
 <a name="287"><span class="lineNum">     287 </span>            :                 funcname, cache, len_args);</a>
 <a name="288"><span class="lineNum">     288 </span>            :     }</a>
@@ -360,16 +360,16 @@
 <a name="290"><span class="lineNum">     290 </span>            :     /* NOTE: Could remove the limit but too many kwargs are slow anyway. */</a>
 <a name="291"><span class="lineNum">     291 </span>            :     PyObject *all_arguments[NPY_MAXARGS];</a>
 <a name="292"><span class="lineNum">     292 </span>            : </a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineCov">    6387295 :     for (Py_ssize_t i = 0; i &lt; len_args; i++) {</span></a>
-<a name="294"><span class="lineNum">     294 </span><span class="lineCov">    4359750 :         all_arguments[i] = args[i];</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineCov">    6387449 :     for (Py_ssize_t i = 0; i &lt; len_args; i++) {</span></a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineCov">    4359820 :         all_arguments[i] = args[i];</span></a>
 <a name="295"><span class="lineNum">     295 </span>            :     }</a>
 <a name="296"><span class="lineNum">     296 </span>            : </a>
 <a name="297"><span class="lineNum">     297 </span>            :     /* Without kwargs, do not iterate all converters. */</a>
-<a name="298"><span class="lineNum">     298 </span><span class="lineCov">    2027545 :     int max_nargs = (int)len_args;</span></a>
-<a name="299"><span class="lineNum">     299 </span><span class="lineCov">    2027545 :     Py_ssize_t len_kwargs = 0;</span></a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineCov">    2027629 :     int max_nargs = (int)len_args;</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineCov">    2027629 :     Py_ssize_t len_kwargs = 0;</span></a>
 <a name="300"><span class="lineNum">     300 </span>            : </a>
 <a name="301"><span class="lineNum">     301 </span>            :     /* If there are any kwargs, first handle them */</a>
-<a name="302"><span class="lineNum">     302 </span><span class="lineCov">    2027545 :     if (NPY_LIKELY(kwnames != NULL)) {</span></a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineCov">    2027629 :     if (NPY_LIKELY(kwnames != NULL)) {</span></a>
 <a name="303"><span class="lineNum">     303 </span><span class="lineCov">     706555 :         len_kwargs = PyTuple_GET_SIZE(kwnames);</span></a>
 <a name="304"><span class="lineNum">     304 </span><span class="lineCov">     706555 :         max_nargs = cache-&gt;nargs;</span></a>
 <a name="305"><span class="lineNum">     305 </span>            : </a>
@@ -427,25 +427,25 @@
 <a name="357"><span class="lineNum">     357 </span>            :      * There cannot be too many args, too many kwargs would find an</a>
 <a name="358"><span class="lineNum">     358 </span>            :      * incorrect one above.</a>
 <a name="359"><span class="lineNum">     359 </span>            :      */</a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineCov">    2027522 :     assert(len_args + len_kwargs &lt;= cache-&gt;nargs);</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineCov">    2027606 :     assert(len_args + len_kwargs &lt;= cache-&gt;nargs);</span></a>
 <a name="361"><span class="lineNum">     361 </span>            : </a>
 <a name="362"><span class="lineNum">     362 </span>            :     /* At this time `all_arguments` holds either NULLs or the objects */</a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineCov">    2027522 :     va_list va;</span></a>
-<a name="364"><span class="lineNum">     364 </span><span class="lineCov">    2027522 :     va_start(va, kwnames);</span></a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineCov">    2027606 :     va_list va;</span></a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineCov">    2027606 :     va_start(va, kwnames);</span></a>
 <a name="365"><span class="lineNum">     365 </span>            : </a>
-<a name="366"><span class="lineNum">     366 </span><span class="lineCov">   10424939 :     for (int i = 0; i &lt; max_nargs; i++) {</span></a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineCov">    8397513 :         va_arg(va, char *);</span></a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineCov">    8397513 :         convert *converter = va_arg(va, convert *);</span></a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineCov">    8397513 :         void *data = va_arg(va, void *);</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">   10425093 :     for (int i = 0; i &lt; max_nargs; i++) {</span></a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineCov">    8397583 :         va_arg(va, char *);</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineCov">    8397583 :         convert *converter = va_arg(va, convert *);</span></a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineCov">    8397583 :         void *data = va_arg(va, void *);</span></a>
 <a name="370"><span class="lineNum">     370 </span>            : </a>
-<a name="371"><span class="lineNum">     371 </span><span class="lineCov">    8397513 :         if (all_arguments[i] == NULL) {</span></a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineCov">    8397583 :         if (all_arguments[i] == NULL) {</span></a>
 <a name="372"><span class="lineNum">     372 </span><span class="lineCov">    2764122 :             continue;</span></a>
 <a name="373"><span class="lineNum">     373 </span>            :         }</a>
 <a name="374"><span class="lineNum">     374 </span>            : </a>
-<a name="375"><span class="lineNum">     375 </span><span class="lineCov">    5633391 :         int res;</span></a>
-<a name="376"><span class="lineNum">     376 </span><span class="lineCov">    5633391 :         if (converter == NULL) {</span></a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineCov">    4061177 :             *((PyObject **) data) = all_arguments[i];</span></a>
-<a name="378"><span class="lineNum">     378 </span><span class="lineCov">    4061177 :             continue;</span></a>
+<a name="375"><span class="lineNum">     375 </span><span class="lineCov">    5633461 :         int res;</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineCov">    5633461 :         if (converter == NULL) {</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineCov">    4061247 :             *((PyObject **) data) = all_arguments[i];</span></a>
+<a name="378"><span class="lineNum">     378 </span><span class="lineCov">    4061247 :             continue;</span></a>
 <a name="379"><span class="lineNum">     379 </span>            :         }</a>
 <a name="380"><span class="lineNum">     380 </span><span class="lineCov">    1572214 :         res = converter(all_arguments[i], data);</span></a>
 <a name="381"><span class="lineNum">     381 </span>            : </a>
@@ -467,7 +467,7 @@
 <a name="397"><span class="lineNum">     397 </span>            :     }</a>
 <a name="398"><span class="lineNum">     398 </span>            : </a>
 <a name="399"><span class="lineNum">     399 </span>            :     /* Required arguments are typically not passed as keyword arguments */</a>
-<a name="400"><span class="lineNum">     400 </span><span class="lineCov">    2027426 :     if (NPY_UNLIKELY(len_args &lt; cache-&gt;nrequired)) {</span></a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineCov">    2027510 :     if (NPY_UNLIKELY(len_args &lt; cache-&gt;nrequired)) {</span></a>
 <a name="401"><span class="lineNum">     401 </span>            :         /* (PyArg_* also does this after the actual parsing is finished) */</a>
 <a name="402"><span class="lineNum">     402 </span><span class="lineCov">        666 :         if (NPY_UNLIKELY(max_nargs &lt; cache-&gt;nrequired)) {</span></a>
 <a name="403"><span class="lineNum">     403 </span><span class="lineCov">          7 :             raise_missing_argument(funcname, cache, max_nargs);</span></a>
@@ -481,8 +481,8 @@
 <a name="411"><span class="lineNum">     411 </span>            :         }</a>
 <a name="412"><span class="lineNum">     412 </span>            :     }</a>
 <a name="413"><span class="lineNum">     413 </span>            : </a>
-<a name="414"><span class="lineNum">     414 </span><span class="lineCov">    2027419 :     va_end(va);</span></a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineCov">    2027419 :     return 0;</span></a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineCov">    2027503 :     va_end(va);</span></a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineCov">    2027503 :     return 0;</span></a>
 <a name="416"><span class="lineNum">     416 </span>            : </a>
 <a name="417"><span class="lineNum">     417 </span><span class="lineCov">        103 : converting_failed:</span></a>
 <a name="418"><span class="lineNum">     418 </span><span class="lineCov">        103 :     va_end(va);</span></a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">36</td>
@@ -193,79 +193,79 @@
 <a name="123"><span class="lineNum">     123 </span>            :  * can be thought of as borrowing the reference.</a>
 <a name="124"><span class="lineNum">     124 </span>            :  */</a>
 <a name="125"><span class="lineNum">     125 </span>            : NPY_NO_EXPORT void</a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">      77282 : PyArray_RawIterBaseInit(PyArrayIterObject *it, PyArrayObject *ao)</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">      77283 : PyArray_RawIterBaseInit(PyArrayIterObject *it, PyArrayObject *ao)</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : {</a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      77282 :     int nd, i;</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      77283 :     int nd, i;</span></a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      77282 :     nd = PyArray_NDIM(ao);</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">      77282 :     PyArray_UpdateFlags(ao, NPY_ARRAY_C_CONTIGUOUS);</span></a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">      77282 :     if (PyArray_ISCONTIGUOUS(ao)) {</span></a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">      73059 :         it-&gt;contiguous = 1;</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      77283 :     nd = PyArray_NDIM(ao);</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">      77283 :     PyArray_UpdateFlags(ao, NPY_ARRAY_C_CONTIGUOUS);</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">      77283 :     if (PyArray_ISCONTIGUOUS(ao)) {</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">      73060 :         it-&gt;contiguous = 1;</span></a>
 <a name="134"><span class="lineNum">     134 </span>            :     }</a>
 <a name="135"><span class="lineNum">     135 </span>            :     else {</a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineCov">       4223 :         it-&gt;contiguous = 0;</span></a>
 <a name="137"><span class="lineNum">     137 </span>            :     }</a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">      77282 :     it-&gt;ao = ao;</span></a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">      77282 :     it-&gt;size = PyArray_SIZE(ao);</span></a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">      77282 :     it-&gt;nd_m1 = nd - 1;</span></a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">      77282 :     if (nd != 0) {</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">      67776 :         it-&gt;factors[nd-1] = 1;</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">      77283 :     it-&gt;ao = ao;</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">      77283 :     it-&gt;size = PyArray_SIZE(ao);</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">      77283 :     it-&gt;nd_m1 = nd - 1;</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">      77283 :     if (nd != 0) {</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">      67777 :         it-&gt;factors[nd-1] = 1;</span></a>
 <a name="143"><span class="lineNum">     143 </span>            :     }</a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">     176512 :     for (i = 0; i &lt; nd; i++) {</span></a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">      99230 :         it-&gt;dims_m1[i] = PyArray_DIMS(ao)[i] - 1;</span></a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">      99230 :         it-&gt;strides[i] = PyArray_STRIDES(ao)[i];</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">      99230 :         it-&gt;backstrides[i] = it-&gt;strides[i] * it-&gt;dims_m1[i];</span></a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">      99230 :         if (i &gt; 0) {</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">     176514 :     for (i = 0; i &lt; nd; i++) {</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">      99231 :         it-&gt;dims_m1[i] = PyArray_DIMS(ao)[i] - 1;</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">      99231 :         it-&gt;strides[i] = PyArray_STRIDES(ao)[i];</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">      99231 :         it-&gt;backstrides[i] = it-&gt;strides[i] * it-&gt;dims_m1[i];</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">      99231 :         if (i &gt; 0) {</span></a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineCov">      31454 :             it-&gt;factors[nd-i-1] = it-&gt;factors[nd-i] * PyArray_DIMS(ao)[nd-i];</span></a>
 <a name="150"><span class="lineNum">     150 </span>            :         }</a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">      99230 :         it-&gt;bounds[i][0] = 0;</span></a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">      99230 :         it-&gt;bounds[i][1] = PyArray_DIMS(ao)[i] - 1;</span></a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">      99230 :         it-&gt;limits[i][0] = 0;</span></a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">      99230 :         it-&gt;limits[i][1] = PyArray_DIMS(ao)[i] - 1;</span></a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">      99230 :         it-&gt;limits_sizes[i] = it-&gt;limits[i][1] - it-&gt;limits[i][0] + 1;</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">      99231 :         it-&gt;bounds[i][0] = 0;</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">      99231 :         it-&gt;bounds[i][1] = PyArray_DIMS(ao)[i] - 1;</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">      99231 :         it-&gt;limits[i][0] = 0;</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">      99231 :         it-&gt;limits[i][1] = PyArray_DIMS(ao)[i] - 1;</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">      99231 :         it-&gt;limits_sizes[i] = it-&gt;limits[i][1] - it-&gt;limits[i][0] + 1;</span></a>
 <a name="156"><span class="lineNum">     156 </span>            :     }</a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">      77282 :     it-&gt;translate = &amp;get_ptr_simple;</span></a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">      77282 :     PyArray_ITER_RESET(it);</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">      77283 :     it-&gt;translate = &amp;get_ptr_simple;</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">      77283 :     PyArray_ITER_RESET(it);</span></a>
 <a name="160"><span class="lineNum">     160 </span>            : </a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">      77282 :     return;</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">      77283 :     return;</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : }</a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
 <a name="164"><span class="lineNum">     164 </span>            : static void</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">      77070 : array_iter_base_dealloc(PyArrayIterObject *it)</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">      77071 : array_iter_base_dealloc(PyArrayIterObject *it)</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : {</a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     154140 :     Py_XDECREF(it-&gt;ao);</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     154142 :     Py_XDECREF(it-&gt;ao);</span></a>
 <a name="168"><span class="lineNum">     168 </span>            : }</a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
 <a name="170"><span class="lineNum">     170 </span>            : /*NUMPY_API</a>
 <a name="171"><span class="lineNum">     171 </span>            :  * Get Iterator.</a>
 <a name="172"><span class="lineNum">     172 </span>            :  */</a>
 <a name="173"><span class="lineNum">     173 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">      77004 : PyArray_IterNew(PyObject *obj)</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">      77005 : PyArray_IterNew(PyObject *obj)</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : {</a>
 <a name="176"><span class="lineNum">     176 </span>            :     /*</a>
 <a name="177"><span class="lineNum">     177 </span>            :      * Note that internally PyArray_RawIterBaseInit may be called directly on a</a>
 <a name="178"><span class="lineNum">     178 </span>            :      * statically allocated PyArrayIterObject.</a>
 <a name="179"><span class="lineNum">     179 </span>            :      */</a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">      77004 :     PyArrayIterObject *it;</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">      77004 :     PyArrayObject *ao;</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">      77005 :     PyArrayIterObject *it;</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">      77005 :     PyArrayObject *ao;</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">      77004 :     if (!PyArray_Check(obj)) {</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">      77005 :     if (!PyArray_Check(obj)) {</span></a>
 <a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :         PyErr_BadInternalCall();</span></a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :         return NULL;</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :     }</a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineCov">      77004 :     ao = (PyArrayObject *)obj;</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">      77005 :     ao = (PyArrayObject *)obj;</span></a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">      77004 :     it = (PyArrayIterObject *)PyArray_malloc(sizeof(PyArrayIterObject));</span></a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">      77004 :     PyObject_Init((PyObject *)it, &amp;PyArrayIter_Type);</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">      77005 :     it = (PyArrayIterObject *)PyArray_malloc(sizeof(PyArrayIterObject));</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">      77005 :     PyObject_Init((PyObject *)it, &amp;PyArrayIter_Type);</span></a>
 <a name="191"><span class="lineNum">     191 </span>            :     /* it = PyObject_New(PyArrayIterObject, &amp;PyArrayIter_Type);*/</a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">      77004 :     if (it == NULL) {</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">      77005 :     if (it == NULL) {</span></a>
 <a name="193"><span class="lineNum">     193 </span>            :         return NULL;</a>
 <a name="194"><span class="lineNum">     194 </span>            :     }</a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">      77004 :     Py_INCREF(ao);  /* PyArray_RawIterBaseInit steals a reference */</span></a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">      77004 :     PyArray_RawIterBaseInit(it, ao);</span></a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">      77004 :     return (PyObject *)it;</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">      77005 :     Py_INCREF(ao);  /* PyArray_RawIterBaseInit steals a reference */</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">      77005 :     PyArray_RawIterBaseInit(it, ao);</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">      77005 :     return (PyObject *)it;</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : }</a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
 <a name="201"><span class="lineNum">     201 </span>            : /*NUMPY_API</a>
@@ -349,27 +349,27 @@
 <a name="279"><span class="lineNum">     279 </span>            :  * with the axis having the smallest stride.</a>
 <a name="280"><span class="lineNum">     280 </span>            :  */</a>
 <a name="281"><span class="lineNum">     281 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">      35724 : PyArray_IterAllButAxis(PyObject *obj, int *inaxis)</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">      35725 : PyArray_IterAllButAxis(PyObject *obj, int *inaxis)</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : {</a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">      35724 :     PyArrayObject *arr;</span></a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineCov">      35724 :     PyArrayIterObject *it;</span></a>
-<a name="286"><span class="lineNum">     286 </span><span class="lineCov">      35724 :     int axis;</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">      35725 :     PyArrayObject *arr;</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">      35725 :     PyArrayIterObject *it;</span></a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineCov">      35725 :     int axis;</span></a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineCov">      35724 :     if (!PyArray_Check(obj)) {</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">      35725 :     if (!PyArray_Check(obj)) {</span></a>
 <a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :         PyErr_SetString(PyExc_ValueError,</span></a>
 <a name="290"><span class="lineNum">     290 </span>            :                 &quot;Numpy IterAllButAxis requires an ndarray&quot;);</a>
 <a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :         return NULL;</span></a>
 <a name="292"><span class="lineNum">     292 </span>            :     }</a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineCov">      35724 :     arr = (PyArrayObject *)obj;</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineCov">      35725 :     arr = (PyArrayObject *)obj;</span></a>
 <a name="294"><span class="lineNum">     294 </span>            : </a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineCov">      35724 :     it = (PyArrayIterObject *)PyArray_IterNew((PyObject *)arr);</span></a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineCov">      35724 :     if (it == NULL) {</span></a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineCov">      35725 :     it = (PyArrayIterObject *)PyArray_IterNew((PyObject *)arr);</span></a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineCov">      35725 :     if (it == NULL) {</span></a>
 <a name="297"><span class="lineNum">     297 </span>            :         return NULL;</a>
 <a name="298"><span class="lineNum">     298 </span>            :     }</a>
-<a name="299"><span class="lineNum">     299 </span><span class="lineCov">      35724 :     if (PyArray_NDIM(arr)==0) {</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineCov">      35725 :     if (PyArray_NDIM(arr)==0) {</span></a>
 <a name="300"><span class="lineNum">     300 </span>            :         return (PyObject *)it;</a>
 <a name="301"><span class="lineNum">     301 </span>            :     }</a>
-<a name="302"><span class="lineNum">     302 </span><span class="lineCov">      35724 :     if (*inaxis &lt; 0) {</span></a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineCov">      35725 :     if (*inaxis &lt; 0) {</span></a>
 <a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 :         int i, minaxis = 0;</span></a>
 <a name="304"><span class="lineNum">     304 </span>            :         npy_intp minstride = 0;</a>
 <a name="305"><span class="lineNum">     305 </span>            :         i = 0;</a>
@@ -386,20 +386,20 @@
 <a name="316"><span class="lineNum">     316 </span>            :         }</a>
 <a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :         *inaxis = minaxis;</span></a>
 <a name="318"><span class="lineNum">     318 </span>            :     }</a>
-<a name="319"><span class="lineNum">     319 </span><span class="lineCov">      35724 :     axis = *inaxis;</span></a>
+<a name="319"><span class="lineNum">     319 </span><span class="lineCov">      35725 :     axis = *inaxis;</span></a>
 <a name="320"><span class="lineNum">     320 </span>            :     /* adjust so that will not iterate over axis */</a>
-<a name="321"><span class="lineNum">     321 </span><span class="lineCov">      35724 :     it-&gt;contiguous = 0;</span></a>
-<a name="322"><span class="lineNum">     322 </span><span class="lineCov">      35724 :     if (it-&gt;size != 0) {</span></a>
-<a name="323"><span class="lineNum">     323 </span><span class="lineCov">      25214 :         it-&gt;size /= PyArray_DIM(arr,axis);</span></a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineCov">      35725 :     it-&gt;contiguous = 0;</span></a>
+<a name="322"><span class="lineNum">     322 </span><span class="lineCov">      35725 :     if (it-&gt;size != 0) {</span></a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineCov">      25215 :         it-&gt;size /= PyArray_DIM(arr,axis);</span></a>
 <a name="324"><span class="lineNum">     324 </span>            :     }</a>
-<a name="325"><span class="lineNum">     325 </span><span class="lineCov">      35724 :     it-&gt;dims_m1[axis] = 0;</span></a>
-<a name="326"><span class="lineNum">     326 </span><span class="lineCov">      35724 :     it-&gt;backstrides[axis] = 0;</span></a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineCov">      35725 :     it-&gt;dims_m1[axis] = 0;</span></a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineCov">      35725 :     it-&gt;backstrides[axis] = 0;</span></a>
 <a name="327"><span class="lineNum">     327 </span>            : </a>
 <a name="328"><span class="lineNum">     328 </span>            :     /*</a>
 <a name="329"><span class="lineNum">     329 </span>            :      * (won't fix factors so don't use</a>
 <a name="330"><span class="lineNum">     330 </span>            :      * PyArray_ITER_GOTO1D with this iterator)</a>
 <a name="331"><span class="lineNum">     331 </span>            :      */</a>
-<a name="332"><span class="lineNum">     332 </span><span class="lineCov">      35724 :     return (PyObject *)it;</span></a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineCov">      35725 :     return (PyObject *)it;</span></a>
 <a name="333"><span class="lineNum">     333 </span>            : }</a>
 <a name="334"><span class="lineNum">     334 </span>            : </a>
 <a name="335"><span class="lineNum">     335 </span>            : /*NUMPY_API</a>
@@ -466,15 +466,15 @@
 <a name="396"><span class="lineNum">     396 </span>            : }</a>
 <a name="397"><span class="lineNum">     397 </span>            : </a>
 <a name="398"><span class="lineNum">     398 </span>            : static void</a>
-<a name="399"><span class="lineNum">     399 </span><span class="lineCov">      77026 : arrayiter_dealloc(PyArrayIterObject *it)</span></a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineCov">      77027 : arrayiter_dealloc(PyArrayIterObject *it)</span></a>
 <a name="400"><span class="lineNum">     400 </span>            : {</a>
 <a name="401"><span class="lineNum">     401 </span>            :     /*</a>
 <a name="402"><span class="lineNum">     402 </span>            :      * Note that it is possible to statically allocate a PyArrayIterObject,</a>
 <a name="403"><span class="lineNum">     403 </span>            :      * which does not call this function.</a>
 <a name="404"><span class="lineNum">     404 </span>            :      */</a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineCov">      77026 :     array_iter_base_dealloc(it);</span></a>
-<a name="406"><span class="lineNum">     406 </span><span class="lineCov">      77026 :     PyArray_free(it);</span></a>
-<a name="407"><span class="lineNum">     407 </span><span class="lineCov">      77026 : }</span></a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineCov">      77027 :     array_iter_base_dealloc(it);</span></a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineCov">      77027 :     PyArray_free(it);</span></a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineCov">      77027 : }</span></a>
 <a name="408"><span class="lineNum">     408 </span>            : </a>
 <a name="409"><span class="lineNum">     409 </span>            : static Py_ssize_t</a>
 <a name="410"><span class="lineNum">     410 </span><span class="lineCov">         15 : iter_length(PyArrayIterObject *self)</span></a>

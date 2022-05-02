@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">43</td>
@@ -131,9 +131,9 @@
 <a name="61"><span class="lineNum">      61 </span>            :  *  http://graphics.stanford.edu/~seander/bithacks.html#IntegerLogLookup</a>
 <a name="62"><span class="lineNum">      62 </span>            :  */</a>
 <a name="63"><span class="lineNum">      63 </span>            : static npy_uint32</a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">      56795 : LogBase2_32(npy_uint32 val)</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">      56801 : LogBase2_32(npy_uint32 val)</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : {</a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">      56795 :     static const npy_uint8 logTable[256] =</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">      56801 :     static const npy_uint8 logTable[256] =</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :     {</a>
 <a name="68"><span class="lineNum">      68 </span>            :         0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,</a>
 <a name="69"><span class="lineNum">      69 </span>            :         4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,</a>
@@ -153,24 +153,24 @@
 <a name="83"><span class="lineNum">      83 </span>            :         7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7</a>
 <a name="84"><span class="lineNum">      84 </span>            :     };</a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">      56795 :     npy_uint32 temp;</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">      56801 :     npy_uint32 temp;</span></a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">      56795 :     temp = val &gt;&gt; 24;</span></a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">      56795 :     if (temp) {</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">      56801 :     temp = val &gt;&gt; 24;</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">      56801 :     if (temp) {</span></a>
 <a name="90"><span class="lineNum">      90 </span><span class="lineCov">       2084 :         return 24 + logTable[temp];</span></a>
 <a name="91"><span class="lineNum">      91 </span>            :     }</a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">      54711 :     temp = val &gt;&gt; 16;</span></a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">      54711 :     if (temp) {</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">      54717 :     temp = val &gt;&gt; 16;</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">      54717 :     if (temp) {</span></a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :         return 16 + logTable[temp];</span></a>
 <a name="96"><span class="lineNum">      96 </span>            :     }</a>
 <a name="97"><span class="lineNum">      97 </span>            : </a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineCov">      54711 :     temp = val &gt;&gt; 8;</span></a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineCov">      54711 :     if (temp) {</span></a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">      54717 :     temp = val &gt;&gt; 8;</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">      54717 :     if (temp) {</span></a>
 <a name="100"><span class="lineNum">     100 </span><span class="lineCov">          9 :         return 8 + logTable[temp];</span></a>
 <a name="101"><span class="lineNum">     101 </span>            :     }</a>
 <a name="102"><span class="lineNum">     102 </span>            : </a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineCov">      54702 :     return logTable[val];</span></a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">      54708 :     return logTable[val];</span></a>
 <a name="104"><span class="lineNum">     104 </span>            : }</a>
 <a name="105"><span class="lineNum">     105 </span>            : </a>
 <a name="106"><span class="lineNum">     106 </span>            : static npy_uint32</a>
@@ -237,37 +237,37 @@
 <a name="167"><span class="lineNum">     167 </span>            : static Dragon4_Scratch _bigint_static;</a>
 <a name="168"><span class="lineNum">     168 </span>            : </a>
 <a name="169"><span class="lineNum">     169 </span>            : static Dragon4_Scratch*</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">     149196 : get_dragon4_bigint_scratch(void) {</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">     149184 : get_dragon4_bigint_scratch(void) {</span></a>
 <a name="171"><span class="lineNum">     171 </span>            :     /* this test+set is not threadsafe, but no matter because we have GIL */</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     149196 :     if (_bigint_static_in_use) {</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     149184 :     if (_bigint_static_in_use) {</span></a>
 <a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :         PyErr_SetString(PyExc_RuntimeError,</span></a>
 <a name="174"><span class="lineNum">     174 </span>            :             &quot;numpy float printing code is not re-entrant. &quot;</a>
 <a name="175"><span class="lineNum">     175 </span>            :             &quot;Ping the devs to fix it.&quot;);</a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :         return NULL;</span></a>
 <a name="177"><span class="lineNum">     177 </span>            :     }</a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">     149196 :     _bigint_static_in_use = 1;</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">     149184 :     _bigint_static_in_use = 1;</span></a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
 <a name="180"><span class="lineNum">     180 </span>            :     /* in this dummy implementation we only return the static allocation */</a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">     149196 :     return &amp;_bigint_static;</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">     149184 :     return &amp;_bigint_static;</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : }</a>
 <a name="183"><span class="lineNum">     183 </span>            : </a>
 <a name="184"><span class="lineNum">     184 </span>            : static void</a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">     149196 : free_dragon4_bigint_scratch(Dragon4_Scratch *mem){</span></a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineCov">     149196 :     _bigint_static_in_use = 0;</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">     149184 : free_dragon4_bigint_scratch(Dragon4_Scratch *mem){</span></a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineCov">     149184 :     _bigint_static_in_use = 0;</span></a>
 <a name="187"><span class="lineNum">     187 </span>            : }</a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
 <a name="189"><span class="lineNum">     189 </span>            : /* Copy integer */</a>
 <a name="190"><span class="lineNum">     190 </span>            : static void</a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">     150902 : BigInt_Copy(BigInt *dst, const BigInt *src)</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">     150728 : BigInt_Copy(BigInt *dst, const BigInt *src)</span></a>
 <a name="192"><span class="lineNum">     192 </span>            : {</a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineCov">     150902 :     npy_uint32 length = src-&gt;length;</span></a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">     150902 :     npy_uint32 * dstp = dst-&gt;blocks;</span></a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">     150902 :     const npy_uint32 *srcp;</span></a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     623862 :     for (srcp = src-&gt;blocks; srcp != src-&gt;blocks + length; ++dstp, ++srcp) {</span></a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">     472960 :         *dstp = *srcp;</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">     150728 :     npy_uint32 length = src-&gt;length;</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">     150728 :     npy_uint32 * dstp = dst-&gt;blocks;</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">     150728 :     const npy_uint32 *srcp;</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     623484 :     for (srcp = src-&gt;blocks; srcp != src-&gt;blocks + length; ++dstp, ++srcp) {</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">     472756 :         *dstp = *srcp;</span></a>
 <a name="198"><span class="lineNum">     198 </span>            :     }</a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">     150902 :     dst-&gt;length = length;</span></a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">      34301 : }</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">     150728 :     dst-&gt;length = length;</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">      34145 : }</span></a>
 <a name="201"><span class="lineNum">     201 </span>            : </a>
 <a name="202"><span class="lineNum">     202 </span>            : /* Basic type accessors */</a>
 <a name="203"><span class="lineNum">     203 </span>            : static void</a>
@@ -325,14 +325,14 @@
 <a name="255"><span class="lineNum">     255 </span>            : #endif /* DOUBLE_DOUBLE and QUAD */</a>
 <a name="256"><span class="lineNum">     256 </span>            : </a>
 <a name="257"><span class="lineNum">     257 </span>            : static void</a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">     183546 : BigInt_Set_uint32(BigInt *i, npy_uint32 val)</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">     183516 : BigInt_Set_uint32(BigInt *i, npy_uint32 val)</span></a>
 <a name="259"><span class="lineNum">     259 </span>            : {</a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">     183546 :     if (val != 0) {</span></a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">     166308 :         i-&gt;blocks[0] = val;</span></a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineCov">      55825 :         i-&gt;length = 1;</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">     183516 :     if (val != 0) {</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">     166272 :         i-&gt;blocks[0] = val;</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">      55807 :         i-&gt;length = 1;</span></a>
 <a name="263"><span class="lineNum">     263 </span>            :     }</a>
 <a name="264"><span class="lineNum">     264 </span>            :     else {</a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineCov">      17238 :         i-&gt;length = 0;</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">      17244 :         i-&gt;length = 0;</span></a>
 <a name="266"><span class="lineNum">     266 </span>            :     }</a>
 <a name="267"><span class="lineNum">     267 </span>            : }</a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
@@ -349,9 +349,9 @@
 <a name="279"><span class="lineNum">     279 </span>            :  * Returns 1 if the value is even</a>
 <a name="280"><span class="lineNum">     280 </span>            :  */</a>
 <a name="281"><span class="lineNum">     281 </span>            : static int</a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">     148177 : BigInt_IsEven(const BigInt *i)</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">     148165 : BigInt_IsEven(const BigInt *i)</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : {</a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">     110483 :     return (i-&gt;length == 0) || ( (i-&gt;blocks[0] % 2) == 0);</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">     110465 :     return (i-&gt;length == 0) || ( (i-&gt;blocks[0] % 2) == 0);</span></a>
 <a name="285"><span class="lineNum">     285 </span>            : }</a>
 <a name="286"><span class="lineNum">     286 </span>            : </a>
 <a name="287"><span class="lineNum">     287 </span>            : /*</a>
@@ -369,15 +369,15 @@
 <a name="299"><span class="lineNum">     299 </span>            :     }</a>
 <a name="300"><span class="lineNum">     300 </span>            : </a>
 <a name="301"><span class="lineNum">     301 </span>            :     /* Compare blocks one by one from high to low. */</a>
-<a name="302"><span class="lineNum">     302 </span><span class="lineCov">     981269 :     for (i = lhs-&gt;length - 1; i &gt;= 0; --i) {</span></a>
-<a name="303"><span class="lineNum">     303 </span><span class="lineCov">     828713 :         if (lhs-&gt;blocks[i] == rhs-&gt;blocks[i]) {</span></a>
-<a name="304"><span class="lineNum">     304 </span><span class="lineCov">     270724 :             continue;</span></a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineCov">     981449 :     for (i = lhs-&gt;length - 1; i &gt;= 0; --i) {</span></a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineCov">     828875 :         if (lhs-&gt;blocks[i] == rhs-&gt;blocks[i]) {</span></a>
+<a name="304"><span class="lineNum">     304 </span><span class="lineCov">     270766 :             continue;</span></a>
 <a name="305"><span class="lineNum">     305 </span>            :         }</a>
-<a name="306"><span class="lineNum">     306 </span><span class="lineCov">     557989 :         else if (lhs-&gt;blocks[i] &gt; rhs-&gt;blocks[i]) {</span></a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineCov">     558109 :         else if (lhs-&gt;blocks[i] &gt; rhs-&gt;blocks[i]) {</span></a>
 <a name="307"><span class="lineNum">     307 </span>            :             return 1;</a>
 <a name="308"><span class="lineNum">     308 </span>            :         }</a>
 <a name="309"><span class="lineNum">     309 </span>            :         else {</a>
-<a name="310"><span class="lineNum">     310 </span><span class="lineCov">     432199 :             return -1;</span></a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineCov">     431851 :             return -1;</span></a>
 <a name="311"><span class="lineNum">     311 </span>            :         }</a>
 <a name="312"><span class="lineNum">     312 </span>            :     }</a>
 <a name="313"><span class="lineNum">     313 </span>            : </a>
@@ -387,53 +387,53 @@
 <a name="317"><span class="lineNum">     317 </span>            : </a>
 <a name="318"><span class="lineNum">     318 </span>            : /* result = lhs + rhs */</a>
 <a name="319"><span class="lineNum">     319 </span>            : static void</a>
-<a name="320"><span class="lineNum">     320 </span><span class="lineCov">     280585 : BigInt_Add(BigInt *result, const BigInt *lhs, const BigInt *rhs)</span></a>
+<a name="320"><span class="lineNum">     320 </span><span class="lineCov">     280591 : BigInt_Add(BigInt *result, const BigInt *lhs, const BigInt *rhs)</span></a>
 <a name="321"><span class="lineNum">     321 </span>            : {</a>
 <a name="322"><span class="lineNum">     322 </span>            :     /* determine which operand has the smaller length */</a>
-<a name="323"><span class="lineNum">     323 </span><span class="lineCov">     280585 :     const BigInt *large, *small;</span></a>
-<a name="324"><span class="lineNum">     324 </span><span class="lineCov">     280585 :     npy_uint64 carry = 0;</span></a>
-<a name="325"><span class="lineNum">     325 </span><span class="lineCov">     280585 :     const npy_uint32 *largeCur, *smallCur, *largeEnd, *smallEnd;</span></a>
-<a name="326"><span class="lineNum">     326 </span><span class="lineCov">     280585 :     npy_uint32 *resultCur;</span></a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineCov">     280591 :     const BigInt *large, *small;</span></a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineCov">     280591 :     npy_uint64 carry = 0;</span></a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineCov">     280591 :     const npy_uint32 *largeCur, *smallCur, *largeEnd, *smallEnd;</span></a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineCov">     280591 :     npy_uint32 *resultCur;</span></a>
 <a name="327"><span class="lineNum">     327 </span>            : </a>
-<a name="328"><span class="lineNum">     328 </span><span class="lineCov">     280585 :     if (lhs-&gt;length &lt; rhs-&gt;length) {</span></a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineCov">     280591 :     if (lhs-&gt;length &lt; rhs-&gt;length) {</span></a>
 <a name="329"><span class="lineNum">     329 </span>            :         small = lhs;</a>
 <a name="330"><span class="lineNum">     330 </span>            :         large = rhs;</a>
 <a name="331"><span class="lineNum">     331 </span>            :     }</a>
 <a name="332"><span class="lineNum">     332 </span>            :     else {</a>
-<a name="333"><span class="lineNum">     333 </span><span class="lineCov">     184044 :         small = rhs;</span></a>
-<a name="334"><span class="lineNum">     334 </span><span class="lineCov">     184044 :         large = lhs;</span></a>
+<a name="333"><span class="lineNum">     333 </span><span class="lineCov">     184068 :         small = rhs;</span></a>
+<a name="334"><span class="lineNum">     334 </span><span class="lineCov">     184068 :         large = lhs;</span></a>
 <a name="335"><span class="lineNum">     335 </span>            :     }</a>
 <a name="336"><span class="lineNum">     336 </span>            : </a>
 <a name="337"><span class="lineNum">     337 </span>            :     /* The output will be at least as long as the largest input */</a>
-<a name="338"><span class="lineNum">     338 </span><span class="lineCov">     280585 :     result-&gt;length = large-&gt;length;</span></a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineCov">     280591 :     result-&gt;length = large-&gt;length;</span></a>
 <a name="339"><span class="lineNum">     339 </span>            : </a>
 <a name="340"><span class="lineNum">     340 </span>            :     /* Add each block and add carry the overflow to the next block */</a>
-<a name="341"><span class="lineNum">     341 </span><span class="lineCov">     280585 :     largeCur  = large-&gt;blocks;</span></a>
-<a name="342"><span class="lineNum">     342 </span><span class="lineCov">     280585 :     largeEnd  = largeCur + large-&gt;length;</span></a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineCov">     280585 :     smallCur  = small-&gt;blocks;</span></a>
-<a name="344"><span class="lineNum">     344 </span><span class="lineCov">     280585 :     smallEnd  = smallCur + small-&gt;length;</span></a>
-<a name="345"><span class="lineNum">     345 </span><span class="lineCov">     280585 :     resultCur = result-&gt;blocks;</span></a>
-<a name="346"><span class="lineNum">     346 </span><span class="lineCov">    2989377 :     while (smallCur != smallEnd) {</span></a>
-<a name="347"><span class="lineNum">     347 </span><span class="lineCov">    2708792 :         npy_uint64 sum = carry + (npy_uint64)(*largeCur) +</span></a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineCov">    2708792 :                                  (npy_uint64)(*smallCur);</span></a>
-<a name="349"><span class="lineNum">     349 </span><span class="lineCov">    2708792 :         carry = sum &gt;&gt; 32;</span></a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineCov">    2708792 :         *resultCur = sum &amp; bitmask_u64(32);</span></a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">    2708792 :         ++largeCur;</span></a>
-<a name="352"><span class="lineNum">     352 </span><span class="lineCov">    2708792 :         ++smallCur;</span></a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineCov">    2708792 :         ++resultCur;</span></a>
+<a name="341"><span class="lineNum">     341 </span><span class="lineCov">     280591 :     largeCur  = large-&gt;blocks;</span></a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineCov">     280591 :     largeEnd  = largeCur + large-&gt;length;</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">     280591 :     smallCur  = small-&gt;blocks;</span></a>
+<a name="344"><span class="lineNum">     344 </span><span class="lineCov">     280591 :     smallEnd  = smallCur + small-&gt;length;</span></a>
+<a name="345"><span class="lineNum">     345 </span><span class="lineCov">     280591 :     resultCur = result-&gt;blocks;</span></a>
+<a name="346"><span class="lineNum">     346 </span><span class="lineCov">    2989407 :     while (smallCur != smallEnd) {</span></a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineCov">    2708816 :         npy_uint64 sum = carry + (npy_uint64)(*largeCur) +</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineCov">    2708816 :                                  (npy_uint64)(*smallCur);</span></a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineCov">    2708816 :         carry = sum &gt;&gt; 32;</span></a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineCov">    2708816 :         *resultCur = sum &amp; bitmask_u64(32);</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">    2708816 :         ++largeCur;</span></a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineCov">    2708816 :         ++smallCur;</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineCov">    2708816 :         ++resultCur;</span></a>
 <a name="354"><span class="lineNum">     354 </span>            :     }</a>
 <a name="355"><span class="lineNum">     355 </span>            : </a>
 <a name="356"><span class="lineNum">     356 </span>            :     /* Add the carry to any blocks that only exist in the large operand */</a>
-<a name="357"><span class="lineNum">     357 </span><span class="lineCov">     488919 :     while (largeCur != largeEnd) {</span></a>
-<a name="358"><span class="lineNum">     358 </span><span class="lineCov">     208334 :         npy_uint64 sum = carry + (npy_uint64)(*largeCur);</span></a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineCov">     208334 :         carry = sum &gt;&gt; 32;</span></a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineCov">     208334 :         (*resultCur) = sum &amp; bitmask_u64(32);</span></a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineCov">     208334 :         ++largeCur;</span></a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineCov">     208334 :         ++resultCur;</span></a>
+<a name="357"><span class="lineNum">     357 </span><span class="lineCov">     488787 :     while (largeCur != largeEnd) {</span></a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineCov">     208196 :         npy_uint64 sum = carry + (npy_uint64)(*largeCur);</span></a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineCov">     208196 :         carry = sum &gt;&gt; 32;</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineCov">     208196 :         (*resultCur) = sum &amp; bitmask_u64(32);</span></a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineCov">     208196 :         ++largeCur;</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">     208196 :         ++resultCur;</span></a>
 <a name="363"><span class="lineNum">     363 </span>            :     }</a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span>            :     /* If there's still a carry, append a new block */</a>
-<a name="366"><span class="lineNum">     366 </span><span class="lineCov">     280585 :     if (carry != 0) {</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">     280591 :     if (carry != 0) {</span></a>
 <a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :         DEBUG_ASSERT(carry == 1);</span></a>
 <a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :         DEBUG_ASSERT((npy_uint32)(resultCur - result-&gt;blocks) ==</span></a>
 <a name="369"><span class="lineNum">     369 </span>            :                large-&gt;length &amp;&amp; (large-&gt;length &lt; c_BigInt_MaxBlocks));</a>
@@ -441,9 +441,9 @@
 <a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 :         result-&gt;length = large-&gt;length + 1;</span></a>
 <a name="372"><span class="lineNum">     372 </span>            :     }</a>
 <a name="373"><span class="lineNum">     373 </span>            :     else {</a>
-<a name="374"><span class="lineNum">     374 </span><span class="lineCov">     280585 :         result-&gt;length = large-&gt;length;</span></a>
+<a name="374"><span class="lineNum">     374 </span><span class="lineCov">     280591 :         result-&gt;length = large-&gt;length;</span></a>
 <a name="375"><span class="lineNum">     375 </span>            :     }</a>
-<a name="376"><span class="lineNum">     376 </span><span class="lineCov">     280585 : }</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineCov">     280591 : }</span></a>
 <a name="377"><span class="lineNum">     377 </span>            : </a>
 <a name="378"><span class="lineNum">     378 </span>            : /*</a>
 <a name="379"><span class="lineNum">     379 </span>            :  * result = lhs * rhs</a>
@@ -517,57 +517,57 @@
 <a name="447"><span class="lineNum">     447 </span>            : </a>
 <a name="448"><span class="lineNum">     448 </span>            : /* result = lhs * rhs */</a>
 <a name="449"><span class="lineNum">     449 </span>            : static void</a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineCov">      37033 : BigInt_Multiply_int(BigInt *result, const BigInt *lhs, npy_uint32 rhs)</span></a>
+<a name="450"><span class="lineNum">     450 </span><span class="lineCov">      36877 : BigInt_Multiply_int(BigInt *result, const BigInt *lhs, npy_uint32 rhs)</span></a>
 <a name="451"><span class="lineNum">     451 </span>            : {</a>
 <a name="452"><span class="lineNum">     452 </span>            :     /* perform long multiplication */</a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineCov">      37033 :     npy_uint32 carry = 0;</span></a>
-<a name="454"><span class="lineNum">     454 </span><span class="lineCov">      37033 :     npy_uint32 *resultCur = result-&gt;blocks;</span></a>
-<a name="455"><span class="lineNum">     455 </span><span class="lineCov">      37033 :     const npy_uint32 *pLhsCur = lhs-&gt;blocks;</span></a>
-<a name="456"><span class="lineNum">     456 </span><span class="lineCov">      37033 :     const npy_uint32 *pLhsEnd = lhs-&gt;blocks + lhs-&gt;length;</span></a>
-<a name="457"><span class="lineNum">     457 </span><span class="lineCov">      86873 :     for ( ; pLhsCur != pLhsEnd; ++pLhsCur, ++resultCur) {</span></a>
-<a name="458"><span class="lineNum">     458 </span><span class="lineCov">      49840 :         npy_uint64 product = (npy_uint64)(*pLhsCur) * rhs + carry;</span></a>
-<a name="459"><span class="lineNum">     459 </span><span class="lineCov">      49840 :         *resultCur = (npy_uint32)(product &amp; bitmask_u64(32));</span></a>
-<a name="460"><span class="lineNum">     460 </span><span class="lineCov">      49840 :         carry = product &gt;&gt; 32;</span></a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineCov">      36877 :     npy_uint32 carry = 0;</span></a>
+<a name="454"><span class="lineNum">     454 </span><span class="lineCov">      36877 :     npy_uint32 *resultCur = result-&gt;blocks;</span></a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineCov">      36877 :     const npy_uint32 *pLhsCur = lhs-&gt;blocks;</span></a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineCov">      36877 :     const npy_uint32 *pLhsEnd = lhs-&gt;blocks + lhs-&gt;length;</span></a>
+<a name="457"><span class="lineNum">     457 </span><span class="lineCov">      86531 :     for ( ; pLhsCur != pLhsEnd; ++pLhsCur, ++resultCur) {</span></a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineCov">      49654 :         npy_uint64 product = (npy_uint64)(*pLhsCur) * rhs + carry;</span></a>
+<a name="459"><span class="lineNum">     459 </span><span class="lineCov">      49654 :         *resultCur = (npy_uint32)(product &amp; bitmask_u64(32));</span></a>
+<a name="460"><span class="lineNum">     460 </span><span class="lineCov">      49654 :         carry = product &gt;&gt; 32;</span></a>
 <a name="461"><span class="lineNum">     461 </span>            :     }</a>
 <a name="462"><span class="lineNum">     462 </span>            : </a>
 <a name="463"><span class="lineNum">     463 </span>            :     /* if there is a remaining carry, grow the array */</a>
-<a name="464"><span class="lineNum">     464 </span><span class="lineCov">      37033 :     if (carry != 0) {</span></a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineCov">      36877 :     if (carry != 0) {</span></a>
 <a name="465"><span class="lineNum">     465 </span>            :         /* grow the array */</a>
 <a name="466"><span class="lineNum">     466 </span><span class="lineCov">        746 :         DEBUG_ASSERT(lhs-&gt;length + 1 &lt;= c_BigInt_MaxBlocks);</span></a>
 <a name="467"><span class="lineNum">     467 </span><span class="lineCov">        746 :         *resultCur = (npy_uint32)carry;</span></a>
 <a name="468"><span class="lineNum">     468 </span><span class="lineCov">        746 :         result-&gt;length = lhs-&gt;length + 1;</span></a>
 <a name="469"><span class="lineNum">     469 </span>            :     }</a>
 <a name="470"><span class="lineNum">     470 </span>            :     else {</a>
-<a name="471"><span class="lineNum">     471 </span><span class="lineCov">      36287 :         result-&gt;length = lhs-&gt;length;</span></a>
+<a name="471"><span class="lineNum">     471 </span><span class="lineCov">      36131 :         result-&gt;length = lhs-&gt;length;</span></a>
 <a name="472"><span class="lineNum">     472 </span>            :     }</a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineCov">      37033 : }</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineCov">      36877 : }</span></a>
 <a name="474"><span class="lineNum">     474 </span>            : </a>
 <a name="475"><span class="lineNum">     475 </span>            : /* result = in * 2 */</a>
 <a name="476"><span class="lineNum">     476 </span>            : static void</a>
-<a name="477"><span class="lineNum">     477 </span><span class="lineCov">      23327 : BigInt_Multiply2(BigInt *result, const BigInt *in)</span></a>
+<a name="477"><span class="lineNum">     477 </span><span class="lineCov">      23219 : BigInt_Multiply2(BigInt *result, const BigInt *in)</span></a>
 <a name="478"><span class="lineNum">     478 </span>            : {</a>
 <a name="479"><span class="lineNum">     479 </span>            :     /* shift all the blocks by one */</a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineCov">      23327 :     npy_uint32 carry = 0;</span></a>
+<a name="480"><span class="lineNum">     480 </span><span class="lineCov">      23219 :     npy_uint32 carry = 0;</span></a>
 <a name="481"><span class="lineNum">     481 </span>            : </a>
-<a name="482"><span class="lineNum">     482 </span><span class="lineCov">      23327 :     npy_uint32 *resultCur = result-&gt;blocks;</span></a>
-<a name="483"><span class="lineNum">     483 </span><span class="lineCov">      23327 :     const npy_uint32 *pLhsCur = in-&gt;blocks;</span></a>
-<a name="484"><span class="lineNum">     484 </span><span class="lineCov">      23327 :     const npy_uint32 *pLhsEnd = in-&gt;blocks + in-&gt;length;</span></a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineCov">     108832 :     for ( ; pLhsCur != pLhsEnd; ++pLhsCur, ++resultCur) {</span></a>
-<a name="486"><span class="lineNum">     486 </span><span class="lineCov">      85505 :         npy_uint32 cur = *pLhsCur;</span></a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineCov">      85505 :         *resultCur = (cur &lt;&lt; 1) | carry;</span></a>
-<a name="488"><span class="lineNum">     488 </span><span class="lineCov">      85505 :         carry = cur &gt;&gt; 31;</span></a>
+<a name="482"><span class="lineNum">     482 </span><span class="lineCov">      23219 :     npy_uint32 *resultCur = result-&gt;blocks;</span></a>
+<a name="483"><span class="lineNum">     483 </span><span class="lineCov">      23219 :     const npy_uint32 *pLhsCur = in-&gt;blocks;</span></a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineCov">      23219 :     const npy_uint32 *pLhsEnd = in-&gt;blocks + in-&gt;length;</span></a>
+<a name="485"><span class="lineNum">     485 </span><span class="lineCov">     108616 :     for ( ; pLhsCur != pLhsEnd; ++pLhsCur, ++resultCur) {</span></a>
+<a name="486"><span class="lineNum">     486 </span><span class="lineCov">      85397 :         npy_uint32 cur = *pLhsCur;</span></a>
+<a name="487"><span class="lineNum">     487 </span><span class="lineCov">      85397 :         *resultCur = (cur &lt;&lt; 1) | carry;</span></a>
+<a name="488"><span class="lineNum">     488 </span><span class="lineCov">      85397 :         carry = cur &gt;&gt; 31;</span></a>
 <a name="489"><span class="lineNum">     489 </span>            :     }</a>
 <a name="490"><span class="lineNum">     490 </span>            : </a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineCov">      23327 :     if (carry != 0) {</span></a>
+<a name="491"><span class="lineNum">     491 </span><span class="lineCov">      23219 :     if (carry != 0) {</span></a>
 <a name="492"><span class="lineNum">     492 </span>            :         /* grow the array */</a>
 <a name="493"><span class="lineNum">     493 </span><span class="lineCov">        494 :         DEBUG_ASSERT(in-&gt;length + 1 &lt;= c_BigInt_MaxBlocks);</span></a>
 <a name="494"><span class="lineNum">     494 </span><span class="lineCov">        494 :         *resultCur = carry;</span></a>
 <a name="495"><span class="lineNum">     495 </span><span class="lineCov">        494 :         result-&gt;length = in-&gt;length + 1;</span></a>
 <a name="496"><span class="lineNum">     496 </span>            :     }</a>
 <a name="497"><span class="lineNum">     497 </span>            :     else {</a>
-<a name="498"><span class="lineNum">     498 </span><span class="lineCov">      22833 :         result-&gt;length = in-&gt;length;</span></a>
+<a name="498"><span class="lineNum">     498 </span><span class="lineCov">      22725 :         result-&gt;length = in-&gt;length;</span></a>
 <a name="499"><span class="lineNum">     499 </span>            :     }</a>
-<a name="500"><span class="lineNum">     500 </span><span class="lineCov">      23327 : }</span></a>
+<a name="500"><span class="lineNum">     500 </span><span class="lineCov">      23219 : }</span></a>
 <a name="501"><span class="lineNum">     501 </span>            : </a>
 <a name="502"><span class="lineNum">     502 </span>            : /* result = result * 2 */</a>
 <a name="503"><span class="lineNum">     503 </span>            : static void</a>
@@ -594,26 +594,26 @@
 <a name="524"><span class="lineNum">     524 </span>            : </a>
 <a name="525"><span class="lineNum">     525 </span>            : /* result = result * 10 */</a>
 <a name="526"><span class="lineNum">     526 </span>            : static void</a>
-<a name="527"><span class="lineNum">     527 </span><span class="lineCov">     368027 : BigInt_Multiply10(BigInt *result)</span></a>
+<a name="527"><span class="lineNum">     527 </span><span class="lineCov">     367319 : BigInt_Multiply10(BigInt *result)</span></a>
 <a name="528"><span class="lineNum">     528 </span>            : {</a>
 <a name="529"><span class="lineNum">     529 </span>            :     /* multiply all the blocks */</a>
-<a name="530"><span class="lineNum">     530 </span><span class="lineCov">     368027 :     npy_uint64 carry = 0;</span></a>
+<a name="530"><span class="lineNum">     530 </span><span class="lineCov">     367319 :     npy_uint64 carry = 0;</span></a>
 <a name="531"><span class="lineNum">     531 </span>            : </a>
-<a name="532"><span class="lineNum">     532 </span><span class="lineCov">     368027 :     npy_uint32 *cur = result-&gt;blocks;</span></a>
-<a name="533"><span class="lineNum">     533 </span><span class="lineCov">     368027 :     npy_uint32 *end = result-&gt;blocks + result-&gt;length;</span></a>
-<a name="534"><span class="lineNum">     534 </span><span class="lineCov">    5627959 :     for ( ; cur != end; ++cur) {</span></a>
-<a name="535"><span class="lineNum">     535 </span><span class="lineCov">    5259932 :         npy_uint64 product = (npy_uint64)(*cur) * 10ull + carry;</span></a>
-<a name="536"><span class="lineNum">     536 </span><span class="lineCov">    5259932 :         (*cur) = (npy_uint32)(product &amp; bitmask_u64(32));</span></a>
-<a name="537"><span class="lineNum">     537 </span><span class="lineCov">    5259932 :         carry = product &gt;&gt; 32;</span></a>
+<a name="532"><span class="lineNum">     532 </span><span class="lineCov">     367319 :     npy_uint32 *cur = result-&gt;blocks;</span></a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineCov">     367319 :     npy_uint32 *end = result-&gt;blocks + result-&gt;length;</span></a>
+<a name="534"><span class="lineNum">     534 </span><span class="lineCov">    5626183 :     for ( ; cur != end; ++cur) {</span></a>
+<a name="535"><span class="lineNum">     535 </span><span class="lineCov">    5258864 :         npy_uint64 product = (npy_uint64)(*cur) * 10ull + carry;</span></a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineCov">    5258864 :         (*cur) = (npy_uint32)(product &amp; bitmask_u64(32));</span></a>
+<a name="537"><span class="lineNum">     537 </span><span class="lineCov">    5258864 :         carry = product &gt;&gt; 32;</span></a>
 <a name="538"><span class="lineNum">     538 </span>            :     }</a>
 <a name="539"><span class="lineNum">     539 </span>            : </a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineCov">     368027 :     if (carry != 0) {</span></a>
+<a name="540"><span class="lineNum">     540 </span><span class="lineCov">     367319 :     if (carry != 0) {</span></a>
 <a name="541"><span class="lineNum">     541 </span>            :         /* grow the array */</a>
 <a name="542"><span class="lineNum">     542 </span><span class="lineCov">       7802 :         DEBUG_ASSERT(result-&gt;length + 1 &lt;= c_BigInt_MaxBlocks);</span></a>
 <a name="543"><span class="lineNum">     543 </span><span class="lineCov">       7802 :         *cur = (npy_uint32)carry;</span></a>
 <a name="544"><span class="lineNum">     544 </span><span class="lineCov">       7802 :         ++result-&gt;length;</span></a>
 <a name="545"><span class="lineNum">     545 </span>            :     }</a>
-<a name="546"><span class="lineNum">     546 </span><span class="lineCov">     368027 : }</span></a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineCov">     367319 : }</span></a>
 <a name="547"><span class="lineNum">     547 </span>            : </a>
 <a name="548"><span class="lineNum">     548 </span>            : static npy_uint32 g_PowerOf10_U32[] =</a>
 <a name="549"><span class="lineNum">     549 </span>            : {</a>
@@ -875,25 +875,25 @@
 <a name="805"><span class="lineNum">     805 </span>            : </a>
 <a name="806"><span class="lineNum">     806 </span>            : /* in = in * 10^exponent */</a>
 <a name="807"><span class="lineNum">     807 </span>            : static void</a>
-<a name="808"><span class="lineNum">     808 </span><span class="lineCov">      37310 : BigInt_MultiplyPow10(BigInt *in, npy_uint32 exponent, BigInt *temp)</span></a>
+<a name="808"><span class="lineNum">     808 </span><span class="lineCov">      37154 : BigInt_MultiplyPow10(BigInt *in, npy_uint32 exponent, BigInt *temp)</span></a>
 <a name="809"><span class="lineNum">     809 </span>            : {</a>
 <a name="810"><span class="lineNum">     810 </span>            :     /* use two temporary values to reduce large integer copy operations */</a>
-<a name="811"><span class="lineNum">     811 </span><span class="lineCov">      37310 :     BigInt *curTemp, *pNextTemp;</span></a>
-<a name="812"><span class="lineNum">     812 </span><span class="lineCov">      37310 :     npy_uint32 smallExponent;</span></a>
-<a name="813"><span class="lineNum">     813 </span><span class="lineCov">      37310 :     npy_uint32 tableIdx = 0;</span></a>
+<a name="811"><span class="lineNum">     811 </span><span class="lineCov">      37154 :     BigInt *curTemp, *pNextTemp;</span></a>
+<a name="812"><span class="lineNum">     812 </span><span class="lineCov">      37154 :     npy_uint32 smallExponent;</span></a>
+<a name="813"><span class="lineNum">     813 </span><span class="lineCov">      37154 :     npy_uint32 tableIdx = 0;</span></a>
 <a name="814"><span class="lineNum">     814 </span>            : </a>
 <a name="815"><span class="lineNum">     815 </span>            :     /* make sure the exponent is within the bounds of the lookup table data */</a>
-<a name="816"><span class="lineNum">     816 </span><span class="lineCov">      37310 :     DEBUG_ASSERT(exponent &lt; 8192);</span></a>
+<a name="816"><span class="lineNum">     816 </span><span class="lineCov">      37154 :     DEBUG_ASSERT(exponent &lt; 8192);</span></a>
 <a name="817"><span class="lineNum">     817 </span>            : </a>
 <a name="818"><span class="lineNum">     818 </span>            :     /*</a>
 <a name="819"><span class="lineNum">     819 </span>            :      * initialize the result by looking up a 32-bit power of 10 corresponding to</a>
 <a name="820"><span class="lineNum">     820 </span>            :      * the first 3 bits</a>
 <a name="821"><span class="lineNum">     821 </span>            :      */</a>
-<a name="822"><span class="lineNum">     822 </span><span class="lineCov">      37310 :     smallExponent = exponent &amp; bitmask_u32(3);</span></a>
-<a name="823"><span class="lineNum">     823 </span><span class="lineCov">      37310 :     if (smallExponent != 0) {</span></a>
-<a name="824"><span class="lineNum">     824 </span><span class="lineCov">      37033 :         BigInt_Multiply_int(temp, in, g_PowerOf10_U32[smallExponent]);</span></a>
-<a name="825"><span class="lineNum">     825 </span><span class="lineCov">      37033 :         curTemp = temp;</span></a>
-<a name="826"><span class="lineNum">     826 </span><span class="lineCov">      37033 :         pNextTemp = in;</span></a>
+<a name="822"><span class="lineNum">     822 </span><span class="lineCov">      37154 :     smallExponent = exponent &amp; bitmask_u32(3);</span></a>
+<a name="823"><span class="lineNum">     823 </span><span class="lineCov">      37154 :     if (smallExponent != 0) {</span></a>
+<a name="824"><span class="lineNum">     824 </span><span class="lineCov">      36877 :         BigInt_Multiply_int(temp, in, g_PowerOf10_U32[smallExponent]);</span></a>
+<a name="825"><span class="lineNum">     825 </span><span class="lineCov">      36877 :         curTemp = temp;</span></a>
+<a name="826"><span class="lineNum">     826 </span><span class="lineCov">      36877 :         pNextTemp = in;</span></a>
 <a name="827"><span class="lineNum">     827 </span>            :     }</a>
 <a name="828"><span class="lineNum">     828 </span>            :     else {</a>
 <a name="829"><span class="lineNum">     829 </span>            :         curTemp = in;</a>
@@ -901,10 +901,10 @@
 <a name="831"><span class="lineNum">     831 </span>            :     }</a>
 <a name="832"><span class="lineNum">     832 </span>            : </a>
 <a name="833"><span class="lineNum">     833 </span>            :     /* remove the low bits that we used for the 32-bit lookup table */</a>
-<a name="834"><span class="lineNum">     834 </span><span class="lineCov">      37310 :     exponent &gt;&gt;= 3;</span></a>
+<a name="834"><span class="lineNum">     834 </span><span class="lineCov">      37154 :     exponent &gt;&gt;= 3;</span></a>
 <a name="835"><span class="lineNum">     835 </span>            : </a>
 <a name="836"><span class="lineNum">     836 </span>            :     /* while there are remaining bits in the exponent to be processed */</a>
-<a name="837"><span class="lineNum">     837 </span><span class="lineCov">      43170 :     while (exponent != 0) {</span></a>
+<a name="837"><span class="lineNum">     837 </span><span class="lineCov">      43014 :     while (exponent != 0) {</span></a>
 <a name="838"><span class="lineNum">     838 </span>            :         /* if the current bit is set, multiply by this power of 10 */</a>
 <a name="839"><span class="lineNum">     839 </span><span class="lineCov">       5860 :         if (exponent &amp; 1) {</span></a>
 <a name="840"><span class="lineNum">     840 </span><span class="lineCov">       4586 :             BigInt *pSwap;</span></a>
@@ -924,30 +924,30 @@
 <a name="854"><span class="lineNum">     854 </span>            :     }</a>
 <a name="855"><span class="lineNum">     855 </span>            : </a>
 <a name="856"><span class="lineNum">     856 </span>            :     /* output the result */</a>
-<a name="857"><span class="lineNum">     857 </span><span class="lineCov">      37310 :     if (curTemp != in){</span></a>
-<a name="858"><span class="lineNum">     858 </span><span class="lineCov">      33607 :         BigInt_Copy(in, curTemp);</span></a>
+<a name="857"><span class="lineNum">     857 </span><span class="lineCov">      37154 :     if (curTemp != in){</span></a>
+<a name="858"><span class="lineNum">     858 </span><span class="lineCov">      33451 :         BigInt_Copy(in, curTemp);</span></a>
 <a name="859"><span class="lineNum">     859 </span>            :     }</a>
-<a name="860"><span class="lineNum">     860 </span><span class="lineCov">      37310 : }</span></a>
+<a name="860"><span class="lineNum">     860 </span><span class="lineCov">      37154 : }</span></a>
 <a name="861"><span class="lineNum">     861 </span>            : </a>
 <a name="862"><span class="lineNum">     862 </span>            : /* result = 2^exponent */</a>
 <a name="863"><span class="lineNum">     863 </span>            : static inline void</a>
-<a name="864"><span class="lineNum">     864 </span><span class="lineCov">     110515 : BigInt_Pow2(BigInt *result, npy_uint32 exponent)</span></a>
+<a name="864"><span class="lineNum">     864 </span><span class="lineCov">     110497 : BigInt_Pow2(BigInt *result, npy_uint32 exponent)</span></a>
 <a name="865"><span class="lineNum">     865 </span>            : {</a>
-<a name="866"><span class="lineNum">     866 </span><span class="lineCov">     110515 :     npy_uint32 bitIdx;</span></a>
-<a name="867"><span class="lineNum">     867 </span><span class="lineCov">     110515 :     npy_uint32 blockIdx = exponent / 32;</span></a>
-<a name="868"><span class="lineNum">     868 </span><span class="lineCov">     110515 :     npy_uint32 i;</span></a>
+<a name="866"><span class="lineNum">     866 </span><span class="lineCov">     110497 :     npy_uint32 bitIdx;</span></a>
+<a name="867"><span class="lineNum">     867 </span><span class="lineCov">     110497 :     npy_uint32 blockIdx = exponent / 32;</span></a>
+<a name="868"><span class="lineNum">     868 </span><span class="lineCov">     110497 :     npy_uint32 i;</span></a>
 <a name="869"><span class="lineNum">     869 </span>            : </a>
-<a name="870"><span class="lineNum">     870 </span><span class="lineCov">     110515 :     DEBUG_ASSERT(blockIdx &lt; c_BigInt_MaxBlocks);</span></a>
+<a name="870"><span class="lineNum">     870 </span><span class="lineCov">     110497 :     DEBUG_ASSERT(blockIdx &lt; c_BigInt_MaxBlocks);</span></a>
 <a name="871"><span class="lineNum">     871 </span>            : </a>
-<a name="872"><span class="lineNum">     872 </span><span class="lineCov">     437175 :     for (i = 0; i &lt;= blockIdx; ++i) {</span></a>
-<a name="873"><span class="lineNum">     873 </span><span class="lineCov">     326660 :         result-&gt;blocks[i] = 0;</span></a>
+<a name="872"><span class="lineNum">     872 </span><span class="lineCov">     437139 :     for (i = 0; i &lt;= blockIdx; ++i) {</span></a>
+<a name="873"><span class="lineNum">     873 </span><span class="lineCov">     326642 :         result-&gt;blocks[i] = 0;</span></a>
 <a name="874"><span class="lineNum">     874 </span>            :     }</a>
 <a name="875"><span class="lineNum">     875 </span>            : </a>
-<a name="876"><span class="lineNum">     876 </span><span class="lineCov">     110515 :     result-&gt;length = blockIdx + 1;</span></a>
+<a name="876"><span class="lineNum">     876 </span><span class="lineCov">     110497 :     result-&gt;length = blockIdx + 1;</span></a>
 <a name="877"><span class="lineNum">     877 </span>            : </a>
-<a name="878"><span class="lineNum">     878 </span><span class="lineCov">     110515 :     bitIdx = (exponent % 32);</span></a>
-<a name="879"><span class="lineNum">     879 </span><span class="lineCov">     110515 :     result-&gt;blocks[blockIdx] |= ((npy_uint32)1 &lt;&lt; bitIdx);</span></a>
-<a name="880"><span class="lineNum">     880 </span><span class="lineCov">     110515 : }</span></a>
+<a name="878"><span class="lineNum">     878 </span><span class="lineCov">     110497 :     bitIdx = (exponent % 32);</span></a>
+<a name="879"><span class="lineNum">     879 </span><span class="lineCov">     110497 :     result-&gt;blocks[blockIdx] |= ((npy_uint32)1 &lt;&lt; bitIdx);</span></a>
+<a name="880"><span class="lineNum">     880 </span><span class="lineCov">     110497 : }</span></a>
 <a name="881"><span class="lineNum">     881 </span>            : </a>
 <a name="882"><span class="lineNum">     882 </span>            : /*</a>
 <a name="883"><span class="lineNum">     883 </span>            :  * This function will divide two large numbers under the assumption that the</a>
@@ -966,17 +966,17 @@
 <a name="896"><span class="lineNum">     896 </span>            :  * dividend is updated to be the remainder and the quotient is returned.</a>
 <a name="897"><span class="lineNum">     897 </span>            :  */</a>
 <a name="898"><span class="lineNum">     898 </span>            : static npy_uint32</a>
-<a name="899"><span class="lineNum">     899 </span><span class="lineCov">     282408 : BigInt_DivideWithRemainder_MaxQuotient9(BigInt *dividend, const BigInt *divisor)</span></a>
+<a name="899"><span class="lineNum">     899 </span><span class="lineCov">     282414 : BigInt_DivideWithRemainder_MaxQuotient9(BigInt *dividend, const BigInt *divisor)</span></a>
 <a name="900"><span class="lineNum">     900 </span>            : {</a>
-<a name="901"><span class="lineNum">     901 </span><span class="lineCov">     282408 :     npy_uint32 length, quotient;</span></a>
-<a name="902"><span class="lineNum">     902 </span><span class="lineCov">     282408 :     const npy_uint32 *finalDivisorBlock;</span></a>
-<a name="903"><span class="lineNum">     903 </span><span class="lineCov">     282408 :     npy_uint32 *finalDividendBlock;</span></a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineCov">     282414 :     npy_uint32 length, quotient;</span></a>
+<a name="902"><span class="lineNum">     902 </span><span class="lineCov">     282414 :     const npy_uint32 *finalDivisorBlock;</span></a>
+<a name="903"><span class="lineNum">     903 </span><span class="lineCov">     282414 :     npy_uint32 *finalDividendBlock;</span></a>
 <a name="904"><span class="lineNum">     904 </span>            : </a>
 <a name="905"><span class="lineNum">     905 </span>            :     /*</a>
 <a name="906"><span class="lineNum">     906 </span>            :      * Check that the divisor has been correctly shifted into range and that it</a>
 <a name="907"><span class="lineNum">     907 </span>            :      * is not smaller than the dividend in length.</a>
 <a name="908"><span class="lineNum">     908 </span>            :      */</a>
-<a name="909"><span class="lineNum">     909 </span><span class="lineCov">     282408 :     DEBUG_ASSERT(!divisor-&gt;length == 0 &amp;&amp;</span></a>
+<a name="909"><span class="lineNum">     909 </span><span class="lineCov">     282414 :     DEBUG_ASSERT(!divisor-&gt;length == 0 &amp;&amp;</span></a>
 <a name="910"><span class="lineNum">     910 </span>            :                 divisor-&gt;blocks[divisor-&gt;length-1] &gt;= 8 &amp;&amp;</a>
 <a name="911"><span class="lineNum">     911 </span>            :                 divisor-&gt;blocks[divisor-&gt;length-1] &lt; bitmask_u64(32) &amp;&amp;</a>
 <a name="912"><span class="lineNum">     912 </span>            :                 dividend-&gt;length &lt;= divisor-&gt;length);</a>
@@ -985,51 +985,51 @@
 <a name="915"><span class="lineNum">     915 </span>            :      * If the dividend is smaller than the divisor, the quotient is zero and the</a>
 <a name="916"><span class="lineNum">     916 </span>            :      * divisor is already the remainder.</a>
 <a name="917"><span class="lineNum">     917 </span>            :      */</a>
-<a name="918"><span class="lineNum">     918 </span><span class="lineCov">     282408 :     length = divisor-&gt;length;</span></a>
-<a name="919"><span class="lineNum">     919 </span><span class="lineCov">     282408 :     if (dividend-&gt;length &lt; divisor-&gt;length) {</span></a>
+<a name="918"><span class="lineNum">     918 </span><span class="lineCov">     282414 :     length = divisor-&gt;length;</span></a>
+<a name="919"><span class="lineNum">     919 </span><span class="lineCov">     282414 :     if (dividend-&gt;length &lt; divisor-&gt;length) {</span></a>
 <a name="920"><span class="lineNum">     920 </span>            :         return 0;</a>
 <a name="921"><span class="lineNum">     921 </span>            :     }</a>
 <a name="922"><span class="lineNum">     922 </span>            : </a>
-<a name="923"><span class="lineNum">     923 </span><span class="lineCov">     280968 :     finalDivisorBlock = divisor-&gt;blocks + length - 1;</span></a>
-<a name="924"><span class="lineNum">     924 </span><span class="lineCov">     280968 :     finalDividendBlock = dividend-&gt;blocks + length - 1;</span></a>
+<a name="923"><span class="lineNum">     923 </span><span class="lineCov">     280974 :     finalDivisorBlock = divisor-&gt;blocks + length - 1;</span></a>
+<a name="924"><span class="lineNum">     924 </span><span class="lineCov">     280974 :     finalDividendBlock = dividend-&gt;blocks + length - 1;</span></a>
 <a name="925"><span class="lineNum">     925 </span>            : </a>
 <a name="926"><span class="lineNum">     926 </span>            :     /*</a>
 <a name="927"><span class="lineNum">     927 </span>            :      * Compute an estimated quotient based on the high block value. This will</a>
 <a name="928"><span class="lineNum">     928 </span>            :      * either match the actual quotient or undershoot by one.</a>
 <a name="929"><span class="lineNum">     929 </span>            :      */</a>
-<a name="930"><span class="lineNum">     930 </span><span class="lineCov">     280968 :     quotient = *finalDividendBlock / (*finalDivisorBlock + 1);</span></a>
-<a name="931"><span class="lineNum">     931 </span><span class="lineCov">     280968 :     DEBUG_ASSERT(quotient &lt;= 9);</span></a>
+<a name="930"><span class="lineNum">     930 </span><span class="lineCov">     280974 :     quotient = *finalDividendBlock / (*finalDivisorBlock + 1);</span></a>
+<a name="931"><span class="lineNum">     931 </span><span class="lineCov">     280974 :     DEBUG_ASSERT(quotient &lt;= 9);</span></a>
 <a name="932"><span class="lineNum">     932 </span>            : </a>
 <a name="933"><span class="lineNum">     933 </span>            :     /* Divide out the estimated quotient */</a>
-<a name="934"><span class="lineNum">     934 </span><span class="lineCov">     280968 :     if (quotient != 0) {</span></a>
+<a name="934"><span class="lineNum">     934 </span><span class="lineCov">     280974 :     if (quotient != 0) {</span></a>
 <a name="935"><span class="lineNum">     935 </span>            :         /* dividend = dividend - divisor*quotient */</a>
 <a name="936"><span class="lineNum">     936 </span>            :         const npy_uint32 *divisorCur = divisor-&gt;blocks;</a>
 <a name="937"><span class="lineNum">     937 </span>            :         npy_uint32 *dividendCur = dividend-&gt;blocks;</a>
 <a name="938"><span class="lineNum">     938 </span>            : </a>
 <a name="939"><span class="lineNum">     939 </span>            :         npy_uint64 borrow = 0;</a>
 <a name="940"><span class="lineNum">     940 </span>            :         npy_uint64 carry = 0;</a>
-<a name="941"><span class="lineNum">     941 </span><span class="lineCov">    2673323 :         do {</span></a>
-<a name="942"><span class="lineNum">     942 </span><span class="lineCov">    2673323 :             npy_uint64 difference, product;</span></a>
+<a name="941"><span class="lineNum">     941 </span><span class="lineCov">    2673101 :         do {</span></a>
+<a name="942"><span class="lineNum">     942 </span><span class="lineCov">    2673101 :             npy_uint64 difference, product;</span></a>
 <a name="943"><span class="lineNum">     943 </span>            : </a>
-<a name="944"><span class="lineNum">     944 </span><span class="lineCov">    2673323 :             product = (npy_uint64)*divisorCur * (npy_uint64)quotient + carry;</span></a>
-<a name="945"><span class="lineNum">     945 </span><span class="lineCov">    2673323 :             carry = product &gt;&gt; 32;</span></a>
+<a name="944"><span class="lineNum">     944 </span><span class="lineCov">    2673101 :             product = (npy_uint64)*divisorCur * (npy_uint64)quotient + carry;</span></a>
+<a name="945"><span class="lineNum">     945 </span><span class="lineCov">    2673101 :             carry = product &gt;&gt; 32;</span></a>
 <a name="946"><span class="lineNum">     946 </span>            : </a>
-<a name="947"><span class="lineNum">     947 </span><span class="lineCov">    2673323 :             difference = (npy_uint64)*dividendCur</span></a>
-<a name="948"><span class="lineNum">     948 </span><span class="lineCov">    2673323 :                        - (product &amp; bitmask_u64(32)) - borrow;</span></a>
-<a name="949"><span class="lineNum">     949 </span><span class="lineCov">    2673323 :             borrow = (difference &gt;&gt; 32) &amp; 1;</span></a>
+<a name="947"><span class="lineNum">     947 </span><span class="lineCov">    2673101 :             difference = (npy_uint64)*dividendCur</span></a>
+<a name="948"><span class="lineNum">     948 </span><span class="lineCov">    2673101 :                        - (product &amp; bitmask_u64(32)) - borrow;</span></a>
+<a name="949"><span class="lineNum">     949 </span><span class="lineCov">    2673101 :             borrow = (difference &gt;&gt; 32) &amp; 1;</span></a>
 <a name="950"><span class="lineNum">     950 </span>            : </a>
-<a name="951"><span class="lineNum">     951 </span><span class="lineCov">    2673323 :             *dividendCur = difference &amp; bitmask_u64(32);</span></a>
+<a name="951"><span class="lineNum">     951 </span><span class="lineCov">    2673101 :             *dividendCur = difference &amp; bitmask_u64(32);</span></a>
 <a name="952"><span class="lineNum">     952 </span>            : </a>
-<a name="953"><span class="lineNum">     953 </span><span class="lineCov">    2673323 :             ++divisorCur;</span></a>
-<a name="954"><span class="lineNum">     954 </span><span class="lineCov">    2673323 :             ++dividendCur;</span></a>
-<a name="955"><span class="lineNum">     955 </span><span class="lineCov">    2673323 :         } while(divisorCur &lt;= finalDivisorBlock);</span></a>
+<a name="953"><span class="lineNum">     953 </span><span class="lineCov">    2673101 :             ++divisorCur;</span></a>
+<a name="954"><span class="lineNum">     954 </span><span class="lineCov">    2673101 :             ++dividendCur;</span></a>
+<a name="955"><span class="lineNum">     955 </span><span class="lineCov">    2673101 :         } while(divisorCur &lt;= finalDivisorBlock);</span></a>
 <a name="956"><span class="lineNum">     956 </span>            : </a>
 <a name="957"><span class="lineNum">     957 </span>            :         /* remove all leading zero blocks from dividend */</a>
-<a name="958"><span class="lineNum">     958 </span><span class="lineCov">     199112 :         while (length &gt; 0 &amp;&amp; dividend-&gt;blocks[length - 1] == 0) {</span></a>
+<a name="958"><span class="lineNum">     958 </span><span class="lineCov">     199064 :         while (length &gt; 0 &amp;&amp; dividend-&gt;blocks[length - 1] == 0) {</span></a>
 <a name="959"><span class="lineNum">     959 </span>            :             --length;</a>
 <a name="960"><span class="lineNum">     960 </span>            :         }</a>
 <a name="961"><span class="lineNum">     961 </span>            : </a>
-<a name="962"><span class="lineNum">     962 </span><span class="lineCov">     199108 :         dividend-&gt;length = length;</span></a>
+<a name="962"><span class="lineNum">     962 </span><span class="lineCov">     199060 :         dividend-&gt;length = length;</span></a>
 <a name="963"><span class="lineNum">     963 </span>            :     }</a>
 <a name="964"><span class="lineNum">     964 </span>            : </a>
 <a name="965"><span class="lineNum">     965 </span>            :     /*</a>
@@ -1037,31 +1037,31 @@
 <a name="967"><span class="lineNum">     967 </span>            :      * estimate quotient. To correct, we increment the quotient and subtract one</a>
 <a name="968"><span class="lineNum">     968 </span>            :      * more divisor from the dividend.</a>
 <a name="969"><span class="lineNum">     969 </span>            :      */</a>
-<a name="970"><span class="lineNum">     970 </span><span class="lineCov">     280968 :     if (BigInt_Compare(dividend, divisor) &gt;= 0) {</span></a>
+<a name="970"><span class="lineNum">     970 </span><span class="lineCov">     280974 :     if (BigInt_Compare(dividend, divisor) &gt;= 0) {</span></a>
 <a name="971"><span class="lineNum">     971 </span>            :         /* dividend = dividend - divisor */</a>
-<a name="972"><span class="lineNum">     972 </span><span class="lineCov">      97144 :         const npy_uint32 *divisorCur = divisor-&gt;blocks;</span></a>
-<a name="973"><span class="lineNum">     973 </span><span class="lineCov">      97144 :         npy_uint32 *dividendCur = dividend-&gt;blocks;</span></a>
-<a name="974"><span class="lineNum">     974 </span><span class="lineCov">      97144 :         npy_uint64 borrow = 0;</span></a>
+<a name="972"><span class="lineNum">     972 </span><span class="lineCov">      97126 :         const npy_uint32 *divisorCur = divisor-&gt;blocks;</span></a>
+<a name="973"><span class="lineNum">     973 </span><span class="lineCov">      97126 :         npy_uint32 *dividendCur = dividend-&gt;blocks;</span></a>
+<a name="974"><span class="lineNum">     974 </span><span class="lineCov">      97126 :         npy_uint64 borrow = 0;</span></a>
 <a name="975"><span class="lineNum">     975 </span>            : </a>
-<a name="976"><span class="lineNum">     976 </span><span class="lineCov">      97144 :         ++quotient;</span></a>
+<a name="976"><span class="lineNum">     976 </span><span class="lineCov">      97126 :         ++quotient;</span></a>
 <a name="977"><span class="lineNum">     977 </span>            : </a>
-<a name="978"><span class="lineNum">     978 </span><span class="lineCov">     164745 :         do {</span></a>
-<a name="979"><span class="lineNum">     979 </span><span class="lineCov">     164745 :             npy_uint64 difference = (npy_uint64)*dividendCur</span></a>
-<a name="980"><span class="lineNum">     980 </span><span class="lineCov">     164745 :                                   - (npy_uint64)*divisorCur - borrow;</span></a>
-<a name="981"><span class="lineNum">     981 </span><span class="lineCov">     164745 :             borrow = (difference &gt;&gt; 32) &amp; 1;</span></a>
+<a name="978"><span class="lineNum">     978 </span><span class="lineCov">     164727 :         do {</span></a>
+<a name="979"><span class="lineNum">     979 </span><span class="lineCov">     164727 :             npy_uint64 difference = (npy_uint64)*dividendCur</span></a>
+<a name="980"><span class="lineNum">     980 </span><span class="lineCov">     164727 :                                   - (npy_uint64)*divisorCur - borrow;</span></a>
+<a name="981"><span class="lineNum">     981 </span><span class="lineCov">     164727 :             borrow = (difference &gt;&gt; 32) &amp; 1;</span></a>
 <a name="982"><span class="lineNum">     982 </span>            : </a>
-<a name="983"><span class="lineNum">     983 </span><span class="lineCov">     164745 :             *dividendCur = difference &amp; bitmask_u64(32);</span></a>
+<a name="983"><span class="lineNum">     983 </span><span class="lineCov">     164727 :             *dividendCur = difference &amp; bitmask_u64(32);</span></a>
 <a name="984"><span class="lineNum">     984 </span>            : </a>
-<a name="985"><span class="lineNum">     985 </span><span class="lineCov">     164745 :             ++divisorCur;</span></a>
-<a name="986"><span class="lineNum">     986 </span><span class="lineCov">     164745 :             ++dividendCur;</span></a>
-<a name="987"><span class="lineNum">     987 </span><span class="lineCov">     164745 :         } while(divisorCur &lt;= finalDivisorBlock);</span></a>
+<a name="985"><span class="lineNum">     985 </span><span class="lineCov">     164727 :             ++divisorCur;</span></a>
+<a name="986"><span class="lineNum">     986 </span><span class="lineCov">     164727 :             ++dividendCur;</span></a>
+<a name="987"><span class="lineNum">     987 </span><span class="lineCov">     164727 :         } while(divisorCur &lt;= finalDivisorBlock);</span></a>
 <a name="988"><span class="lineNum">     988 </span>            : </a>
 <a name="989"><span class="lineNum">     989 </span>            :         /* remove all leading zero blocks from dividend */</a>
-<a name="990"><span class="lineNum">     990 </span><span class="lineCov">     259718 :         while (length &gt; 0 &amp;&amp; dividend-&gt;blocks[length - 1] == 0) {</span></a>
+<a name="990"><span class="lineNum">     990 </span><span class="lineCov">     259682 :         while (length &gt; 0 &amp;&amp; dividend-&gt;blocks[length - 1] == 0) {</span></a>
 <a name="991"><span class="lineNum">     991 </span>            :             --length;</a>
 <a name="992"><span class="lineNum">     992 </span>            :         }</a>
 <a name="993"><span class="lineNum">     993 </span>            : </a>
-<a name="994"><span class="lineNum">     994 </span><span class="lineCov">      97144 :         dividend-&gt;length = length;</span></a>
+<a name="994"><span class="lineNum">     994 </span><span class="lineCov">      97126 :         dividend-&gt;length = length;</span></a>
 <a name="995"><span class="lineNum">     995 </span>            :     }</a>
 <a name="996"><span class="lineNum">     996 </span>            : </a>
 <a name="997"><span class="lineNum">     997 </span>            :     return quotient;</a>
@@ -1069,21 +1069,21 @@
 <a name="999"><span class="lineNum">     999 </span>            : </a>
 <a name="1000"><span class="lineNum">    1000 </span>            : /* result = result &lt;&lt; shift */</a>
 <a name="1001"><span class="lineNum">    1001 </span>            : static void</a>
-<a name="1002"><span class="lineNum">    1002 </span><span class="lineCov">     167258 : BigInt_ShiftLeft(BigInt *result, npy_uint32 shift)</span></a>
+<a name="1002"><span class="lineNum">    1002 </span><span class="lineCov">     167240 : BigInt_ShiftLeft(BigInt *result, npy_uint32 shift)</span></a>
 <a name="1003"><span class="lineNum">    1003 </span>            : {</a>
-<a name="1004"><span class="lineNum">    1004 </span><span class="lineCov">     167258 :     npy_uint32 shiftBlocks = shift / 32;</span></a>
-<a name="1005"><span class="lineNum">    1005 </span><span class="lineCov">     167258 :     npy_uint32 shiftBits = shift % 32;</span></a>
+<a name="1004"><span class="lineNum">    1004 </span><span class="lineCov">     167240 :     npy_uint32 shiftBlocks = shift / 32;</span></a>
+<a name="1005"><span class="lineNum">    1005 </span><span class="lineCov">     167240 :     npy_uint32 shiftBits = shift % 32;</span></a>
 <a name="1006"><span class="lineNum">    1006 </span>            : </a>
 <a name="1007"><span class="lineNum">    1007 </span>            :     /* process blocks high to low so that we can safely process in place */</a>
-<a name="1008"><span class="lineNum">    1008 </span><span class="lineCov">     167258 :     const npy_uint32 *pInBlocks = result-&gt;blocks;</span></a>
-<a name="1009"><span class="lineNum">    1009 </span><span class="lineCov">     167258 :     npy_int32 inLength = result-&gt;length;</span></a>
-<a name="1010"><span class="lineNum">    1010 </span><span class="lineCov">     167258 :     npy_uint32 *pInCur, *pOutCur;</span></a>
+<a name="1008"><span class="lineNum">    1008 </span><span class="lineCov">     167240 :     const npy_uint32 *pInBlocks = result-&gt;blocks;</span></a>
+<a name="1009"><span class="lineNum">    1009 </span><span class="lineCov">     167240 :     npy_int32 inLength = result-&gt;length;</span></a>
+<a name="1010"><span class="lineNum">    1010 </span><span class="lineCov">     167240 :     npy_uint32 *pInCur, *pOutCur;</span></a>
 <a name="1011"><span class="lineNum">    1011 </span>            : </a>
-<a name="1012"><span class="lineNum">    1012 </span><span class="lineCov">     167258 :     DEBUG_ASSERT(inLength + shiftBlocks &lt; c_BigInt_MaxBlocks);</span></a>
-<a name="1013"><span class="lineNum">    1013 </span><span class="lineCov">     167258 :     DEBUG_ASSERT(shift != 0);</span></a>
+<a name="1012"><span class="lineNum">    1012 </span><span class="lineCov">     167240 :     DEBUG_ASSERT(inLength + shiftBlocks &lt; c_BigInt_MaxBlocks);</span></a>
+<a name="1013"><span class="lineNum">    1013 </span><span class="lineCov">     167240 :     DEBUG_ASSERT(shift != 0);</span></a>
 <a name="1014"><span class="lineNum">    1014 </span>            : </a>
 <a name="1015"><span class="lineNum">    1015 </span>            :     /* check if the shift is block aligned */</a>
-<a name="1016"><span class="lineNum">    1016 </span><span class="lineCov">     167258 :     if (shiftBits == 0) {</span></a>
+<a name="1016"><span class="lineNum">    1016 </span><span class="lineCov">     167240 :     if (shiftBits == 0) {</span></a>
 <a name="1017"><span class="lineNum">    1017 </span><span class="lineCov">         10 :         npy_uint32 i;</span></a>
 <a name="1018"><span class="lineNum">    1018 </span>            : </a>
 <a name="1019"><span class="lineNum">    1019 </span>            :         /* copy blocks from high to low */</a>
@@ -1103,21 +1103,21 @@
 <a name="1033"><span class="lineNum">    1033 </span>            :     }</a>
 <a name="1034"><span class="lineNum">    1034 </span>            :     /* else we need to shift partial blocks */</a>
 <a name="1035"><span class="lineNum">    1035 </span>            :     else {</a>
-<a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">     167248 :         npy_uint32 i;</span></a>
-<a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">     167248 :         npy_int32 inBlockIdx = inLength - 1;</span></a>
-<a name="1038"><span class="lineNum">    1038 </span><span class="lineCov">     167248 :         npy_uint32 outBlockIdx = inLength + shiftBlocks;</span></a>
+<a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">     167230 :         npy_uint32 i;</span></a>
+<a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">     167230 :         npy_int32 inBlockIdx = inLength - 1;</span></a>
+<a name="1038"><span class="lineNum">    1038 </span><span class="lineCov">     167230 :         npy_uint32 outBlockIdx = inLength + shiftBlocks;</span></a>
 <a name="1039"><span class="lineNum">    1039 </span>            : </a>
 <a name="1040"><span class="lineNum">    1040 </span>            :         /* output the initial blocks */</a>
-<a name="1041"><span class="lineNum">    1041 </span><span class="lineCov">     167248 :         const npy_uint32 lowBitsShift = (32 - shiftBits);</span></a>
-<a name="1042"><span class="lineNum">    1042 </span><span class="lineCov">     167248 :         npy_uint32 highBits = 0;</span></a>
-<a name="1043"><span class="lineNum">    1043 </span><span class="lineCov">     167248 :         npy_uint32 block = result-&gt;blocks[inBlockIdx];</span></a>
-<a name="1044"><span class="lineNum">    1044 </span><span class="lineCov">     167248 :         npy_uint32 lowBits = block &gt;&gt; lowBitsShift;</span></a>
+<a name="1041"><span class="lineNum">    1041 </span><span class="lineCov">     167230 :         const npy_uint32 lowBitsShift = (32 - shiftBits);</span></a>
+<a name="1042"><span class="lineNum">    1042 </span><span class="lineCov">     167230 :         npy_uint32 highBits = 0;</span></a>
+<a name="1043"><span class="lineNum">    1043 </span><span class="lineCov">     167230 :         npy_uint32 block = result-&gt;blocks[inBlockIdx];</span></a>
+<a name="1044"><span class="lineNum">    1044 </span><span class="lineCov">     167230 :         npy_uint32 lowBits = block &gt;&gt; lowBitsShift;</span></a>
 <a name="1045"><span class="lineNum">    1045 </span>            : </a>
 <a name="1046"><span class="lineNum">    1046 </span>            :         /* set the length to hold the shifted blocks */</a>
-<a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">     167248 :         DEBUG_ASSERT(outBlockIdx &lt; c_BigInt_MaxBlocks);</span></a>
-<a name="1048"><span class="lineNum">    1048 </span><span class="lineCov">     167248 :         result-&gt;length = outBlockIdx + 1;</span></a>
+<a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">     167230 :         DEBUG_ASSERT(outBlockIdx &lt; c_BigInt_MaxBlocks);</span></a>
+<a name="1048"><span class="lineNum">    1048 </span><span class="lineCov">     167230 :         result-&gt;length = outBlockIdx + 1;</span></a>
 <a name="1049"><span class="lineNum">    1049 </span>            : </a>
-<a name="1050"><span class="lineNum">    1050 </span><span class="lineCov">     715032 :         while (inBlockIdx &gt; 0) {</span></a>
+<a name="1050"><span class="lineNum">    1050 </span><span class="lineCov">     715014 :         while (inBlockIdx &gt; 0) {</span></a>
 <a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">     547784 :             result-&gt;blocks[outBlockIdx] = highBits | lowBits;</span></a>
 <a name="1052"><span class="lineNum">    1052 </span><span class="lineCov">     547784 :             highBits = block &lt;&lt; shiftBits;</span></a>
 <a name="1053"><span class="lineNum">    1053 </span>            : </a>
@@ -1129,21 +1129,21 @@
 <a name="1059"><span class="lineNum">    1059 </span>            :         }</a>
 <a name="1060"><span class="lineNum">    1060 </span>            : </a>
 <a name="1061"><span class="lineNum">    1061 </span>            :         /* output the final blocks */</a>
-<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">     167248 :         DEBUG_ASSERT(outBlockIdx == shiftBlocks + 1);</span></a>
-<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">     167248 :         result-&gt;blocks[outBlockIdx] = highBits | lowBits;</span></a>
-<a name="1064"><span class="lineNum">    1064 </span><span class="lineCov">     167248 :         result-&gt;blocks[outBlockIdx-1] = block &lt;&lt; shiftBits;</span></a>
+<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">     167230 :         DEBUG_ASSERT(outBlockIdx == shiftBlocks + 1);</span></a>
+<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">     167230 :         result-&gt;blocks[outBlockIdx] = highBits | lowBits;</span></a>
+<a name="1064"><span class="lineNum">    1064 </span><span class="lineCov">     167230 :         result-&gt;blocks[outBlockIdx-1] = block &lt;&lt; shiftBits;</span></a>
 <a name="1065"><span class="lineNum">    1065 </span>            : </a>
 <a name="1066"><span class="lineNum">    1066 </span>            :         /* zero the remaining low blocks */</a>
-<a name="1067"><span class="lineNum">    1067 </span><span class="lineCov">     231128 :         for (i = 0; i &lt; shiftBlocks; ++i) {</span></a>
+<a name="1067"><span class="lineNum">    1067 </span><span class="lineCov">     231110 :         for (i = 0; i &lt; shiftBlocks; ++i) {</span></a>
 <a name="1068"><span class="lineNum">    1068 </span><span class="lineCov">      63880 :             result-&gt;blocks[i] = 0;</span></a>
 <a name="1069"><span class="lineNum">    1069 </span>            :         }</a>
 <a name="1070"><span class="lineNum">    1070 </span>            : </a>
 <a name="1071"><span class="lineNum">    1071 </span>            :         /* check if the terminating block has no set bits */</a>
-<a name="1072"><span class="lineNum">    1072 </span><span class="lineCov">     167248 :         if (result-&gt;blocks[result-&gt;length - 1] == 0) {</span></a>
-<a name="1073"><span class="lineNum">    1073 </span><span class="lineCov">     142043 :             --result-&gt;length;</span></a>
+<a name="1072"><span class="lineNum">    1072 </span><span class="lineCov">     167230 :         if (result-&gt;blocks[result-&gt;length - 1] == 0) {</span></a>
+<a name="1073"><span class="lineNum">    1073 </span><span class="lineCov">     142025 :             --result-&gt;length;</span></a>
 <a name="1074"><span class="lineNum">    1074 </span>            :         }</a>
 <a name="1075"><span class="lineNum">    1075 </span>            :     }</a>
-<a name="1076"><span class="lineNum">    1076 </span><span class="lineCov">     167258 : }</span></a>
+<a name="1076"><span class="lineNum">    1076 </span><span class="lineCov">     167240 : }</span></a>
 <a name="1077"><span class="lineNum">    1077 </span>            : </a>
 <a name="1078"><span class="lineNum">    1078 </span>            : </a>
 <a name="1079"><span class="lineNum">    1079 </span>            : /*</a>
@@ -1210,13 +1210,13 @@
 <a name="1140"><span class="lineNum">    1140 </span>            :  * Returns the number of digits written to the output buffer.</a>
 <a name="1141"><span class="lineNum">    1141 </span>            :  */</a>
 <a name="1142"><span class="lineNum">    1142 </span>            : static npy_uint32</a>
-<a name="1143"><span class="lineNum">    1143 </span><span class="lineCov">     148177 : Dragon4(BigInt *bigints, const npy_int32 exponent,</span></a>
+<a name="1143"><span class="lineNum">    1143 </span><span class="lineCov">     148165 : Dragon4(BigInt *bigints, const npy_int32 exponent,</span></a>
 <a name="1144"><span class="lineNum">    1144 </span>            :         const npy_uint32 mantissaBit, const npy_bool hasUnequalMargins,</a>
 <a name="1145"><span class="lineNum">    1145 </span>            :         const DigitMode digitMode, const CutoffMode cutoffMode,</a>
 <a name="1146"><span class="lineNum">    1146 </span>            :         npy_int32 cutoff_max, npy_int32 cutoff_min, char *pOutBuffer,</a>
 <a name="1147"><span class="lineNum">    1147 </span>            :         npy_uint32 bufferSize, npy_int32 *pOutExponent)</a>
 <a name="1148"><span class="lineNum">    1148 </span>            : {</a>
-<a name="1149"><span class="lineNum">    1149 </span><span class="lineCov">     148177 :     char *curDigit = pOutBuffer;</span></a>
+<a name="1149"><span class="lineNum">    1149 </span><span class="lineCov">     148165 :     char *curDigit = pOutBuffer;</span></a>
 <a name="1150"><span class="lineNum">    1150 </span>            : </a>
 <a name="1151"><span class="lineNum">    1151 </span>            :     /*</a>
 <a name="1152"><span class="lineNum">    1152 </span>            :      * We compute values in integer format by rescaling as</a>
@@ -1229,41 +1229,41 @@
 <a name="1159"><span class="lineNum">    1159 </span>            :      * scaledMarginHigh will point to scaledMarginLow in the case they must be</a>
 <a name="1160"><span class="lineNum">    1160 </span>            :      * equal to each other, otherwise it will point to optionalMarginHigh.</a>
 <a name="1161"><span class="lineNum">    1161 </span>            :      */</a>
-<a name="1162"><span class="lineNum">    1162 </span><span class="lineCov">     148177 :     BigInt *mantissa = &amp;bigints[0];  /* the only initialized bigint */</span></a>
-<a name="1163"><span class="lineNum">    1163 </span><span class="lineCov">     148177 :     BigInt *scale = &amp;bigints[1];</span></a>
-<a name="1164"><span class="lineNum">    1164 </span><span class="lineCov">     148177 :     BigInt *scaledValue = &amp;bigints[2];</span></a>
-<a name="1165"><span class="lineNum">    1165 </span><span class="lineCov">     148177 :     BigInt *scaledMarginLow = &amp;bigints[3];</span></a>
-<a name="1166"><span class="lineNum">    1166 </span><span class="lineCov">     148177 :     BigInt *scaledMarginHigh;</span></a>
-<a name="1167"><span class="lineNum">    1167 </span><span class="lineCov">     148177 :     BigInt *optionalMarginHigh = &amp;bigints[4];</span></a>
+<a name="1162"><span class="lineNum">    1162 </span><span class="lineCov">     148165 :     BigInt *mantissa = &amp;bigints[0];  /* the only initialized bigint */</span></a>
+<a name="1163"><span class="lineNum">    1163 </span><span class="lineCov">     148165 :     BigInt *scale = &amp;bigints[1];</span></a>
+<a name="1164"><span class="lineNum">    1164 </span><span class="lineCov">     148165 :     BigInt *scaledValue = &amp;bigints[2];</span></a>
+<a name="1165"><span class="lineNum">    1165 </span><span class="lineCov">     148165 :     BigInt *scaledMarginLow = &amp;bigints[3];</span></a>
+<a name="1166"><span class="lineNum">    1166 </span><span class="lineCov">     148165 :     BigInt *scaledMarginHigh;</span></a>
+<a name="1167"><span class="lineNum">    1167 </span><span class="lineCov">     148165 :     BigInt *optionalMarginHigh = &amp;bigints[4];</span></a>
 <a name="1168"><span class="lineNum">    1168 </span>            : </a>
-<a name="1169"><span class="lineNum">    1169 </span><span class="lineCov">     148177 :     BigInt *temp1 = &amp;bigints[5];</span></a>
-<a name="1170"><span class="lineNum">    1170 </span><span class="lineCov">     148177 :     BigInt *temp2 = &amp;bigints[6];</span></a>
+<a name="1169"><span class="lineNum">    1169 </span><span class="lineCov">     148165 :     BigInt *temp1 = &amp;bigints[5];</span></a>
+<a name="1170"><span class="lineNum">    1170 </span><span class="lineCov">     148165 :     BigInt *temp2 = &amp;bigints[6];</span></a>
 <a name="1171"><span class="lineNum">    1171 </span>            : </a>
-<a name="1172"><span class="lineNum">    1172 </span><span class="lineCov">     148177 :     const npy_float64 log10_2 = 0.30102999566398119521373889472449;</span></a>
-<a name="1173"><span class="lineNum">    1173 </span><span class="lineCov">     148177 :     npy_int32 digitExponent, hiBlock;</span></a>
-<a name="1174"><span class="lineNum">    1174 </span><span class="lineCov">     148177 :     npy_int32 cutoff_max_Exponent, cutoff_min_Exponent;</span></a>
-<a name="1175"><span class="lineNum">    1175 </span><span class="lineCov">     148177 :     npy_uint32 outputDigit;    /* current digit being output */</span></a>
-<a name="1176"><span class="lineNum">    1176 </span><span class="lineCov">     148177 :     npy_uint32 outputLen;</span></a>
-<a name="1177"><span class="lineNum">    1177 </span><span class="lineCov">     148177 :     npy_bool isEven = BigInt_IsEven(mantissa);</span></a>
-<a name="1178"><span class="lineNum">    1178 </span><span class="lineCov">     148177 :     npy_int32 cmp;</span></a>
+<a name="1172"><span class="lineNum">    1172 </span><span class="lineCov">     148165 :     const npy_float64 log10_2 = 0.30102999566398119521373889472449;</span></a>
+<a name="1173"><span class="lineNum">    1173 </span><span class="lineCov">     148165 :     npy_int32 digitExponent, hiBlock;</span></a>
+<a name="1174"><span class="lineNum">    1174 </span><span class="lineCov">     148165 :     npy_int32 cutoff_max_Exponent, cutoff_min_Exponent;</span></a>
+<a name="1175"><span class="lineNum">    1175 </span><span class="lineCov">     148165 :     npy_uint32 outputDigit;    /* current digit being output */</span></a>
+<a name="1176"><span class="lineNum">    1176 </span><span class="lineCov">     148165 :     npy_uint32 outputLen;</span></a>
+<a name="1177"><span class="lineNum">    1177 </span><span class="lineCov">     148165 :     npy_bool isEven = BigInt_IsEven(mantissa);</span></a>
+<a name="1178"><span class="lineNum">    1178 </span><span class="lineCov">     148165 :     npy_int32 cmp;</span></a>
 <a name="1179"><span class="lineNum">    1179 </span>            : </a>
 <a name="1180"><span class="lineNum">    1180 </span>            :     /* values used to determine how to round */</a>
-<a name="1181"><span class="lineNum">    1181 </span><span class="lineCov">     148177 :     npy_bool low, high, roundDown;</span></a>
+<a name="1181"><span class="lineNum">    1181 </span><span class="lineCov">     148165 :     npy_bool low, high, roundDown;</span></a>
 <a name="1182"><span class="lineNum">    1182 </span>            : </a>
-<a name="1183"><span class="lineNum">    1183 </span><span class="lineCov">     148177 :     DEBUG_ASSERT(bufferSize &gt; 0);</span></a>
+<a name="1183"><span class="lineNum">    1183 </span><span class="lineCov">     148165 :     DEBUG_ASSERT(bufferSize &gt; 0);</span></a>
 <a name="1184"><span class="lineNum">    1184 </span>            : </a>
 <a name="1185"><span class="lineNum">    1185 </span>            :     /* if the mantissa is zero, the value is zero regardless of the exponent */</a>
-<a name="1186"><span class="lineNum">    1186 </span><span class="lineCov">     148177 :     if (BigInt_IsZero(mantissa)) {</span></a>
-<a name="1187"><span class="lineNum">    1187 </span><span class="lineCov">      37694 :         *curDigit = '0';</span></a>
-<a name="1188"><span class="lineNum">    1188 </span><span class="lineCov">      37694 :         *pOutExponent = 0;</span></a>
-<a name="1189"><span class="lineNum">    1189 </span><span class="lineCov">      37694 :         return 1;</span></a>
+<a name="1186"><span class="lineNum">    1186 </span><span class="lineCov">     148165 :     if (BigInt_IsZero(mantissa)) {</span></a>
+<a name="1187"><span class="lineNum">    1187 </span><span class="lineCov">      37700 :         *curDigit = '0';</span></a>
+<a name="1188"><span class="lineNum">    1188 </span><span class="lineCov">      37700 :         *pOutExponent = 0;</span></a>
+<a name="1189"><span class="lineNum">    1189 </span><span class="lineCov">      37700 :         return 1;</span></a>
 <a name="1190"><span class="lineNum">    1190 </span>            :     }</a>
 <a name="1191"><span class="lineNum">    1191 </span>            : </a>
-<a name="1192"><span class="lineNum">    1192 </span><span class="lineCov">     110483 :     BigInt_Copy(scaledValue, mantissa);</span></a>
+<a name="1192"><span class="lineNum">    1192 </span><span class="lineCov">     110465 :     BigInt_Copy(scaledValue, mantissa);</span></a>
 <a name="1193"><span class="lineNum">    1193 </span>            : </a>
-<a name="1194"><span class="lineNum">    1194 </span><span class="lineCov">     110483 :     if (hasUnequalMargins) {</span></a>
+<a name="1194"><span class="lineNum">    1194 </span><span class="lineCov">     110465 :     if (hasUnequalMargins) {</span></a>
 <a name="1195"><span class="lineNum">    1195 </span>            :         /* if we have no fractional component */</a>
-<a name="1196"><span class="lineNum">    1196 </span><span class="lineCov">      58670 :         if (exponent &gt; 0) {</span></a>
+<a name="1196"><span class="lineNum">    1196 </span><span class="lineCov">      58646 :         if (exponent &gt; 0) {</span></a>
 <a name="1197"><span class="lineNum">    1197 </span>            :             /*</a>
 <a name="1198"><span class="lineNum">    1198 </span>            :              * 1) Expand the input value by multiplying out the mantissa and</a>
 <a name="1199"><span class="lineNum">    1199 </span>            :              *    exponent. This represents the input value in its whole number</a>
@@ -1290,13 +1290,13 @@
 <a name="1220"><span class="lineNum">    1220 </span>            :              */</a>
 <a name="1221"><span class="lineNum">    1221 </span>            : </a>
 <a name="1222"><span class="lineNum">    1222 </span>            :             /* scaledValue      = 2 * 2 * mantissa */</a>
-<a name="1223"><span class="lineNum">    1223 </span><span class="lineCov">      58638 :             BigInt_ShiftLeft(scaledValue, 2);</span></a>
+<a name="1223"><span class="lineNum">    1223 </span><span class="lineCov">      58614 :             BigInt_ShiftLeft(scaledValue, 2);</span></a>
 <a name="1224"><span class="lineNum">    1224 </span>            :             /* scale            = 2 * 2 * 2^(-exponent) */</a>
-<a name="1225"><span class="lineNum">    1225 </span><span class="lineCov">      58638 :             BigInt_Pow2(scale, -exponent + 2);</span></a>
+<a name="1225"><span class="lineNum">    1225 </span><span class="lineCov">      58614 :             BigInt_Pow2(scale, -exponent + 2);</span></a>
 <a name="1226"><span class="lineNum">    1226 </span>            :             /* scaledMarginLow  = 2 * 2^(-1) */</a>
-<a name="1227"><span class="lineNum">    1227 </span><span class="lineCov">      58638 :             BigInt_Set_uint32(scaledMarginLow, 1);</span></a>
+<a name="1227"><span class="lineNum">    1227 </span><span class="lineCov">      58614 :             BigInt_Set_uint32(scaledMarginLow, 1);</span></a>
 <a name="1228"><span class="lineNum">    1228 </span>            :             /* scaledMarginHigh = 2 * 2 * 2^(-1) */</a>
-<a name="1229"><span class="lineNum">    1229 </span><span class="lineCov">      58638 :             BigInt_Set_uint32(optionalMarginHigh, 2);</span></a>
+<a name="1229"><span class="lineNum">    1229 </span><span class="lineCov">      58614 :             BigInt_Set_uint32(optionalMarginHigh, 2);</span></a>
 <a name="1230"><span class="lineNum">    1230 </span>            :         }</a>
 <a name="1231"><span class="lineNum">    1231 </span>            : </a>
 <a name="1232"><span class="lineNum">    1232 </span>            :         /* the high and low margins are different */</a>
@@ -1304,7 +1304,7 @@
 <a name="1234"><span class="lineNum">    1234 </span>            :     }</a>
 <a name="1235"><span class="lineNum">    1235 </span>            :     else {</a>
 <a name="1236"><span class="lineNum">    1236 </span>            :         /* if we have no fractional component */</a>
-<a name="1237"><span class="lineNum">    1237 </span><span class="lineCov">      51813 :         if (exponent &gt; 0) {</span></a>
+<a name="1237"><span class="lineNum">    1237 </span><span class="lineCov">      51819 :         if (exponent &gt; 0) {</span></a>
 <a name="1238"><span class="lineNum">    1238 </span>            :             /* scaledValue     = 2 * mantissa*2^exponent */</a>
 <a name="1239"><span class="lineNum">    1239 </span><span class="lineCov">       3624 :             BigInt_ShiftLeft(scaledValue, exponent + 1);</span></a>
 <a name="1240"><span class="lineNum">    1240 </span>            :             /* scale           = 2 * 1 */</a>
@@ -1320,11 +1320,11 @@
 <a name="1250"><span class="lineNum">    1250 </span>            :              */</a>
 <a name="1251"><span class="lineNum">    1251 </span>            : </a>
 <a name="1252"><span class="lineNum">    1252 </span>            :             /* scaledValue     = 2 * mantissa */</a>
-<a name="1253"><span class="lineNum">    1253 </span><span class="lineCov">      48189 :             BigInt_ShiftLeft(scaledValue, 1);</span></a>
+<a name="1253"><span class="lineNum">    1253 </span><span class="lineCov">      48195 :             BigInt_ShiftLeft(scaledValue, 1);</span></a>
 <a name="1254"><span class="lineNum">    1254 </span>            :             /* scale           = 2 * 2^(-exponent) */</a>
-<a name="1255"><span class="lineNum">    1255 </span><span class="lineCov">      48189 :             BigInt_Pow2(scale, -exponent + 1);</span></a>
+<a name="1255"><span class="lineNum">    1255 </span><span class="lineCov">      48195 :             BigInt_Pow2(scale, -exponent + 1);</span></a>
 <a name="1256"><span class="lineNum">    1256 </span>            :             /* scaledMarginLow = 2 * 2^(-1) */</a>
-<a name="1257"><span class="lineNum">    1257 </span><span class="lineCov">      48189 :             BigInt_Set_uint32(scaledMarginLow, 1);</span></a>
+<a name="1257"><span class="lineNum">    1257 </span><span class="lineCov">      48195 :             BigInt_Set_uint32(scaledMarginLow, 1);</span></a>
 <a name="1258"><span class="lineNum">    1258 </span>            :         }</a>
 <a name="1259"><span class="lineNum">    1259 </span>            : </a>
 <a name="1260"><span class="lineNum">    1260 </span>            :         /* the high and low margins are equal */</a>
@@ -1355,8 +1355,8 @@
 <a name="1285"><span class="lineNum">    1285 </span>            :      *  Warning: This calculation assumes npy_float64 is an IEEE-binary64</a>
 <a name="1286"><span class="lineNum">    1286 </span>            :      *  float. This line may need to be updated if this is not the case.</a>
 <a name="1287"><span class="lineNum">    1287 </span>            :      */</a>
-<a name="1288"><span class="lineNum">    1288 </span><span class="lineCov">     110483 :     digitExponent = (npy_int32)(</span></a>
-<a name="1289"><span class="lineNum">    1289 </span><span class="lineCov">     110483 :        ceil((npy_float64)((npy_int32)mantissaBit + exponent) * log10_2 - 0.69));</span></a>
+<a name="1288"><span class="lineNum">    1288 </span><span class="lineCov">     110465 :     digitExponent = (npy_int32)(</span></a>
+<a name="1289"><span class="lineNum">    1289 </span><span class="lineCov">     110465 :        ceil((npy_float64)((npy_int32)mantissaBit + exponent) * log10_2 - 0.69));</span></a>
 <a name="1290"><span class="lineNum">    1290 </span>            : </a>
 <a name="1291"><span class="lineNum">    1291 </span>            :     /*</a>
 <a name="1292"><span class="lineNum">    1292 </span>            :      * if the digit exponent is smaller than the smallest desired digit for</a>
@@ -1366,18 +1366,18 @@
 <a name="1296"><span class="lineNum">    1296 </span>            :      * increases the number. This will either correct digitExponent to an</a>
 <a name="1297"><span class="lineNum">    1297 </span>            :      * accurate value or it will clamp it above the accurate value.</a>
 <a name="1298"><span class="lineNum">    1298 </span>            :      */</a>
-<a name="1299"><span class="lineNum">    1299 </span><span class="lineCov">     110483 :     if (cutoff_max &gt;= 0 &amp;&amp; cutoffMode == CutoffMode_FractionLength &amp;&amp;</span></a>
+<a name="1299"><span class="lineNum">    1299 </span><span class="lineCov">     110465 :     if (cutoff_max &gt;= 0 &amp;&amp; cutoffMode == CutoffMode_FractionLength &amp;&amp;</span></a>
 <a name="1300"><span class="lineNum">    1300 </span><span class="lineCov">      19325 :             digitExponent &lt;= -cutoff_max) {</span></a>
 <a name="1301"><span class="lineNum">    1301 </span><span class="lineCov">         29 :         digitExponent = -cutoff_max + 1;</span></a>
 <a name="1302"><span class="lineNum">    1302 </span>            :     }</a>
 <a name="1303"><span class="lineNum">    1303 </span>            : </a>
 <a name="1304"><span class="lineNum">    1304 </span>            : </a>
 <a name="1305"><span class="lineNum">    1305 </span>            :     /* Divide value by 10^digitExponent. */</a>
-<a name="1306"><span class="lineNum">    1306 </span><span class="lineCov">     110483 :     if (digitExponent &gt; 0) {</span></a>
+<a name="1306"><span class="lineNum">    1306 </span><span class="lineCov">     110465 :     if (digitExponent &gt; 0) {</span></a>
 <a name="1307"><span class="lineNum">    1307 </span>            :         /* A positive exponent creates a division so we multiply the scale. */</a>
-<a name="1308"><span class="lineNum">    1308 </span><span class="lineCov">      37310 :         BigInt_MultiplyPow10(scale, digitExponent, temp1);</span></a>
+<a name="1308"><span class="lineNum">    1308 </span><span class="lineCov">      37154 :         BigInt_MultiplyPow10(scale, digitExponent, temp1);</span></a>
 <a name="1309"><span class="lineNum">    1309 </span>            :     }</a>
-<a name="1310"><span class="lineNum">    1310 </span><span class="lineCov">      73173 :     else if (digitExponent &lt; 0) {</span></a>
+<a name="1310"><span class="lineNum">    1310 </span><span class="lineCov">      73311 :     else if (digitExponent &lt; 0) {</span></a>
 <a name="1311"><span class="lineNum">    1311 </span>            :         /*</a>
 <a name="1312"><span class="lineNum">    1312 </span>            :          * A negative exponent creates a multiplication so we multiply up the</a>
 <a name="1313"><span class="lineNum">    1313 </span>            :          * scaledValue, scaledMarginLow and scaledMarginHigh.</a>
@@ -1397,13 +1397,13 @@
 <a name="1327"><span class="lineNum">    1327 </span>            :     }</a>
 <a name="1328"><span class="lineNum">    1328 </span>            : </a>
 <a name="1329"><span class="lineNum">    1329 </span>            :     /* If (value &gt;= 1), our estimate for digitExponent was too low */</a>
-<a name="1330"><span class="lineNum">    1330 </span><span class="lineCov">     110483 :     if (BigInt_Compare(scaledValue, scale) &gt;= 0) {</span></a>
+<a name="1330"><span class="lineNum">    1330 </span><span class="lineCov">     110465 :     if (BigInt_Compare(scaledValue, scale) &gt;= 0) {</span></a>
 <a name="1331"><span class="lineNum">    1331 </span>            :         /*</a>
 <a name="1332"><span class="lineNum">    1332 </span>            :          * The exponent estimate was incorrect.</a>
 <a name="1333"><span class="lineNum">    1333 </span>            :          * Increment the exponent and don't perform the premultiply needed</a>
 <a name="1334"><span class="lineNum">    1334 </span>            :          * for the first loop iteration.</a>
 <a name="1335"><span class="lineNum">    1335 </span>            :          */</a>
-<a name="1336"><span class="lineNum">    1336 </span><span class="lineCov">      97557 :         digitExponent = digitExponent + 1;</span></a>
+<a name="1336"><span class="lineNum">    1336 </span><span class="lineCov">      97917 :         digitExponent = digitExponent + 1;</span></a>
 <a name="1337"><span class="lineNum">    1337 </span>            :     }</a>
 <a name="1338"><span class="lineNum">    1338 </span>            :     else {</a>
 <a name="1339"><span class="lineNum">    1339 </span>            :         /*</a>
@@ -1411,10 +1411,10 @@
 <a name="1341"><span class="lineNum">    1341 </span>            :          * Multiply larger by the output base to prepare for the first loop</a>
 <a name="1342"><span class="lineNum">    1342 </span>            :          * iteration.</a>
 <a name="1343"><span class="lineNum">    1343 </span>            :          */</a>
-<a name="1344"><span class="lineNum">    1344 </span><span class="lineCov">      12926 :         BigInt_Multiply10(scaledValue);</span></a>
-<a name="1345"><span class="lineNum">    1345 </span><span class="lineCov">      12926 :         BigInt_Multiply10(scaledMarginLow);</span></a>
-<a name="1346"><span class="lineNum">    1346 </span><span class="lineCov">      12926 :         if (scaledMarginHigh != scaledMarginLow) {</span></a>
-<a name="1347"><span class="lineNum">    1347 </span><span class="lineCov">       1448 :             BigInt_Multiply2(scaledMarginHigh, scaledMarginLow);</span></a>
+<a name="1344"><span class="lineNum">    1344 </span><span class="lineCov">      12548 :         BigInt_Multiply10(scaledValue);</span></a>
+<a name="1345"><span class="lineNum">    1345 </span><span class="lineCov">      12548 :         BigInt_Multiply10(scaledMarginLow);</span></a>
+<a name="1346"><span class="lineNum">    1346 </span><span class="lineCov">      12548 :         if (scaledMarginHigh != scaledMarginLow) {</span></a>
+<a name="1347"><span class="lineNum">    1347 </span><span class="lineCov">       1424 :             BigInt_Multiply2(scaledMarginHigh, scaledMarginLow);</span></a>
 <a name="1348"><span class="lineNum">    1348 </span>            :         }</a>
 <a name="1349"><span class="lineNum">    1349 </span>            :     }</a>
 <a name="1350"><span class="lineNum">    1350 </span>            : </a>
@@ -1422,8 +1422,8 @@
 <a name="1352"><span class="lineNum">    1352 </span>            :      * Compute the cutoff_max exponent (the exponent of the final digit to</a>
 <a name="1353"><span class="lineNum">    1353 </span>            :      * print).  Default to the maximum size of the output buffer.</a>
 <a name="1354"><span class="lineNum">    1354 </span>            :      */</a>
-<a name="1355"><span class="lineNum">    1355 </span><span class="lineCov">     110483 :     cutoff_max_Exponent = digitExponent - bufferSize;</span></a>
-<a name="1356"><span class="lineNum">    1356 </span><span class="lineCov">     110483 :     if (cutoff_max &gt;= 0) {</span></a>
+<a name="1355"><span class="lineNum">    1355 </span><span class="lineCov">     110465 :     cutoff_max_Exponent = digitExponent - bufferSize;</span></a>
+<a name="1356"><span class="lineNum">    1356 </span><span class="lineCov">     110465 :     if (cutoff_max &gt;= 0) {</span></a>
 <a name="1357"><span class="lineNum">    1357 </span><span class="lineCov">      23546 :         npy_int32 desiredCutoffExponent;</span></a>
 <a name="1358"><span class="lineNum">    1358 </span>            : </a>
 <a name="1359"><span class="lineNum">    1359 </span><span class="lineCov">      23546 :         if (cutoffMode == CutoffMode_TotalLength) {</span></a>
@@ -1443,8 +1443,8 @@
 <a name="1373"><span class="lineNum">    1373 </span>            :         }</a>
 <a name="1374"><span class="lineNum">    1374 </span>            :     }</a>
 <a name="1375"><span class="lineNum">    1375 </span>            :     /* Also compute the cutoff_min exponent. */</a>
-<a name="1376"><span class="lineNum">    1376 </span><span class="lineCov">     110483 :     cutoff_min_Exponent = digitExponent;</span></a>
-<a name="1377"><span class="lineNum">    1377 </span><span class="lineCov">     110483 :     if (cutoff_min &gt;= 0) {</span></a>
+<a name="1376"><span class="lineNum">    1376 </span><span class="lineCov">     110465 :     cutoff_min_Exponent = digitExponent;</span></a>
+<a name="1377"><span class="lineNum">    1377 </span><span class="lineCov">     110465 :     if (cutoff_min &gt;= 0) {</span></a>
 <a name="1378"><span class="lineNum">    1378 </span><span class="lineCov">      11786 :         npy_int32 desiredCutoffExponent;</span></a>
 <a name="1379"><span class="lineNum">    1379 </span>            : </a>
 <a name="1380"><span class="lineNum">    1380 </span><span class="lineCov">      11786 :         if (cutoffMode == CutoffMode_TotalLength) {</span></a>
@@ -1462,7 +1462,7 @@
 <a name="1392"><span class="lineNum">    1392 </span>            :     }</a>
 <a name="1393"><span class="lineNum">    1393 </span>            : </a>
 <a name="1394"><span class="lineNum">    1394 </span>            :     /* Output the exponent of the first digit we will print */</a>
-<a name="1395"><span class="lineNum">    1395 </span><span class="lineCov">     110483 :     *pOutExponent = digitExponent-1;</span></a>
+<a name="1395"><span class="lineNum">    1395 </span><span class="lineCov">     110465 :     *pOutExponent = digitExponent-1;</span></a>
 <a name="1396"><span class="lineNum">    1396 </span>            : </a>
 <a name="1397"><span class="lineNum">    1397 </span>            :     /*</a>
 <a name="1398"><span class="lineNum">    1398 </span>            :      * In preparation for calling BigInt_DivideWithRemainder_MaxQuotient9(), we</a>
@@ -1473,9 +1473,9 @@
 <a name="1403"><span class="lineNum">    1403 </span>            :      * to be less than or equal to 429496729 which is the highest number that</a>
 <a name="1404"><span class="lineNum">    1404 </span>            :      * can be multiplied by 10 without overflowing to a new block.</a>
 <a name="1405"><span class="lineNum">    1405 </span>            :      */</a>
-<a name="1406"><span class="lineNum">    1406 </span><span class="lineCov">     110483 :     DEBUG_ASSERT(scale-&gt;length &gt; 0);</span></a>
-<a name="1407"><span class="lineNum">    1407 </span><span class="lineCov">     110483 :     hiBlock = scale-&gt;blocks[scale-&gt;length - 1];</span></a>
-<a name="1408"><span class="lineNum">    1408 </span><span class="lineCov">     110483 :     if (hiBlock &lt; 8 || hiBlock &gt; 429496729) {</span></a>
+<a name="1406"><span class="lineNum">    1406 </span><span class="lineCov">     110465 :     DEBUG_ASSERT(scale-&gt;length &gt; 0);</span></a>
+<a name="1407"><span class="lineNum">    1407 </span><span class="lineCov">     110465 :     hiBlock = scale-&gt;blocks[scale-&gt;length - 1];</span></a>
+<a name="1408"><span class="lineNum">    1408 </span><span class="lineCov">     110465 :     if (hiBlock &lt; 8 || hiBlock &gt; 429496729) {</span></a>
 <a name="1409"><span class="lineNum">    1409 </span><span class="lineCov">      18925 :         npy_uint32 hiBlockLog2, shift;</span></a>
 <a name="1410"><span class="lineNum">    1410 </span>            : </a>
 <a name="1411"><span class="lineNum">    1411 </span>            :         /*</a>
@@ -1500,49 +1500,49 @@
 <a name="1430"><span class="lineNum">    1430 </span>            :         }</a>
 <a name="1431"><span class="lineNum">    1431 </span>            :     }</a>
 <a name="1432"><span class="lineNum">    1432 </span>            : </a>
-<a name="1433"><span class="lineNum">    1433 </span><span class="lineCov">     110483 :     if (digitMode == DigitMode_Unique) {</span></a>
+<a name="1433"><span class="lineNum">    1433 </span><span class="lineCov">     110465 :     if (digitMode == DigitMode_Unique) {</span></a>
 <a name="1434"><span class="lineNum">    1434 </span>            :         /*</a>
 <a name="1435"><span class="lineNum">    1435 </span>            :          * For the unique cutoff mode, we will try to print until we have</a>
 <a name="1436"><span class="lineNum">    1436 </span>            :          * reached a level of precision that uniquely distinguishes this value</a>
 <a name="1437"><span class="lineNum">    1437 </span>            :          * from its neighbors. If we run out of space in the output buffer, we</a>
 <a name="1438"><span class="lineNum">    1438 </span>            :          * terminate early.</a>
 <a name="1439"><span class="lineNum">    1439 </span>            :          */</a>
-<a name="1440"><span class="lineNum">    1440 </span><span class="lineCov">     280585 :         for (;;) {</span></a>
-<a name="1441"><span class="lineNum">    1441 </span><span class="lineCov">     280585 :             BigInt *scaledValueHigh = temp1;</span></a>
+<a name="1440"><span class="lineNum">    1440 </span><span class="lineCov">     280591 :         for (;;) {</span></a>
+<a name="1441"><span class="lineNum">    1441 </span><span class="lineCov">     280591 :             BigInt *scaledValueHigh = temp1;</span></a>
 <a name="1442"><span class="lineNum">    1442 </span>            : </a>
-<a name="1443"><span class="lineNum">    1443 </span><span class="lineCov">     280585 :             digitExponent = digitExponent-1;</span></a>
+<a name="1443"><span class="lineNum">    1443 </span><span class="lineCov">     280591 :             digitExponent = digitExponent-1;</span></a>
 <a name="1444"><span class="lineNum">    1444 </span>            : </a>
 <a name="1445"><span class="lineNum">    1445 </span>            :             /* divide out the scale to extract the digit */</a>
-<a name="1446"><span class="lineNum">    1446 </span><span class="lineCov">     280585 :             outputDigit =</span></a>
-<a name="1447"><span class="lineNum">    1447 </span><span class="lineCov">     280585 :                 BigInt_DivideWithRemainder_MaxQuotient9(scaledValue, scale);</span></a>
-<a name="1448"><span class="lineNum">    1448 </span><span class="lineCov">     280585 :             DEBUG_ASSERT(outputDigit &lt; 10);</span></a>
+<a name="1446"><span class="lineNum">    1446 </span><span class="lineCov">     280591 :             outputDigit =</span></a>
+<a name="1447"><span class="lineNum">    1447 </span><span class="lineCov">     280591 :                 BigInt_DivideWithRemainder_MaxQuotient9(scaledValue, scale);</span></a>
+<a name="1448"><span class="lineNum">    1448 </span><span class="lineCov">     280591 :             DEBUG_ASSERT(outputDigit &lt; 10);</span></a>
 <a name="1449"><span class="lineNum">    1449 </span>            : </a>
 <a name="1450"><span class="lineNum">    1450 </span>            :             /* update the high end of the value */</a>
-<a name="1451"><span class="lineNum">    1451 </span><span class="lineCov">     280585 :             BigInt_Add(scaledValueHigh, scaledValue, scaledMarginHigh);</span></a>
+<a name="1451"><span class="lineNum">    1451 </span><span class="lineCov">     280591 :             BigInt_Add(scaledValueHigh, scaledValue, scaledMarginHigh);</span></a>
 <a name="1452"><span class="lineNum">    1452 </span>            : </a>
 <a name="1453"><span class="lineNum">    1453 </span>            :             /*</a>
 <a name="1454"><span class="lineNum">    1454 </span>            :              * stop looping if we are far enough away from our neighboring</a>
 <a name="1455"><span class="lineNum">    1455 </span>            :              * values (and we have printed at least the requested minimum</a>
 <a name="1456"><span class="lineNum">    1456 </span>            :              * digits) or if we have reached the cutoff digit</a>
 <a name="1457"><span class="lineNum">    1457 </span>            :              */</a>
-<a name="1458"><span class="lineNum">    1458 </span><span class="lineCov">     280585 :             cmp = BigInt_Compare(scaledValue, scaledMarginLow);</span></a>
-<a name="1459"><span class="lineNum">    1459 </span><span class="lineCov">     280585 :             low = isEven ? (cmp &lt;= 0) : (cmp &lt; 0);</span></a>
-<a name="1460"><span class="lineNum">    1460 </span><span class="lineCov">     280585 :             cmp = BigInt_Compare(scaledValueHigh, scale);</span></a>
-<a name="1461"><span class="lineNum">    1461 </span><span class="lineCov">     280585 :             high = isEven ? (cmp &gt;= 0) : (cmp &gt; 0);</span></a>
-<a name="1462"><span class="lineNum">    1462 </span><span class="lineCov">     280585 :             if (((low | high) &amp; (digitExponent &lt;= cutoff_min_Exponent)) |</span></a>
-<a name="1463"><span class="lineNum">    1463 </span><span class="lineCov">     280585 :                     (digitExponent == cutoff_max_Exponent)) {</span></a>
+<a name="1458"><span class="lineNum">    1458 </span><span class="lineCov">     280591 :             cmp = BigInt_Compare(scaledValue, scaledMarginLow);</span></a>
+<a name="1459"><span class="lineNum">    1459 </span><span class="lineCov">     280591 :             low = isEven ? (cmp &lt;= 0) : (cmp &lt; 0);</span></a>
+<a name="1460"><span class="lineNum">    1460 </span><span class="lineCov">     280591 :             cmp = BigInt_Compare(scaledValueHigh, scale);</span></a>
+<a name="1461"><span class="lineNum">    1461 </span><span class="lineCov">     280591 :             high = isEven ? (cmp &gt;= 0) : (cmp &gt; 0);</span></a>
+<a name="1462"><span class="lineNum">    1462 </span><span class="lineCov">     280591 :             if (((low | high) &amp; (digitExponent &lt;= cutoff_min_Exponent)) |</span></a>
+<a name="1463"><span class="lineNum">    1463 </span><span class="lineCov">     280591 :                     (digitExponent == cutoff_max_Exponent)) {</span></a>
 <a name="1464"><span class="lineNum">    1464 </span>            :                 break;</a>
 <a name="1465"><span class="lineNum">    1465 </span>            :             }</a>
 <a name="1466"><span class="lineNum">    1466 </span>            : </a>
 <a name="1467"><span class="lineNum">    1467 </span>            :             /* store the output digit */</a>
-<a name="1468"><span class="lineNum">    1468 </span><span class="lineCov">     170250 :             *curDigit = (char)('0' + outputDigit);</span></a>
-<a name="1469"><span class="lineNum">    1469 </span><span class="lineCov">     170250 :             ++curDigit;</span></a>
+<a name="1468"><span class="lineNum">    1468 </span><span class="lineCov">     170274 :             *curDigit = (char)('0' + outputDigit);</span></a>
+<a name="1469"><span class="lineNum">    1469 </span><span class="lineCov">     170274 :             ++curDigit;</span></a>
 <a name="1470"><span class="lineNum">    1470 </span>            : </a>
 <a name="1471"><span class="lineNum">    1471 </span>            :             /* multiply larger by the output base */</a>
-<a name="1472"><span class="lineNum">    1472 </span><span class="lineCov">     170250 :             BigInt_Multiply10(scaledValue);</span></a>
-<a name="1473"><span class="lineNum">    1473 </span><span class="lineCov">     170250 :             BigInt_Multiply10(scaledMarginLow);</span></a>
-<a name="1474"><span class="lineNum">    1474 </span><span class="lineCov">     170250 :             if (scaledMarginHigh != scaledMarginLow) {</span></a>
-<a name="1475"><span class="lineNum">    1475 </span><span class="lineCov">       8319 :                 BigInt_Multiply2(scaledMarginHigh, scaledMarginLow);</span></a>
+<a name="1472"><span class="lineNum">    1472 </span><span class="lineCov">     170274 :             BigInt_Multiply10(scaledValue);</span></a>
+<a name="1473"><span class="lineNum">    1473 </span><span class="lineCov">     170274 :             BigInt_Multiply10(scaledMarginLow);</span></a>
+<a name="1474"><span class="lineNum">    1474 </span><span class="lineCov">     170274 :             if (scaledMarginHigh != scaledMarginLow) {</span></a>
+<a name="1475"><span class="lineNum">    1475 </span><span class="lineCov">       8235 :                 BigInt_Multiply2(scaledMarginHigh, scaledMarginLow);</span></a>
 <a name="1476"><span class="lineNum">    1476 </span>            :             }</a>
 <a name="1477"><span class="lineNum">    1477 </span>            :         }</a>
 <a name="1478"><span class="lineNum">    1478 </span>            :     }</a>
@@ -1578,10 +1578,10 @@
 <a name="1508"><span class="lineNum">    1508 </span>            :     }</a>
 <a name="1509"><span class="lineNum">    1509 </span>            : </a>
 <a name="1510"><span class="lineNum">    1510 </span>            :     /* default to rounding down the final digit if value got too close to 0 */</a>
-<a name="1511"><span class="lineNum">    1511 </span><span class="lineCov">     110483 :     roundDown = low;</span></a>
+<a name="1511"><span class="lineNum">    1511 </span><span class="lineCov">     110465 :     roundDown = low;</span></a>
 <a name="1512"><span class="lineNum">    1512 </span>            : </a>
 <a name="1513"><span class="lineNum">    1513 </span>            :     /* if it is legal to round up and down */</a>
-<a name="1514"><span class="lineNum">    1514 </span><span class="lineCov">     110483 :     if (low == high) {</span></a>
+<a name="1514"><span class="lineNum">    1514 </span><span class="lineCov">     110465 :     if (low == high) {</span></a>
 <a name="1515"><span class="lineNum">    1515 </span><span class="lineCov">       8234 :         npy_int32 compare;</span></a>
 <a name="1516"><span class="lineNum">    1516 </span>            : </a>
 <a name="1517"><span class="lineNum">    1517 </span>            :         /*</a>
@@ -1605,9 +1605,9 @@
 <a name="1535"><span class="lineNum">    1535 </span>            :     }</a>
 <a name="1536"><span class="lineNum">    1536 </span>            : </a>
 <a name="1537"><span class="lineNum">    1537 </span>            :     /* print the rounded digit */</a>
-<a name="1538"><span class="lineNum">    1538 </span><span class="lineCov">     110483 :     if (roundDown) {</span></a>
-<a name="1539"><span class="lineNum">    1539 </span><span class="lineCov">     103472 :         *curDigit = (char)('0' + outputDigit);</span></a>
-<a name="1540"><span class="lineNum">    1540 </span><span class="lineCov">     103472 :         ++curDigit;</span></a>
+<a name="1538"><span class="lineNum">    1538 </span><span class="lineCov">     110465 :     if (roundDown) {</span></a>
+<a name="1539"><span class="lineNum">    1539 </span><span class="lineCov">     103454 :         *curDigit = (char)('0' + outputDigit);</span></a>
+<a name="1540"><span class="lineNum">    1540 </span><span class="lineCov">     103454 :         ++curDigit;</span></a>
 <a name="1541"><span class="lineNum">    1541 </span>            :     }</a>
 <a name="1542"><span class="lineNum">    1542 </span>            :     else {</a>
 <a name="1543"><span class="lineNum">    1543 </span>            :         /* handle rounding up */</a>
@@ -1640,9 +1640,9 @@
 <a name="1570"><span class="lineNum">    1570 </span>            :     }</a>
 <a name="1571"><span class="lineNum">    1571 </span>            : </a>
 <a name="1572"><span class="lineNum">    1572 </span>            :     /* return the number of digits output */</a>
-<a name="1573"><span class="lineNum">    1573 </span><span class="lineCov">     110483 :     outputLen = (npy_uint32)(curDigit - pOutBuffer);</span></a>
-<a name="1574"><span class="lineNum">    1574 </span><span class="lineCov">     110483 :     DEBUG_ASSERT(outputLen &lt;= bufferSize);</span></a>
-<a name="1575"><span class="lineNum">    1575 </span><span class="lineCov">     110483 :     return outputLen;</span></a>
+<a name="1573"><span class="lineNum">    1573 </span><span class="lineCov">     110465 :     outputLen = (npy_uint32)(curDigit - pOutBuffer);</span></a>
+<a name="1574"><span class="lineNum">    1574 </span><span class="lineCov">     110465 :     DEBUG_ASSERT(outputLen &lt;= bufferSize);</span></a>
+<a name="1575"><span class="lineNum">    1575 </span><span class="lineCov">     110465 :     return outputLen;</span></a>
 <a name="1576"><span class="lineNum">    1576 </span>            : }</a>
 <a name="1577"><span class="lineNum">    1577 </span>            : </a>
 <a name="1578"><span class="lineNum">    1578 </span>            : </a>
@@ -1707,62 +1707,62 @@
 <a name="1637"><span class="lineNum">    1637 </span>            :  * See Dragon4_Options for description of remaining arguments.</a>
 <a name="1638"><span class="lineNum">    1638 </span>            :  */</a>
 <a name="1639"><span class="lineNum">    1639 </span>            : static npy_uint32</a>
-<a name="1640"><span class="lineNum">    1640 </span><span class="lineCov">     142551 : FormatPositional(char *buffer, npy_uint32 bufferSize, BigInt *mantissa,</span></a>
+<a name="1640"><span class="lineNum">    1640 </span><span class="lineCov">     142539 : FormatPositional(char *buffer, npy_uint32 bufferSize, BigInt *mantissa,</span></a>
 <a name="1641"><span class="lineNum">    1641 </span>            :                  npy_int32 exponent, char signbit, npy_uint32 mantissaBit,</a>
 <a name="1642"><span class="lineNum">    1642 </span>            :                  npy_bool hasUnequalMargins, DigitMode digit_mode,</a>
 <a name="1643"><span class="lineNum">    1643 </span>            :                  CutoffMode cutoff_mode, npy_int32 precision,</a>
 <a name="1644"><span class="lineNum">    1644 </span>            :                  npy_int32 min_digits, TrimMode trim_mode,</a>
 <a name="1645"><span class="lineNum">    1645 </span>            :                  npy_int32 digits_left, npy_int32 digits_right)</a>
 <a name="1646"><span class="lineNum">    1646 </span>            : {</a>
-<a name="1647"><span class="lineNum">    1647 </span><span class="lineCov">     142551 :     npy_int32 printExponent;</span></a>
-<a name="1648"><span class="lineNum">    1648 </span><span class="lineCov">     142551 :     npy_int32 numDigits, numWholeDigits=0, has_sign=0;</span></a>
-<a name="1649"><span class="lineNum">    1649 </span><span class="lineCov">     142551 :     npy_int32 add_digits;</span></a>
+<a name="1647"><span class="lineNum">    1647 </span><span class="lineCov">     142539 :     npy_int32 printExponent;</span></a>
+<a name="1648"><span class="lineNum">    1648 </span><span class="lineCov">     142539 :     npy_int32 numDigits, numWholeDigits=0, has_sign=0;</span></a>
+<a name="1649"><span class="lineNum">    1649 </span><span class="lineCov">     142539 :     npy_int32 add_digits;</span></a>
 <a name="1650"><span class="lineNum">    1650 </span>            : </a>
-<a name="1651"><span class="lineNum">    1651 </span><span class="lineCov">     142551 :     npy_int32 maxPrintLen = (npy_int32)bufferSize - 1, pos = 0;</span></a>
+<a name="1651"><span class="lineNum">    1651 </span><span class="lineCov">     142539 :     npy_int32 maxPrintLen = (npy_int32)bufferSize - 1, pos = 0;</span></a>
 <a name="1652"><span class="lineNum">    1652 </span>            : </a>
 <a name="1653"><span class="lineNum">    1653 </span>            :     /* track the # of digits past the decimal point that have been printed */</a>
-<a name="1654"><span class="lineNum">    1654 </span><span class="lineCov">     142551 :     npy_int32 numFractionDigits = 0, desiredFractionalDigits;</span></a>
+<a name="1654"><span class="lineNum">    1654 </span><span class="lineCov">     142539 :     npy_int32 numFractionDigits = 0, desiredFractionalDigits;</span></a>
 <a name="1655"><span class="lineNum">    1655 </span>            : </a>
-<a name="1656"><span class="lineNum">    1656 </span><span class="lineCov">     142551 :     DEBUG_ASSERT(bufferSize &gt; 0);</span></a>
+<a name="1656"><span class="lineNum">    1656 </span><span class="lineCov">     142539 :     DEBUG_ASSERT(bufferSize &gt; 0);</span></a>
 <a name="1657"><span class="lineNum">    1657 </span>            : </a>
-<a name="1658"><span class="lineNum">    1658 </span><span class="lineCov">     142551 :     if (digit_mode != DigitMode_Unique) {</span></a>
-<a name="1659"><span class="lineNum">    1659 </span><span class="lineCov">     142551 :         DEBUG_ASSERT(precision &gt;= 0);</span></a>
+<a name="1658"><span class="lineNum">    1658 </span><span class="lineCov">     142539 :     if (digit_mode != DigitMode_Unique) {</span></a>
+<a name="1659"><span class="lineNum">    1659 </span><span class="lineCov">     142539 :         DEBUG_ASSERT(precision &gt;= 0);</span></a>
 <a name="1660"><span class="lineNum">    1660 </span>            :     }</a>
 <a name="1661"><span class="lineNum">    1661 </span>            : </a>
-<a name="1662"><span class="lineNum">    1662 </span><span class="lineCov">     142551 :     if (signbit == '+' &amp;&amp; pos &lt; maxPrintLen) {</span></a>
-<a name="1663"><span class="lineNum">    1663 </span><span class="lineCov">      31811 :         buffer[pos++] = '+';</span></a>
-<a name="1664"><span class="lineNum">    1664 </span><span class="lineCov">      31811 :         has_sign = 1;</span></a>
+<a name="1662"><span class="lineNum">    1662 </span><span class="lineCov">     142539 :     if (signbit == '+' &amp;&amp; pos &lt; maxPrintLen) {</span></a>
+<a name="1663"><span class="lineNum">    1663 </span><span class="lineCov">      31799 :         buffer[pos++] = '+';</span></a>
+<a name="1664"><span class="lineNum">    1664 </span><span class="lineCov">      31799 :         has_sign = 1;</span></a>
 <a name="1665"><span class="lineNum">    1665 </span>            :     }</a>
 <a name="1666"><span class="lineNum">    1666 </span><span class="lineCov">     110740 :     else if (signbit == '-' &amp;&amp; pos &lt; maxPrintLen) {</span></a>
-<a name="1667"><span class="lineNum">    1667 </span><span class="lineCov">      14248 :         buffer[pos++] = '-';</span></a>
-<a name="1668"><span class="lineNum">    1668 </span><span class="lineCov">      14248 :         has_sign = 1;</span></a>
+<a name="1667"><span class="lineNum">    1667 </span><span class="lineCov">      14224 :         buffer[pos++] = '-';</span></a>
+<a name="1668"><span class="lineNum">    1668 </span><span class="lineCov">      14224 :         has_sign = 1;</span></a>
 <a name="1669"><span class="lineNum">    1669 </span>            :     }</a>
 <a name="1670"><span class="lineNum">    1670 </span>            : </a>
-<a name="1671"><span class="lineNum">    1671 </span><span class="lineCov">     285102 :     numDigits = Dragon4(mantissa, exponent, mantissaBit, hasUnequalMargins,</span></a>
+<a name="1671"><span class="lineNum">    1671 </span><span class="lineCov">     285078 :     numDigits = Dragon4(mantissa, exponent, mantissaBit, hasUnequalMargins,</span></a>
 <a name="1672"><span class="lineNum">    1672 </span>            :                         digit_mode, cutoff_mode, precision, min_digits,</a>
-<a name="1673"><span class="lineNum">    1673 </span><span class="lineCov">     142551 :                         buffer + has_sign, maxPrintLen - has_sign,</span></a>
+<a name="1673"><span class="lineNum">    1673 </span><span class="lineCov">     142539 :                         buffer + has_sign, maxPrintLen - has_sign,</span></a>
 <a name="1674"><span class="lineNum">    1674 </span>            :                         &amp;printExponent);</a>
 <a name="1675"><span class="lineNum">    1675 </span>            : </a>
-<a name="1676"><span class="lineNum">    1676 </span><span class="lineCov">     142551 :     DEBUG_ASSERT(numDigits &gt; 0);</span></a>
-<a name="1677"><span class="lineNum">    1677 </span><span class="lineCov">     142551 :     DEBUG_ASSERT(numDigits &lt;= bufferSize);</span></a>
+<a name="1676"><span class="lineNum">    1676 </span><span class="lineCov">     142539 :     DEBUG_ASSERT(numDigits &gt; 0);</span></a>
+<a name="1677"><span class="lineNum">    1677 </span><span class="lineCov">     142539 :     DEBUG_ASSERT(numDigits &lt;= bufferSize);</span></a>
 <a name="1678"><span class="lineNum">    1678 </span>            : </a>
 <a name="1679"><span class="lineNum">    1679 </span>            :     /* if output has a whole number */</a>
-<a name="1680"><span class="lineNum">    1680 </span><span class="lineCov">     142551 :     if (printExponent &gt;= 0) {</span></a>
+<a name="1680"><span class="lineNum">    1680 </span><span class="lineCov">     142539 :     if (printExponent &gt;= 0) {</span></a>
 <a name="1681"><span class="lineNum">    1681 </span>            :         /* leave the whole number at the start of the buffer */</a>
-<a name="1682"><span class="lineNum">    1682 </span><span class="lineCov">     139915 :         numWholeDigits = printExponent+1;</span></a>
-<a name="1683"><span class="lineNum">    1683 </span><span class="lineCov">     139915 :         if (numDigits &lt;= numWholeDigits) {</span></a>
-<a name="1684"><span class="lineNum">    1684 </span><span class="lineCov">     133077 :             npy_int32 count = numWholeDigits - numDigits;</span></a>
-<a name="1685"><span class="lineNum">    1685 </span><span class="lineCov">     133077 :             pos += numDigits;</span></a>
+<a name="1682"><span class="lineNum">    1682 </span><span class="lineCov">     139903 :         numWholeDigits = printExponent+1;</span></a>
+<a name="1683"><span class="lineNum">    1683 </span><span class="lineCov">     139903 :         if (numDigits &lt;= numWholeDigits) {</span></a>
+<a name="1684"><span class="lineNum">    1684 </span><span class="lineCov">     133065 :             npy_int32 count = numWholeDigits - numDigits;</span></a>
+<a name="1685"><span class="lineNum">    1685 </span><span class="lineCov">     133065 :             pos += numDigits;</span></a>
 <a name="1686"><span class="lineNum">    1686 </span>            : </a>
 <a name="1687"><span class="lineNum">    1687 </span>            :             /* don't overflow the buffer */</a>
-<a name="1688"><span class="lineNum">    1688 </span><span class="lineCov">     133077 :             if (pos + count &gt; maxPrintLen) {</span></a>
+<a name="1688"><span class="lineNum">    1688 </span><span class="lineCov">     133065 :             if (pos + count &gt; maxPrintLen) {</span></a>
 <a name="1689"><span class="lineNum">    1689 </span><span class="lineNoCov">          0 :                 count = maxPrintLen - pos;</span></a>
 <a name="1690"><span class="lineNum">    1690 </span>            :             }</a>
 <a name="1691"><span class="lineNum">    1691 </span>            : </a>
 <a name="1692"><span class="lineNum">    1692 </span>            :             /* add trailing zeros up to the decimal point */</a>
-<a name="1693"><span class="lineNum">    1693 </span><span class="lineCov">     133077 :             numDigits += count;</span></a>
+<a name="1693"><span class="lineNum">    1693 </span><span class="lineCov">     133065 :             numDigits += count;</span></a>
 <a name="1694"><span class="lineNum">    1694 </span><span class="lineCov">     171140 :             for ( ; count &gt; 0; count--) {</span></a>
-<a name="1695"><span class="lineNum">    1695 </span><span class="lineCov">      38063 :                 buffer[pos++] = '0';</span></a>
+<a name="1695"><span class="lineNum">    1695 </span><span class="lineCov">      38075 :                 buffer[pos++] = '0';</span></a>
 <a name="1696"><span class="lineNum">    1696 </span>            :             }</a>
 <a name="1697"><span class="lineNum">    1697 </span>            :         }</a>
 <a name="1698"><span class="lineNum">    1698 </span>            :         /* insert the decimal point prior to the fraction */</a>
@@ -1835,26 +1835,26 @@
 <a name="1765"><span class="lineNum">    1765 </span>            :     }</a>
 <a name="1766"><span class="lineNum">    1766 </span>            : </a>
 <a name="1767"><span class="lineNum">    1767 </span>            :     /* always add decimal point, except for DprZeros mode */</a>
-<a name="1768"><span class="lineNum">    1768 </span><span class="lineCov">     142551 :     if (trim_mode != TrimMode_DptZeros &amp;&amp; numFractionDigits == 0 &amp;&amp;</span></a>
+<a name="1768"><span class="lineNum">    1768 </span><span class="lineCov">     142539 :     if (trim_mode != TrimMode_DptZeros &amp;&amp; numFractionDigits == 0 &amp;&amp;</span></a>
 <a name="1769"><span class="lineNum">    1769 </span>            :             pos &lt; maxPrintLen) {</a>
 <a name="1770"><span class="lineNum">    1770 </span><span class="lineCov">      86951 :         buffer[pos++] = '.';</span></a>
 <a name="1771"><span class="lineNum">    1771 </span>            :     }</a>
 <a name="1772"><span class="lineNum">    1772 </span>            : </a>
-<a name="1773"><span class="lineNum">    1773 </span><span class="lineCov">     142551 :     add_digits = digit_mode == DigitMode_Unique ? min_digits : precision;</span></a>
-<a name="1774"><span class="lineNum">    1774 </span><span class="lineCov">     142551 :     desiredFractionalDigits = add_digits &lt; 0 ? 0 : add_digits;</span></a>
-<a name="1775"><span class="lineNum">    1775 </span><span class="lineCov">     142551 :     if (cutoff_mode == CutoffMode_TotalLength) {</span></a>
-<a name="1776"><span class="lineNum">    1776 </span><span class="lineCov">     111278 :         desiredFractionalDigits = add_digits - numWholeDigits;</span></a>
+<a name="1773"><span class="lineNum">    1773 </span><span class="lineCov">     142539 :     add_digits = digit_mode == DigitMode_Unique ? min_digits : precision;</span></a>
+<a name="1774"><span class="lineNum">    1774 </span><span class="lineCov">     142539 :     desiredFractionalDigits = add_digits &lt; 0 ? 0 : add_digits;</span></a>
+<a name="1775"><span class="lineNum">    1775 </span><span class="lineCov">     142539 :     if (cutoff_mode == CutoffMode_TotalLength) {</span></a>
+<a name="1776"><span class="lineNum">    1776 </span><span class="lineCov">     111266 :         desiredFractionalDigits = add_digits - numWholeDigits;</span></a>
 <a name="1777"><span class="lineNum">    1777 </span>            :     }</a>
 <a name="1778"><span class="lineNum">    1778 </span>            : </a>
-<a name="1779"><span class="lineNum">    1779 </span><span class="lineCov">     142551 :     if (trim_mode == TrimMode_LeaveOneZero) {</span></a>
+<a name="1779"><span class="lineNum">    1779 </span><span class="lineCov">     142539 :     if (trim_mode == TrimMode_LeaveOneZero) {</span></a>
 <a name="1780"><span class="lineNum">    1780 </span>            :         /* if we didn't print any fractional digits, add a trailing 0 */</a>
 <a name="1781"><span class="lineNum">    1781 </span><span class="lineCov">      65102 :         if (numFractionDigits == 0 &amp;&amp; pos &lt; maxPrintLen) {</span></a>
 <a name="1782"><span class="lineNum">    1782 </span><span class="lineCov">      60966 :             buffer[pos++] = '0';</span></a>
 <a name="1783"><span class="lineNum">    1783 </span><span class="lineCov">      60966 :             numFractionDigits++;</span></a>
 <a name="1784"><span class="lineNum">    1784 </span>            :         }</a>
 <a name="1785"><span class="lineNum">    1785 </span>            :     }</a>
-<a name="1786"><span class="lineNum">    1786 </span><span class="lineCov">      77449 :     else if (trim_mode == TrimMode_None &amp;&amp;</span></a>
-<a name="1787"><span class="lineNum">    1787 </span><span class="lineCov">      77449 :              desiredFractionalDigits &gt; numFractionDigits &amp;&amp;</span></a>
+<a name="1786"><span class="lineNum">    1786 </span><span class="lineCov">      77437 :     else if (trim_mode == TrimMode_None &amp;&amp;</span></a>
+<a name="1787"><span class="lineNum">    1787 </span><span class="lineCov">      77437 :              desiredFractionalDigits &gt; numFractionDigits &amp;&amp;</span></a>
 <a name="1788"><span class="lineNum">    1788 </span>            :              pos &lt; maxPrintLen) {</a>
 <a name="1789"><span class="lineNum">    1789 </span>            :         /* add trailing zeros up to add_digits length */</a>
 <a name="1790"><span class="lineNum">    1790 </span>            :         /* compute the number of trailing zeros needed */</a>
@@ -1874,7 +1874,7 @@
 <a name="1804"><span class="lineNum">    1804 </span>            :      * when rounding, we may still end up with trailing zeros. Remove them</a>
 <a name="1805"><span class="lineNum">    1805 </span>            :      * depending on trim settings.</a>
 <a name="1806"><span class="lineNum">    1806 </span>            :      */</a>
-<a name="1807"><span class="lineNum">    1807 </span><span class="lineCov">     142551 :     if (trim_mode != TrimMode_None &amp;&amp; numFractionDigits &gt; 0) {</span></a>
+<a name="1807"><span class="lineNum">    1807 </span><span class="lineCov">     142539 :     if (trim_mode != TrimMode_None &amp;&amp; numFractionDigits &gt; 0) {</span></a>
 <a name="1808"><span class="lineNum">    1808 </span><span class="lineCov">     131651 :         while (buffer[pos-1] == '0') {</span></a>
 <a name="1809"><span class="lineNum">    1809 </span><span class="lineCov">      61318 :             pos--;</span></a>
 <a name="1810"><span class="lineNum">    1810 </span><span class="lineCov">      61318 :             numFractionDigits--;</span></a>
@@ -1886,7 +1886,7 @@
 <a name="1816"><span class="lineNum">    1816 </span>            :     }</a>
 <a name="1817"><span class="lineNum">    1817 </span>            : </a>
 <a name="1818"><span class="lineNum">    1818 </span>            :     /* add any whitespace padding to right side */</a>
-<a name="1819"><span class="lineNum">    1819 </span><span class="lineCov">     142551 :     if (digits_right &gt;= numFractionDigits) {</span></a>
+<a name="1819"><span class="lineNum">    1819 </span><span class="lineCov">     142539 :     if (digits_right &gt;= numFractionDigits) {</span></a>
 <a name="1820"><span class="lineNum">    1820 </span><span class="lineCov">      15608 :         npy_int32 count = digits_right - numFractionDigits;</span></a>
 <a name="1821"><span class="lineNum">    1821 </span>            : </a>
 <a name="1822"><span class="lineNum">    1822 </span>            :         /* in trim_mode DptZeros, if right padding, add a space for the . */</a>
@@ -1904,7 +1904,7 @@
 <a name="1834"><span class="lineNum">    1834 </span>            :         }</a>
 <a name="1835"><span class="lineNum">    1835 </span>            :     }</a>
 <a name="1836"><span class="lineNum">    1836 </span>            :     /* add any whitespace padding to left side */</a>
-<a name="1837"><span class="lineNum">    1837 </span><span class="lineCov">     142551 :     if (digits_left &gt; numWholeDigits + has_sign) {</span></a>
+<a name="1837"><span class="lineNum">    1837 </span><span class="lineCov">     142539 :     if (digits_left &gt; numWholeDigits + has_sign) {</span></a>
 <a name="1838"><span class="lineNum">    1838 </span><span class="lineCov">       3698 :         npy_int32 shift = digits_left - (numWholeDigits + has_sign);</span></a>
 <a name="1839"><span class="lineNum">    1839 </span><span class="lineCov">       3698 :         npy_int32 count = pos;</span></a>
 <a name="1840"><span class="lineNum">    1840 </span>            : </a>
@@ -1922,10 +1922,10 @@
 <a name="1852"><span class="lineNum">    1852 </span>            :     }</a>
 <a name="1853"><span class="lineNum">    1853 </span>            : </a>
 <a name="1854"><span class="lineNum">    1854 </span>            :     /* terminate the buffer */</a>
-<a name="1855"><span class="lineNum">    1855 </span><span class="lineCov">     142551 :     DEBUG_ASSERT(pos &lt;= maxPrintLen);</span></a>
-<a name="1856"><span class="lineNum">    1856 </span><span class="lineCov">     142551 :     buffer[pos] = '\0';</span></a>
+<a name="1855"><span class="lineNum">    1855 </span><span class="lineCov">     142539 :     DEBUG_ASSERT(pos &lt;= maxPrintLen);</span></a>
+<a name="1856"><span class="lineNum">    1856 </span><span class="lineCov">     142539 :     buffer[pos] = '\0';</span></a>
 <a name="1857"><span class="lineNum">    1857 </span>            : </a>
-<a name="1858"><span class="lineNum">    1858 </span><span class="lineCov">     142551 :     return pos;</span></a>
+<a name="1858"><span class="lineNum">    1858 </span><span class="lineCov">     142539 :     return pos;</span></a>
 <a name="1859"><span class="lineNum">    1859 </span>            : }</a>
 <a name="1860"><span class="lineNum">    1860 </span>            : </a>
 <a name="1861"><span class="lineNum">    1861 </span>            : /*</a>
@@ -2243,12 +2243,12 @@
 <a name="2173"><span class="lineNum">    2173 </span>            :  * calls Dragon4.</a>
 <a name="2174"><span class="lineNum">    2174 </span>            :  */</a>
 <a name="2175"><span class="lineNum">    2175 </span>            : static npy_uint32</a>
-<a name="2176"><span class="lineNum">    2176 </span><span class="lineCov">     148177 : Format_floatbits(char *buffer, npy_uint32 bufferSize, BigInt *mantissa,</span></a>
+<a name="2176"><span class="lineNum">    2176 </span><span class="lineCov">     148165 : Format_floatbits(char *buffer, npy_uint32 bufferSize, BigInt *mantissa,</span></a>
 <a name="2177"><span class="lineNum">    2177 </span>            :                  npy_int32 exponent, char signbit, npy_uint32 mantissaBit,</a>
 <a name="2178"><span class="lineNum">    2178 </span>            :                  npy_bool hasUnequalMargins, Dragon4_Options *opt)</a>
 <a name="2179"><span class="lineNum">    2179 </span>            : {</a>
 <a name="2180"><span class="lineNum">    2180 </span>            :     /* format the value */</a>
-<a name="2181"><span class="lineNum">    2181 </span><span class="lineCov">     148177 :     if (opt-&gt;scientific) {</span></a>
+<a name="2181"><span class="lineNum">    2181 </span><span class="lineCov">     148165 :     if (opt-&gt;scientific) {</span></a>
 <a name="2182"><span class="lineNum">    2182 </span><span class="lineCov">       5626 :         return FormatScientific(buffer, bufferSize, mantissa, exponent,</span></a>
 <a name="2183"><span class="lineNum">    2183 </span>            :                                 signbit, mantissaBit, hasUnequalMargins,</a>
 <a name="2184"><span class="lineNum">    2184 </span>            :                                 opt-&gt;digit_mode, opt-&gt;precision,</a>
@@ -2256,7 +2256,7 @@
 <a name="2186"><span class="lineNum">    2186 </span>            :                                 opt-&gt;digits_left, opt-&gt;exp_digits);</a>
 <a name="2187"><span class="lineNum">    2187 </span>            :     }</a>
 <a name="2188"><span class="lineNum">    2188 </span>            :     else {</a>
-<a name="2189"><span class="lineNum">    2189 </span><span class="lineCov">     142551 :         return FormatPositional(buffer, bufferSize, mantissa, exponent,</span></a>
+<a name="2189"><span class="lineNum">    2189 </span><span class="lineCov">     142539 :         return FormatPositional(buffer, bufferSize, mantissa, exponent,</span></a>
 <a name="2190"><span class="lineNum">    2190 </span>            :                                 signbit, mantissaBit, hasUnequalMargins,</a>
 <a name="2191"><span class="lineNum">    2191 </span>            :                                 opt-&gt;digit_mode, opt-&gt;cutoff_mode,</a>
 <a name="2192"><span class="lineNum">    2192 </span>            :                                 opt-&gt;precision, opt-&gt;min_digits, opt-&gt;trim_mode,</a>
@@ -2306,7 +2306,7 @@
 <a name="2236"><span class="lineNum">    2236 </span><span class="lineCov">      16176 :     if (floatSign != 0) {</span></a>
 <a name="2237"><span class="lineNum">    2237 </span>            :         signbit = '-';</a>
 <a name="2238"><span class="lineNum">    2238 </span>            :     }</a>
-<a name="2239"><span class="lineNum">    2239 </span><span class="lineCov">      11492 :     else if (opt-&gt;sign) {</span></a>
+<a name="2239"><span class="lineNum">    2239 </span><span class="lineCov">      11234 :     else if (opt-&gt;sign) {</span></a>
 <a name="2240"><span class="lineNum">    2240 </span><span class="lineNoCov">          0 :         signbit = '+';</span></a>
 <a name="2241"><span class="lineNum">    2241 </span>            :     }</a>
 <a name="2242"><span class="lineNum">    2242 </span>            : </a>
@@ -2368,58 +2368,58 @@
 <a name="2298"><span class="lineNum">    2298 </span>            :  * mantissa: 23 bits</a>
 <a name="2299"><span class="lineNum">    2299 </span>            :  */</a>
 <a name="2300"><span class="lineNum">    2300 </span>            : static npy_uint32</a>
-<a name="2301"><span class="lineNum">    2301 </span><span class="lineCov">      54083 : Dragon4_PrintFloat_IEEE_binary32(</span></a>
+<a name="2301"><span class="lineNum">    2301 </span><span class="lineCov">      54071 : Dragon4_PrintFloat_IEEE_binary32(</span></a>
 <a name="2302"><span class="lineNum">    2302 </span>            :         Dragon4_Scratch *scratch, npy_float32 *value,</a>
 <a name="2303"><span class="lineNum">    2303 </span>            :         Dragon4_Options *opt)</a>
 <a name="2304"><span class="lineNum">    2304 </span>            : {</a>
-<a name="2305"><span class="lineNum">    2305 </span><span class="lineCov">      54083 :     char *buffer = scratch-&gt;repr;</span></a>
-<a name="2306"><span class="lineNum">    2306 </span><span class="lineCov">      54083 :     npy_uint32 bufferSize = sizeof(scratch-&gt;repr);</span></a>
-<a name="2307"><span class="lineNum">    2307 </span><span class="lineCov">      54083 :     BigInt *bigints = scratch-&gt;bigints;</span></a>
+<a name="2305"><span class="lineNum">    2305 </span><span class="lineCov">      54071 :     char *buffer = scratch-&gt;repr;</span></a>
+<a name="2306"><span class="lineNum">    2306 </span><span class="lineCov">      54071 :     npy_uint32 bufferSize = sizeof(scratch-&gt;repr);</span></a>
+<a name="2307"><span class="lineNum">    2307 </span><span class="lineCov">      54071 :     BigInt *bigints = scratch-&gt;bigints;</span></a>
 <a name="2308"><span class="lineNum">    2308 </span>            : </a>
-<a name="2309"><span class="lineNum">    2309 </span><span class="lineCov">      54083 :     union</span></a>
+<a name="2309"><span class="lineNum">    2309 </span><span class="lineCov">      54071 :     union</span></a>
 <a name="2310"><span class="lineNum">    2310 </span>            :     {</a>
 <a name="2311"><span class="lineNum">    2311 </span>            :         npy_float32 floatingPoint;</a>
 <a name="2312"><span class="lineNum">    2312 </span>            :         npy_uint32 integer;</a>
 <a name="2313"><span class="lineNum">    2313 </span>            :     } floatUnion;</a>
-<a name="2314"><span class="lineNum">    2314 </span><span class="lineCov">      54083 :     npy_uint32 floatExponent, floatMantissa, floatSign;</span></a>
+<a name="2314"><span class="lineNum">    2314 </span><span class="lineCov">      54071 :     npy_uint32 floatExponent, floatMantissa, floatSign;</span></a>
 <a name="2315"><span class="lineNum">    2315 </span>            : </a>
-<a name="2316"><span class="lineNum">    2316 </span><span class="lineCov">      54083 :     npy_uint32 mantissa;</span></a>
-<a name="2317"><span class="lineNum">    2317 </span><span class="lineCov">      54083 :     npy_int32 exponent;</span></a>
-<a name="2318"><span class="lineNum">    2318 </span><span class="lineCov">      54083 :     npy_uint32 mantissaBit;</span></a>
-<a name="2319"><span class="lineNum">    2319 </span><span class="lineCov">      54083 :     npy_bool hasUnequalMargins;</span></a>
-<a name="2320"><span class="lineNum">    2320 </span><span class="lineCov">      54083 :     char signbit = '\0';</span></a>
+<a name="2316"><span class="lineNum">    2316 </span><span class="lineCov">      54071 :     npy_uint32 mantissa;</span></a>
+<a name="2317"><span class="lineNum">    2317 </span><span class="lineCov">      54071 :     npy_int32 exponent;</span></a>
+<a name="2318"><span class="lineNum">    2318 </span><span class="lineCov">      54071 :     npy_uint32 mantissaBit;</span></a>
+<a name="2319"><span class="lineNum">    2319 </span><span class="lineCov">      54071 :     npy_bool hasUnequalMargins;</span></a>
+<a name="2320"><span class="lineNum">    2320 </span><span class="lineCov">      54071 :     char signbit = '\0';</span></a>
 <a name="2321"><span class="lineNum">    2321 </span>            : </a>
-<a name="2322"><span class="lineNum">    2322 </span><span class="lineCov">      54083 :     if (bufferSize == 0) {</span></a>
-<a name="2323"><span class="lineNum">    2323 </span><span class="lineCov">      54083 :         return 0;</span></a>
+<a name="2322"><span class="lineNum">    2322 </span><span class="lineCov">      54071 :     if (bufferSize == 0) {</span></a>
+<a name="2323"><span class="lineNum">    2323 </span><span class="lineCov">      54071 :         return 0;</span></a>
 <a name="2324"><span class="lineNum">    2324 </span>            :     }</a>
 <a name="2325"><span class="lineNum">    2325 </span>            : </a>
-<a name="2326"><span class="lineNum">    2326 </span><span class="lineCov">      54083 :     if (bufferSize == 1) {</span></a>
+<a name="2326"><span class="lineNum">    2326 </span><span class="lineCov">      54071 :     if (bufferSize == 1) {</span></a>
 <a name="2327"><span class="lineNum">    2327 </span>            :         buffer[0] = '\0';</a>
 <a name="2328"><span class="lineNum">    2328 </span>            :         return 0;</a>
 <a name="2329"><span class="lineNum">    2329 </span>            :     }</a>
 <a name="2330"><span class="lineNum">    2330 </span>            : </a>
 <a name="2331"><span class="lineNum">    2331 </span>            :     /* deconstruct the floating point value */</a>
-<a name="2332"><span class="lineNum">    2332 </span><span class="lineCov">      54083 :     floatUnion.floatingPoint = *value;</span></a>
-<a name="2333"><span class="lineNum">    2333 </span><span class="lineCov">      54083 :     floatMantissa = floatUnion.integer &amp; bitmask_u32(23);</span></a>
-<a name="2334"><span class="lineNum">    2334 </span><span class="lineCov">      54083 :     floatExponent = (floatUnion.integer &gt;&gt; 23) &amp; bitmask_u32(8);</span></a>
-<a name="2335"><span class="lineNum">    2335 </span><span class="lineCov">      54083 :     floatSign = floatUnion.integer &gt;&gt; 31;</span></a>
+<a name="2332"><span class="lineNum">    2332 </span><span class="lineCov">      54071 :     floatUnion.floatingPoint = *value;</span></a>
+<a name="2333"><span class="lineNum">    2333 </span><span class="lineCov">      54071 :     floatMantissa = floatUnion.integer &amp; bitmask_u32(23);</span></a>
+<a name="2334"><span class="lineNum">    2334 </span><span class="lineCov">      54071 :     floatExponent = (floatUnion.integer &gt;&gt; 23) &amp; bitmask_u32(8);</span></a>
+<a name="2335"><span class="lineNum">    2335 </span><span class="lineCov">      54071 :     floatSign = floatUnion.integer &gt;&gt; 31;</span></a>
 <a name="2336"><span class="lineNum">    2336 </span>            : </a>
 <a name="2337"><span class="lineNum">    2337 </span>            :     /* output the sign */</a>
-<a name="2338"><span class="lineNum">    2338 </span><span class="lineCov">      54083 :     if (floatSign != 0) {</span></a>
+<a name="2338"><span class="lineNum">    2338 </span><span class="lineCov">      54071 :     if (floatSign != 0) {</span></a>
 <a name="2339"><span class="lineNum">    2339 </span>            :         signbit = '-';</a>
 <a name="2340"><span class="lineNum">    2340 </span>            :     }</a>
-<a name="2341"><span class="lineNum">    2341 </span><span class="lineCov">      47278 :     else if (opt-&gt;sign) {</span></a>
-<a name="2342"><span class="lineNum">    2342 </span><span class="lineCov">      15104 :         signbit = '+';</span></a>
+<a name="2341"><span class="lineNum">    2341 </span><span class="lineCov">      47392 :     else if (opt-&gt;sign) {</span></a>
+<a name="2342"><span class="lineNum">    2342 </span><span class="lineCov">      15092 :         signbit = '+';</span></a>
 <a name="2343"><span class="lineNum">    2343 </span>            :     }</a>
 <a name="2344"><span class="lineNum">    2344 </span>            : </a>
 <a name="2345"><span class="lineNum">    2345 </span>            :     /* if this is a special value */</a>
-<a name="2346"><span class="lineNum">    2346 </span><span class="lineCov">      54083 :     if (floatExponent == bitmask_u32(8)) {</span></a>
+<a name="2346"><span class="lineNum">    2346 </span><span class="lineCov">      54071 :     if (floatExponent == bitmask_u32(8)) {</span></a>
 <a name="2347"><span class="lineNum">    2347 </span><span class="lineCov">        165 :         return PrintInfNan(buffer, bufferSize, floatMantissa, 6, signbit);</span></a>
 <a name="2348"><span class="lineNum">    2348 </span>            :     }</a>
 <a name="2349"><span class="lineNum">    2349 </span>            :     /* else this is a number */</a>
 <a name="2350"><span class="lineNum">    2350 </span>            : </a>
 <a name="2351"><span class="lineNum">    2351 </span>            :     /* factor the value into its parts */</a>
-<a name="2352"><span class="lineNum">    2352 </span><span class="lineCov">      53918 :     if (floatExponent != 0) {</span></a>
+<a name="2352"><span class="lineNum">    2352 </span><span class="lineCov">      53906 :     if (floatExponent != 0) {</span></a>
 <a name="2353"><span class="lineNum">    2353 </span>            :         /*</a>
 <a name="2354"><span class="lineNum">    2354 </span>            :          * normalized</a>
 <a name="2355"><span class="lineNum">    2355 </span>            :          * The floating point equation is:</a>
@@ -2433,10 +2433,10 @@
 <a name="2363"><span class="lineNum">    2363 </span>            :          *   m = (2^23 + mantissa)</a>
 <a name="2364"><span class="lineNum">    2364 </span>            :          *   e = (exponent-127-23)</a>
 <a name="2365"><span class="lineNum">    2365 </span>            :          */</a>
-<a name="2366"><span class="lineNum">    2366 </span><span class="lineCov">      36837 :         mantissa            = (1UL &lt;&lt; 23) | floatMantissa;</span></a>
-<a name="2367"><span class="lineNum">    2367 </span><span class="lineCov">      36837 :         exponent            = floatExponent - 127 - 23;</span></a>
-<a name="2368"><span class="lineNum">    2368 </span><span class="lineCov">      36837 :         mantissaBit         = 23;</span></a>
-<a name="2369"><span class="lineNum">    2369 </span><span class="lineCov">      36837 :         hasUnequalMargins   = (floatExponent != 1) &amp;&amp; (floatMantissa == 0);</span></a>
+<a name="2366"><span class="lineNum">    2366 </span><span class="lineCov">      36819 :         mantissa            = (1UL &lt;&lt; 23) | floatMantissa;</span></a>
+<a name="2367"><span class="lineNum">    2367 </span><span class="lineCov">      36819 :         exponent            = floatExponent - 127 - 23;</span></a>
+<a name="2368"><span class="lineNum">    2368 </span><span class="lineCov">      36819 :         mantissaBit         = 23;</span></a>
+<a name="2369"><span class="lineNum">    2369 </span><span class="lineCov">      36819 :         hasUnequalMargins   = (floatExponent != 1) &amp;&amp; (floatMantissa == 0);</span></a>
 <a name="2370"><span class="lineNum">    2370 </span>            :     }</a>
 <a name="2371"><span class="lineNum">    2371 </span>            :     else {</a>
 <a name="2372"><span class="lineNum">    2372 </span>            :         /*</a>
@@ -2451,14 +2451,14 @@
 <a name="2381"><span class="lineNum">    2381 </span>            :          *   m = (mantissa)</a>
 <a name="2382"><span class="lineNum">    2382 </span>            :          *   e = (1-127-23)</a>
 <a name="2383"><span class="lineNum">    2383 </span>            :          */</a>
-<a name="2384"><span class="lineNum">    2384 </span><span class="lineCov">      17081 :         mantissa           = floatMantissa;</span></a>
-<a name="2385"><span class="lineNum">    2385 </span><span class="lineCov">      17081 :         exponent           = 1 - 127 - 23;</span></a>
-<a name="2386"><span class="lineNum">    2386 </span><span class="lineCov">      17081 :         mantissaBit        = LogBase2_32(mantissa);</span></a>
-<a name="2387"><span class="lineNum">    2387 </span><span class="lineCov">      17081 :         hasUnequalMargins  = NPY_FALSE;</span></a>
+<a name="2384"><span class="lineNum">    2384 </span><span class="lineCov">      17087 :         mantissa           = floatMantissa;</span></a>
+<a name="2385"><span class="lineNum">    2385 </span><span class="lineCov">      17087 :         exponent           = 1 - 127 - 23;</span></a>
+<a name="2386"><span class="lineNum">    2386 </span><span class="lineCov">      17087 :         mantissaBit        = LogBase2_32(mantissa);</span></a>
+<a name="2387"><span class="lineNum">    2387 </span><span class="lineCov">      17087 :         hasUnequalMargins  = NPY_FALSE;</span></a>
 <a name="2388"><span class="lineNum">    2388 </span>            :     }</a>
 <a name="2389"><span class="lineNum">    2389 </span>            : </a>
-<a name="2390"><span class="lineNum">    2390 </span><span class="lineCov">      53918 :     BigInt_Set_uint32(&amp;bigints[0], mantissa);</span></a>
-<a name="2391"><span class="lineNum">    2391 </span><span class="lineCov">      53918 :     return Format_floatbits(buffer, bufferSize, bigints, exponent,</span></a>
+<a name="2390"><span class="lineNum">    2390 </span><span class="lineCov">      53906 :     BigInt_Set_uint32(&amp;bigints[0], mantissa);</span></a>
+<a name="2391"><span class="lineNum">    2391 </span><span class="lineCov">      53906 :     return Format_floatbits(buffer, bufferSize, bigints, exponent,</span></a>
 <a name="2392"><span class="lineNum">    2392 </span>            :                            signbit, mantissaBit, hasUnequalMargins, opt);</a>
 <a name="2393"><span class="lineNum">    2393 </span>            : }</a>
 <a name="2394"><span class="lineNum">    2394 </span>            : </a>
@@ -2510,7 +2510,7 @@
 <a name="2440"><span class="lineNum">    2440 </span><span class="lineCov">      54381 :     if (floatSign != 0) {</span></a>
 <a name="2441"><span class="lineNum">    2441 </span>            :         signbit = '-';</a>
 <a name="2442"><span class="lineNum">    2442 </span>            :     }</a>
-<a name="2443"><span class="lineNum">    2443 </span><span class="lineCov">      49667 :     else if (opt-&gt;sign) {</span></a>
+<a name="2443"><span class="lineNum">    2443 </span><span class="lineCov">      49823 :     else if (opt-&gt;sign) {</span></a>
 <a name="2444"><span class="lineNum">    2444 </span><span class="lineCov">      10032 :         signbit = '+';</span></a>
 <a name="2445"><span class="lineNum">    2445 </span>            :     }</a>
 <a name="2446"><span class="lineNum">    2446 </span>            : </a>
@@ -3259,7 +3259,7 @@
 <a name="3189"><span class="lineNum">    3189 </span>            :         make_dragon4_typefuncs_inner(Type, npy_type, format)</a>
 <a name="3190"><span class="lineNum">    3190 </span>            : </a>
 <a name="3191"><span class="lineNum">    3191 </span><span class="lineCov">      31947 : make_dragon4_typefuncs(Half, npy_half, NPY_HALF_BINFMT_NAME)</span></a>
-<a name="3192"><span class="lineNum">    3192 </span><span class="lineCov">      87061 : make_dragon4_typefuncs(Float, npy_float, NPY_FLOAT_BINFMT_NAME)</span></a>
+<a name="3192"><span class="lineNum">    3192 </span><span class="lineCov">      87037 : make_dragon4_typefuncs(Float, npy_float, NPY_FLOAT_BINFMT_NAME)</span></a>
 <a name="3193"><span class="lineNum">    3193 </span><span class="lineCov">      97102 : make_dragon4_typefuncs(Double, npy_double, NPY_DOUBLE_BINFMT_NAME)</span></a>
 <a name="3194"><span class="lineNum">    3194 </span><span class="lineCov">      46641 : make_dragon4_typefuncs(LongDouble, npy_longdouble, NPY_LONGDOUBLE_BINFMT_NAME)</span></a>
 <a name="3195"><span class="lineNum">    3195 </span>            : </a>

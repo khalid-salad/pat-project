@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">30</td>
@@ -1029,16 +1029,16 @@
 <a name="959"><span class="lineNum">     959 </span>            : </a>
 <a name="960"><span class="lineNum">     960 </span>            :     /* Check if there is any sorting to do */</a>
 <a name="961"><span class="lineNum">     961 </span><span class="lineCov">       7284 :     if (N &lt;= 1 || PyArray_SIZE(op) == 0) {</span></a>
-<a name="962"><span class="lineNum">     962 </span><span class="lineCov">        650 :         return 0;</span></a>
+<a name="962"><span class="lineNum">     962 </span><span class="lineCov">        649 :         return 0;</span></a>
 <a name="963"><span class="lineNum">     963 </span>            :     }</a>
 <a name="964"><span class="lineNum">     964 </span>            : </a>
-<a name="965"><span class="lineNum">     965 </span><span class="lineCov">       6634 :     it = (PyArrayIterObject *)PyArray_IterAllButAxis((PyObject *)op, &amp;axis);</span></a>
-<a name="966"><span class="lineNum">     966 </span><span class="lineCov">       6634 :     if (it == NULL) {</span></a>
+<a name="965"><span class="lineNum">     965 </span><span class="lineCov">       6635 :     it = (PyArrayIterObject *)PyArray_IterAllButAxis((PyObject *)op, &amp;axis);</span></a>
+<a name="966"><span class="lineNum">     966 </span><span class="lineCov">       6635 :     if (it == NULL) {</span></a>
 <a name="967"><span class="lineNum">     967 </span>            :         return -1;</a>
 <a name="968"><span class="lineNum">     968 </span>            :     }</a>
-<a name="969"><span class="lineNum">     969 </span><span class="lineCov">       6634 :     size = it-&gt;size;</span></a>
+<a name="969"><span class="lineNum">     969 </span><span class="lineCov">       6635 :     size = it-&gt;size;</span></a>
 <a name="970"><span class="lineNum">     970 </span>            : </a>
-<a name="971"><span class="lineNum">     971 </span><span class="lineCov">       6634 :     if (needcopy) {</span></a>
+<a name="971"><span class="lineNum">     971 </span><span class="lineCov">       6635 :     if (needcopy) {</span></a>
 <a name="972"><span class="lineNum">     972 </span><span class="lineCov">        273 :         buffer = npy_alloc_cache(N * elsize);</span></a>
 <a name="973"><span class="lineNum">     973 </span><span class="lineCov">        273 :         if (buffer == NULL) {</span></a>
 <a name="974"><span class="lineNum">     974 </span><span class="lineNoCov">          0 :             ret = -1;</span></a>
@@ -1046,12 +1046,12 @@
 <a name="976"><span class="lineNum">     976 </span>            :         }</a>
 <a name="977"><span class="lineNum">     977 </span>            :     }</a>
 <a name="978"><span class="lineNum">     978 </span>            : </a>
-<a name="979"><span class="lineNum">     979 </span><span class="lineCov">       6634 :     NPY_BEGIN_THREADS_DESCR(PyArray_DESCR(op));</span></a>
+<a name="979"><span class="lineNum">     979 </span><span class="lineCov">       6635 :     NPY_BEGIN_THREADS_DESCR(PyArray_DESCR(op));</span></a>
 <a name="980"><span class="lineNum">     980 </span>            : </a>
-<a name="981"><span class="lineNum">     981 </span><span class="lineCov">      22554 :     while (size--) {</span></a>
-<a name="982"><span class="lineNum">     982 </span><span class="lineCov">      15926 :         char *bufptr = it-&gt;dataptr;</span></a>
+<a name="981"><span class="lineNum">     981 </span><span class="lineCov">      22556 :     while (size--) {</span></a>
+<a name="982"><span class="lineNum">     982 </span><span class="lineCov">      15927 :         char *bufptr = it-&gt;dataptr;</span></a>
 <a name="983"><span class="lineNum">     983 </span>            : </a>
-<a name="984"><span class="lineNum">     984 </span><span class="lineCov">      15926 :         if (needcopy) {</span></a>
+<a name="984"><span class="lineNum">     984 </span><span class="lineCov">      15927 :         if (needcopy) {</span></a>
 <a name="985"><span class="lineNum">     985 </span><span class="lineCov">       6074 :             if (hasrefs) {</span></a>
 <a name="986"><span class="lineNum">     986 </span>            :                 /*</a>
 <a name="987"><span class="lineNum">     987 </span>            :                  * For dtype's with objects, copyswapn Py_XINCREF's src</a>
@@ -1081,12 +1081,12 @@
 <a name="1011"><span class="lineNum">    1011 </span>            :          * sort or part, the unswapping is still done before returning.</a>
 <a name="1012"><span class="lineNum">    1012 </span>            :          */</a>
 <a name="1013"><span class="lineNum">    1013 </span>            : </a>
-<a name="1014"><span class="lineNum">    1014 </span><span class="lineCov">      15926 :         if (part == NULL) {</span></a>
-<a name="1015"><span class="lineNum">    1015 </span><span class="lineCov">       4112 :             ret = sort(bufptr, N, op);</span></a>
-<a name="1016"><span class="lineNum">    1016 </span><span class="lineCov">       4112 :             if (hasrefs &amp;&amp; PyErr_Occurred()) {</span></a>
+<a name="1014"><span class="lineNum">    1014 </span><span class="lineCov">      15927 :         if (part == NULL) {</span></a>
+<a name="1015"><span class="lineNum">    1015 </span><span class="lineCov">       4113 :             ret = sort(bufptr, N, op);</span></a>
+<a name="1016"><span class="lineNum">    1016 </span><span class="lineCov">       4113 :             if (hasrefs &amp;&amp; PyErr_Occurred()) {</span></a>
 <a name="1017"><span class="lineNum">    1017 </span>            :                 ret = -1;</a>
 <a name="1018"><span class="lineNum">    1018 </span>            :             }</a>
-<a name="1019"><span class="lineNum">    1019 </span><span class="lineCov">       4106 :             if (ret &lt; 0) {</span></a>
+<a name="1019"><span class="lineNum">    1019 </span><span class="lineCov">       4107 :             if (ret &lt; 0) {</span></a>
 <a name="1020"><span class="lineNum">    1020 </span><span class="lineCov">          6 :                 goto fail;</span></a>
 <a name="1021"><span class="lineNum">    1021 </span>            :             }</a>
 <a name="1022"><span class="lineNum">    1022 </span>            :         }</a>
@@ -1105,7 +1105,7 @@
 <a name="1035"><span class="lineNum">    1035 </span>            :             }</a>
 <a name="1036"><span class="lineNum">    1036 </span>            :         }</a>
 <a name="1037"><span class="lineNum">    1037 </span>            : </a>
-<a name="1038"><span class="lineNum">    1038 </span><span class="lineCov">      15920 :         if (needcopy) {</span></a>
+<a name="1038"><span class="lineNum">    1038 </span><span class="lineCov">      15921 :         if (needcopy) {</span></a>
 <a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">       6074 :             if (hasrefs) {</span></a>
 <a name="1040"><span class="lineNum">    1040 </span><span class="lineNoCov">          0 :                 if (swap) {</span></a>
 <a name="1041"><span class="lineNum">    1041 </span><span class="lineNoCov">          0 :                     copyswapn(buffer, elsize, NULL, 0, N, swap, op);</span></a>
@@ -1118,19 +1118,19 @@
 <a name="1048"><span class="lineNum">    1048 </span>            :             }</a>
 <a name="1049"><span class="lineNum">    1049 </span>            :         }</a>
 <a name="1050"><span class="lineNum">    1050 </span>            : </a>
-<a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">      41352 :         PyArray_ITER_NEXT(it);</span></a>
+<a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">      41355 :         PyArray_ITER_NEXT(it);</span></a>
 <a name="1052"><span class="lineNum">    1052 </span>            :     }</a>
 <a name="1053"><span class="lineNum">    1053 </span>            : </a>
-<a name="1054"><span class="lineNum">    1054 </span><span class="lineCov">       6628 : fail:</span></a>
-<a name="1055"><span class="lineNum">    1055 </span><span class="lineCov">       6634 :     NPY_END_THREADS_DESCR(PyArray_DESCR(op));</span></a>
-<a name="1056"><span class="lineNum">    1056 </span><span class="lineCov">       6634 :     npy_free_cache(buffer, N * elsize);</span></a>
-<a name="1057"><span class="lineNum">    1057 </span><span class="lineCov">       6634 :     if (ret &lt; 0 &amp;&amp; !PyErr_Occurred()) {</span></a>
+<a name="1054"><span class="lineNum">    1054 </span><span class="lineCov">       6629 : fail:</span></a>
+<a name="1055"><span class="lineNum">    1055 </span><span class="lineCov">       6635 :     NPY_END_THREADS_DESCR(PyArray_DESCR(op));</span></a>
+<a name="1056"><span class="lineNum">    1056 </span><span class="lineCov">       6635 :     npy_free_cache(buffer, N * elsize);</span></a>
+<a name="1057"><span class="lineNum">    1057 </span><span class="lineCov">       6635 :     if (ret &lt; 0 &amp;&amp; !PyErr_Occurred()) {</span></a>
 <a name="1058"><span class="lineNum">    1058 </span>            :         /* Out of memory during sorting or buffer creation */</a>
 <a name="1059"><span class="lineNum">    1059 </span><span class="lineNoCov">          0 :         PyErr_NoMemory();</span></a>
 <a name="1060"><span class="lineNum">    1060 </span>            :     }</a>
-<a name="1061"><span class="lineNum">    1061 </span><span class="lineCov">       6634 :     Py_DECREF(it);</span></a>
+<a name="1061"><span class="lineNum">    1061 </span><span class="lineCov">       6635 :     Py_DECREF(it);</span></a>
 <a name="1062"><span class="lineNum">    1062 </span>            : </a>
-<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">       6634 :     return ret;</span></a>
+<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">       6635 :     return ret;</span></a>
 <a name="1064"><span class="lineNum">    1064 </span>            : }</a>
 <a name="1065"><span class="lineNum">    1065 </span>            : </a>
 <a name="1066"><span class="lineNum">    1066 </span>            : static PyObject*</a>
@@ -1236,8 +1236,8 @@
 <a name="1166"><span class="lineNum">    1166 </span>            :         }</a>
 <a name="1167"><span class="lineNum">    1167 </span>            : </a>
 <a name="1168"><span class="lineNum">    1168 </span><span class="lineCov">       9244 :         iptr = idxptr;</span></a>
-<a name="1169"><span class="lineNum">    1169 </span><span class="lineCov">    1085731 :         for (i = 0; i &lt; N; ++i) {</span></a>
-<a name="1170"><span class="lineNum">    1170 </span><span class="lineCov">    1076487 :             *iptr++ = i;</span></a>
+<a name="1169"><span class="lineNum">    1169 </span><span class="lineCov">    1085732 :         for (i = 0; i &lt; N; ++i) {</span></a>
+<a name="1170"><span class="lineNum">    1170 </span><span class="lineCov">    1076488 :             *iptr++ = i;</span></a>
 <a name="1171"><span class="lineNum">    1171 </span>            :         }</a>
 <a name="1172"><span class="lineNum">    1172 </span>            : </a>
 <a name="1173"><span class="lineNum">    1173 </span><span class="lineCov">       9244 :         if (argpart == NULL) {</span></a>
@@ -2284,8 +2284,8 @@
 <a name="2214"><span class="lineNum">    2214 </span>            :         }</a>
 <a name="2215"><span class="lineNum">    2215 </span>            :     #endif // NPY_SIMD</a>
 <a name="2216"><span class="lineNum">    2216 </span>            :     }</a>
-<a name="2217"><span class="lineNum">    2217 </span><span class="lineCov">    1626940 :     for (; len &gt; 0; --len, data += bstride) {</span></a>
-<a name="2218"><span class="lineNum">    2218 </span><span class="lineCov">    1362948 :         count += (*data != 0);</span></a>
+<a name="2217"><span class="lineNum">    2217 </span><span class="lineCov">    1626942 :     for (; len &gt; 0; --len, data += bstride) {</span></a>
+<a name="2218"><span class="lineNum">    2218 </span><span class="lineCov">    1362950 :         count += (*data != 0);</span></a>
 <a name="2219"><span class="lineNum">    2219 </span>            :     }</a>
 <a name="2220"><span class="lineNum">    2220 </span><span class="lineCov">     263992 :     return count;</span></a>
 <a name="2221"><span class="lineNum">    2221 </span>            : }</a>

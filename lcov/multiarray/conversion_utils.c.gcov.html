@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">34</td>
@@ -157,19 +157,19 @@
 <a name="87"><span class="lineNum">      87 </span>            :  * PyDimMem_FREE(seq.ptr)**</a>
 <a name="88"><span class="lineNum">      88 </span>            :  */</a>
 <a name="89"><span class="lineNum">      89 </span>            : NPY_NO_EXPORT int</a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">     211426 : PyArray_IntpConverter(PyObject *obj, PyArray_Dims *seq)</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">     211440 : PyArray_IntpConverter(PyObject *obj, PyArray_Dims *seq)</span></a>
 <a name="91"><span class="lineNum">      91 </span>            : {</a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">     211426 :     Py_ssize_t len;</span></a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">     211426 :     int nd;</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">     211440 :     Py_ssize_t len;</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">     211440 :     int nd;</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineCov">     211426 :     seq-&gt;ptr = NULL;</span></a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">     211426 :     seq-&gt;len = 0;</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">     211440 :     seq-&gt;ptr = NULL;</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">     211440 :     seq-&gt;len = 0;</span></a>
 <a name="97"><span class="lineNum">      97 </span>            : </a>
 <a name="98"><span class="lineNum">      98 </span>            :     /*</a>
 <a name="99"><span class="lineNum">      99 </span>            :      * When the deprecation below expires, remove the `if` statement, and</a>
 <a name="100"><span class="lineNum">     100 </span>            :      * update the comment for PyArray_OptionalIntpConverter.</a>
 <a name="101"><span class="lineNum">     101 </span>            :      */</a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">     211426 :     if (obj == Py_None) {</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">     211440 :     if (obj == Py_None) {</span></a>
 <a name="103"><span class="lineNum">     103 </span>            :         /* Numpy 1.20, 2020-05-31 */</a>
 <a name="104"><span class="lineNum">     104 </span><span class="lineCov">          1 :         if (DEPRECATE(</span></a>
 <a name="105"><span class="lineNum">     105 </span>            :                 &quot;Passing None into shape arguments as an alias for () is &quot;</a>
@@ -179,8 +179,8 @@
 <a name="109"><span class="lineNum">     109 </span><span class="lineCov">          1 :         return NPY_SUCCEED;</span></a>
 <a name="110"><span class="lineNum">     110 </span>            :     }</a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">     211425 :     len = PySequence_Size(obj);</span></a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineCov">     211425 :     if (len == -1) {</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">     211439 :     len = PySequence_Size(obj);</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">     211439 :     if (len == -1) {</span></a>
 <a name="114"><span class="lineNum">     114 </span>            :         /* Check to see if it is an integer number */</a>
 <a name="115"><span class="lineNum">     115 </span><span class="lineCov">      50560 :         if (PyNumber_Check(obj)) {</span></a>
 <a name="116"><span class="lineNum">     116 </span>            :             /*</a>
@@ -191,26 +191,26 @@
 <a name="121"><span class="lineNum">     121 </span>            :             len = 1;</a>
 <a name="122"><span class="lineNum">     122 </span>            :         }</a>
 <a name="123"><span class="lineNum">     123 </span>            :     }</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">     160868 :     if (len &lt; 0) {</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">     160882 :     if (len &lt; 0) {</span></a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineCov">          3 :         PyErr_SetString(PyExc_TypeError,</span></a>
 <a name="126"><span class="lineNum">     126 </span>            :                 &quot;expected sequence object with len &gt;= 0 or a single integer&quot;);</a>
 <a name="127"><span class="lineNum">     127 </span><span class="lineCov">          3 :         return NPY_FAIL;</span></a>
 <a name="128"><span class="lineNum">     128 </span>            :     }</a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineCov">     211422 :     if (len &gt; NPY_MAXDIMS) {</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">     211436 :     if (len &gt; NPY_MAXDIMS) {</span></a>
 <a name="130"><span class="lineNum">     130 </span><span class="lineCov">         41 :         PyErr_Format(PyExc_ValueError, &quot;maximum supported dimension for an ndarray is %d&quot;</span></a>
 <a name="131"><span class="lineNum">     131 </span>            :                      &quot;, found %d&quot;, NPY_MAXDIMS, len);</a>
 <a name="132"><span class="lineNum">     132 </span><span class="lineCov">         41 :         return NPY_FAIL;</span></a>
 <a name="133"><span class="lineNum">     133 </span>            :     }</a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">     211381 :     if (len &gt; 0) {</span></a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">     197425 :         seq-&gt;ptr = npy_alloc_cache_dim(len);</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">     197425 :         if (seq-&gt;ptr == NULL) {</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">     211395 :     if (len &gt; 0) {</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">     197443 :         seq-&gt;ptr = npy_alloc_cache_dim(len);</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">     197443 :         if (seq-&gt;ptr == NULL) {</span></a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :             PyErr_NoMemory();</span></a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :             return NPY_FAIL;</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :         }</a>
 <a name="140"><span class="lineNum">     140 </span>            :     }</a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     211381 :     seq-&gt;len = len;</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">     211381 :     nd = PyArray_IntpFromIndexSequence(obj, (npy_intp *)seq-&gt;ptr, len);</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     211381 :     if (nd == -1 || nd != len) {</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     211395 :     seq-&gt;len = len;</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">     211395 :     nd = PyArray_IntpFromIndexSequence(obj, (npy_intp *)seq-&gt;ptr, len);</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     211395 :     if (nd == -1 || nd != len) {</span></a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineCov">         18 :         npy_free_cache_dim_obj(*seq);</span></a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineCov">         18 :         seq-&gt;ptr = NULL;</span></a>
 <a name="146"><span class="lineNum">     146 </span><span class="lineCov">         18 :         return NPY_FAIL;</span></a>
@@ -403,7 +403,7 @@
 <a name="333"><span class="lineNum">     333 </span>            : }</a>
 <a name="334"><span class="lineNum">     334 </span>            : </a>
 <a name="335"><span class="lineNum">     335 </span>            : static int</a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineCov">     232181 : string_converter_helper(</span></a>
+<a name="336"><span class="lineNum">     336 </span><span class="lineCov">     232195 : string_converter_helper(</span></a>
 <a name="337"><span class="lineNum">     337 </span>            :     PyObject *object,</a>
 <a name="338"><span class="lineNum">     338 </span>            :     void *out,</a>
 <a name="339"><span class="lineNum">     339 </span>            :     int (*str_func)(char const*, Py_ssize_t, void*),</a>
@@ -411,8 +411,8 @@
 <a name="341"><span class="lineNum">     341 </span>            :     char const *message)</a>
 <a name="342"><span class="lineNum">     342 </span>            : {</a>
 <a name="343"><span class="lineNum">     343 </span>            :     /* allow bytes for compatibility */</a>
-<a name="344"><span class="lineNum">     344 </span><span class="lineCov">     232181 :     PyObject *str_object = NULL;</span></a>
-<a name="345"><span class="lineNum">     345 </span><span class="lineCov">     232181 :     if (PyBytes_Check(object)) {</span></a>
+<a name="344"><span class="lineNum">     344 </span><span class="lineCov">     232195 :     PyObject *str_object = NULL;</span></a>
+<a name="345"><span class="lineNum">     345 </span><span class="lineCov">     232195 :     if (PyBytes_Check(object)) {</span></a>
 <a name="346"><span class="lineNum">     346 </span><span class="lineCov">         42 :         str_object = PyUnicode_FromEncodedObject(object, NULL, NULL);</span></a>
 <a name="347"><span class="lineNum">     347 </span><span class="lineCov">         42 :         if (str_object == NULL) {</span></a>
 <a name="348"><span class="lineNum">     348 </span><span class="lineCov">          7 :             PyErr_Format(PyExc_ValueError,</span></a>
@@ -420,9 +420,9 @@
 <a name="350"><span class="lineNum">     350 </span><span class="lineCov">          7 :             return NPY_FAIL;</span></a>
 <a name="351"><span class="lineNum">     351 </span>            :         }</a>
 <a name="352"><span class="lineNum">     352 </span>            :     }</a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineCov">     232139 :     else if (PyUnicode_Check(object)) {</span></a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineCov">     232122 :         str_object = object;</span></a>
-<a name="355"><span class="lineNum">     355 </span><span class="lineCov">     232122 :         Py_INCREF(str_object);</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineCov">     232153 :     else if (PyUnicode_Check(object)) {</span></a>
+<a name="354"><span class="lineNum">     354 </span><span class="lineCov">     232136 :         str_object = object;</span></a>
+<a name="355"><span class="lineNum">     355 </span><span class="lineCov">     232136 :         Py_INCREF(str_object);</span></a>
 <a name="356"><span class="lineNum">     356 </span>            :     }</a>
 <a name="357"><span class="lineNum">     357 </span>            :     else {</a>
 <a name="358"><span class="lineNum">     358 </span><span class="lineCov">         17 :         PyErr_Format(PyExc_TypeError,</span></a>
@@ -430,16 +430,16 @@
 <a name="360"><span class="lineNum">     360 </span><span class="lineCov">         17 :         return NPY_FAIL;</span></a>
 <a name="361"><span class="lineNum">     361 </span>            :     }</a>
 <a name="362"><span class="lineNum">     362 </span>            : </a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineCov">     232157 :     Py_ssize_t length;</span></a>
-<a name="364"><span class="lineNum">     364 </span><span class="lineCov">     232157 :     char const *str = PyUnicode_AsUTF8AndSize(str_object, &amp;length);</span></a>
-<a name="365"><span class="lineNum">     365 </span><span class="lineCov">     232157 :     if (str == NULL) {</span></a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineCov">     232171 :     Py_ssize_t length;</span></a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineCov">     232171 :     char const *str = PyUnicode_AsUTF8AndSize(str_object, &amp;length);</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineCov">     232171 :     if (str == NULL) {</span></a>
 <a name="366"><span class="lineNum">     366 </span><span class="lineNoCov">          0 :         Py_DECREF(str_object);</span></a>
 <a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :         return NPY_FAIL;</span></a>
 <a name="368"><span class="lineNum">     368 </span>            :     }</a>
 <a name="369"><span class="lineNum">     369 </span>            : </a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineCov">     232157 :     int ret = str_func(str, length, out);</span></a>
-<a name="371"><span class="lineNum">     371 </span><span class="lineCov">     232157 :     Py_DECREF(str_object);</span></a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineCov">     232157 :     if (ret &lt; 0) {</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">     232171 :     int ret = str_func(str, length, out);</span></a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineCov">     232171 :     Py_DECREF(str_object);</span></a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineCov">     232171 :     if (ret &lt; 0) {</span></a>
 <a name="373"><span class="lineNum">     373 </span>            :         /* str_func returns -1 without an exception if the value is wrong */</a>
 <a name="374"><span class="lineNum">     374 </span><span class="lineCov">         62 :         if (!PyErr_Occurred()) {</span></a>
 <a name="375"><span class="lineNum">     375 </span><span class="lineCov">         60 :             PyErr_Format(PyExc_ValueError,</span></a>
@@ -623,15 +623,15 @@
 <a name="553"><span class="lineNum">     553 </span>            :         &quot;must be 'left' or 'right'&quot;);</a>
 <a name="554"><span class="lineNum">     554 </span>            : }</a>
 <a name="555"><span class="lineNum">     555 </span>            : </a>
-<a name="556"><span class="lineNum">     556 </span><span class="lineCov">      64575 : static int order_parser(char const *str, Py_ssize_t length, void *data)</span></a>
+<a name="556"><span class="lineNum">     556 </span><span class="lineCov">      64589 : static int order_parser(char const *str, Py_ssize_t length, void *data)</span></a>
 <a name="557"><span class="lineNum">     557 </span>            : {</a>
-<a name="558"><span class="lineNum">     558 </span><span class="lineCov">      64575 :     NPY_ORDER *val = (NPY_ORDER *)data;</span></a>
-<a name="559"><span class="lineNum">     559 </span><span class="lineCov">      64575 :     if (length != 1) {</span></a>
+<a name="558"><span class="lineNum">     558 </span><span class="lineCov">      64589 :     NPY_ORDER *val = (NPY_ORDER *)data;</span></a>
+<a name="559"><span class="lineNum">     559 </span><span class="lineCov">      64589 :     if (length != 1) {</span></a>
 <a name="560"><span class="lineNum">     560 </span>            :         return -1;</a>
 <a name="561"><span class="lineNum">     561 </span>            :     }</a>
-<a name="562"><span class="lineNum">     562 </span><span class="lineCov">      64571 :     if (str[0] == 'C' || str[0] == 'c') {</span></a>
-<a name="563"><span class="lineNum">     563 </span><span class="lineCov">      36773 :         *val = NPY_CORDER;</span></a>
-<a name="564"><span class="lineNum">     564 </span><span class="lineCov">      36773 :         return 0;</span></a>
+<a name="562"><span class="lineNum">     562 </span><span class="lineCov">      64585 :     if (str[0] == 'C' || str[0] == 'c') {</span></a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineCov">      36787 :         *val = NPY_CORDER;</span></a>
+<a name="564"><span class="lineNum">     564 </span><span class="lineCov">      36787 :         return 0;</span></a>
 <a name="565"><span class="lineNum">     565 </span>            :     }</a>
 <a name="566"><span class="lineNum">     566 </span><span class="lineCov">      27798 :     else if (str[0] == 'F' || str[0] == 'f') {</span></a>
 <a name="567"><span class="lineNum">     567 </span><span class="lineCov">      10605 :         *val = NPY_FORTRANORDER;</span></a>
@@ -654,13 +654,13 @@
 <a name="584"><span class="lineNum">     584 </span>            :  * Convert an object to FORTRAN / C / ANY / KEEP</a>
 <a name="585"><span class="lineNum">     585 </span>            :  */</a>
 <a name="586"><span class="lineNum">     586 </span>            : NPY_NO_EXPORT int</a>
-<a name="587"><span class="lineNum">     587 </span><span class="lineCov">     107213 : PyArray_OrderConverter(PyObject *object, NPY_ORDER *val)</span></a>
+<a name="587"><span class="lineNum">     587 </span><span class="lineCov">     107227 : PyArray_OrderConverter(PyObject *object, NPY_ORDER *val)</span></a>
 <a name="588"><span class="lineNum">     588 </span>            : {</a>
 <a name="589"><span class="lineNum">     589 </span>            :     /* Leave the desired default from the caller for Py_None */</a>
-<a name="590"><span class="lineNum">     590 </span><span class="lineCov">     107213 :     if (object == Py_None) {</span></a>
+<a name="590"><span class="lineNum">     590 </span><span class="lineCov">     107227 :     if (object == Py_None) {</span></a>
 <a name="591"><span class="lineNum">     591 </span>            :         return NPY_SUCCEED;</a>
 <a name="592"><span class="lineNum">     592 </span>            :     }</a>
-<a name="593"><span class="lineNum">     593 </span><span class="lineCov">      64582 :     return string_converter_helper(</span></a>
+<a name="593"><span class="lineNum">     593 </span><span class="lineCov">      64596 :     return string_converter_helper(</span></a>
 <a name="594"><span class="lineNum">     594 </span>            :         object, (void *)val, order_parser, &quot;order&quot;,</a>
 <a name="595"><span class="lineNum">     595 </span>            :         &quot;must be one of 'C', 'F', 'A', or 'K'&quot;);</a>
 <a name="596"><span class="lineNum">     596 </span>            : }</a>
@@ -939,21 +939,21 @@
 <a name="869"><span class="lineNum">     869 </span>            : }</a>
 <a name="870"><span class="lineNum">     870 </span>            : </a>
 <a name="871"><span class="lineNum">     871 </span>            : static npy_intp</a>
-<a name="872"><span class="lineNum">     872 </span><span class="lineCov">    3355277 : PyArray_PyIntAsIntp_ErrMsg(PyObject *o, const char * msg)</span></a>
+<a name="872"><span class="lineNum">     872 </span><span class="lineCov">    3355345 : PyArray_PyIntAsIntp_ErrMsg(PyObject *o, const char * msg)</span></a>
 <a name="873"><span class="lineNum">     873 </span>            : {</a>
 <a name="874"><span class="lineNum">     874 </span>            : #if (NPY_SIZEOF_LONG &lt; NPY_SIZEOF_INTP)</a>
 <a name="875"><span class="lineNum">     875 </span>            :     long long long_value = -1;</a>
 <a name="876"><span class="lineNum">     876 </span>            : #else</a>
-<a name="877"><span class="lineNum">     877 </span><span class="lineCov">    3355277 :     long long_value = -1;</span></a>
+<a name="877"><span class="lineNum">     877 </span><span class="lineCov">    3355345 :     long long_value = -1;</span></a>
 <a name="878"><span class="lineNum">     878 </span>            : #endif</a>
-<a name="879"><span class="lineNum">     879 </span><span class="lineCov">    3355277 :     PyObject *obj, *err;</span></a>
+<a name="879"><span class="lineNum">     879 </span><span class="lineCov">    3355345 :     PyObject *obj, *err;</span></a>
 <a name="880"><span class="lineNum">     880 </span>            : </a>
 <a name="881"><span class="lineNum">     881 </span>            :     /*</a>
 <a name="882"><span class="lineNum">     882 </span>            :      * Be a bit stricter and not allow bools.</a>
 <a name="883"><span class="lineNum">     883 </span>            :      * np.bool_ is also disallowed as Boolean arrays do not currently</a>
 <a name="884"><span class="lineNum">     884 </span>            :      * support index.</a>
 <a name="885"><span class="lineNum">     885 </span>            :      */</a>
-<a name="886"><span class="lineNum">     886 </span><span class="lineCov">    3355277 :     if (!o || PyBool_Check(o) || PyArray_IsScalar(o, Bool)) {</span></a>
+<a name="886"><span class="lineNum">     886 </span><span class="lineCov">    3355345 :     if (!o || PyBool_Check(o) || PyArray_IsScalar(o, Bool)) {</span></a>
 <a name="887"><span class="lineNum">     887 </span><span class="lineCov">        600 :         PyErr_SetString(PyExc_TypeError, msg);</span></a>
 <a name="888"><span class="lineNum">     888 </span><span class="lineCov">        600 :         return -1;</span></a>
 <a name="889"><span class="lineNum">     889 </span>            :     }</a>
@@ -962,13 +962,13 @@
 <a name="892"><span class="lineNum">     892 </span>            :      * Since it is the usual case, first check if o is an integer. This is</a>
 <a name="893"><span class="lineNum">     893 </span>            :      * an exact check, since otherwise __index__ is used.</a>
 <a name="894"><span class="lineNum">     894 </span>            :      */</a>
-<a name="895"><span class="lineNum">     895 </span><span class="lineCov">    3354677 :     if (PyLong_CheckExact(o)) {</span></a>
+<a name="895"><span class="lineNum">     895 </span><span class="lineCov">    3354745 :     if (PyLong_CheckExact(o)) {</span></a>
 <a name="896"><span class="lineNum">     896 </span>            : #if (NPY_SIZEOF_LONG &lt; NPY_SIZEOF_INTP)</a>
 <a name="897"><span class="lineNum">     897 </span>            :         long_value = PyLong_AsLongLong(o);</a>
 <a name="898"><span class="lineNum">     898 </span>            : #else</a>
-<a name="899"><span class="lineNum">     899 </span><span class="lineCov">    3318779 :         long_value = PyLong_AsLong(o);</span></a>
+<a name="899"><span class="lineNum">     899 </span><span class="lineCov">    3318847 :         long_value = PyLong_AsLong(o);</span></a>
 <a name="900"><span class="lineNum">     900 </span>            : #endif</a>
-<a name="901"><span class="lineNum">     901 </span><span class="lineCov">    3318779 :         return (npy_intp)long_value;</span></a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineCov">    3318847 :         return (npy_intp)long_value;</span></a>
 <a name="902"><span class="lineNum">     902 </span>            :     }</a>
 <a name="903"><span class="lineNum">     903 </span>            : </a>
 <a name="904"><span class="lineNum">     904 </span>            :     /*</a>
@@ -1020,9 +1020,9 @@
 <a name="950"><span class="lineNum">     950 </span>            : </a>
 <a name="951"><span class="lineNum">     951 </span>            : /*NUMPY_API*/</a>
 <a name="952"><span class="lineNum">     952 </span>            : NPY_NO_EXPORT npy_intp</a>
-<a name="953"><span class="lineNum">     953 </span><span class="lineCov">    3287044 : PyArray_PyIntAsIntp(PyObject *o)</span></a>
+<a name="953"><span class="lineNum">     953 </span><span class="lineCov">    3287112 : PyArray_PyIntAsIntp(PyObject *o)</span></a>
 <a name="954"><span class="lineNum">     954 </span>            : {</a>
-<a name="955"><span class="lineNum">     955 </span><span class="lineCov">    2904493 :     return PyArray_PyIntAsIntp_ErrMsg(o, &quot;an integer is required&quot;);</span></a>
+<a name="955"><span class="lineNum">     955 </span><span class="lineCov">    2904543 :     return PyArray_PyIntAsIntp_ErrMsg(o, &quot;an integer is required&quot;);</span></a>
 <a name="956"><span class="lineNum">     956 </span>            : }</a>
 <a name="957"><span class="lineNum">     957 </span>            : </a>
 <a name="958"><span class="lineNum">     958 </span>            : </a>
@@ -1034,18 +1034,18 @@
 <a name="964"><span class="lineNum">     964 </span>            :  * for the number of values.</a>
 <a name="965"><span class="lineNum">     965 </span>            :  */</a>
 <a name="966"><span class="lineNum">     966 </span>            : NPY_NO_EXPORT npy_intp</a>
-<a name="967"><span class="lineNum">     967 </span><span class="lineCov">     211720 : PyArray_IntpFromIndexSequence(PyObject *seq, npy_intp *vals, npy_intp maxvals)</span></a>
+<a name="967"><span class="lineNum">     967 </span><span class="lineCov">     211734 : PyArray_IntpFromIndexSequence(PyObject *seq, npy_intp *vals, npy_intp maxvals)</span></a>
 <a name="968"><span class="lineNum">     968 </span>            : {</a>
-<a name="969"><span class="lineNum">     969 </span><span class="lineCov">     211720 :     Py_ssize_t nd;</span></a>
-<a name="970"><span class="lineNum">     970 </span><span class="lineCov">     211720 :     npy_intp i;</span></a>
-<a name="971"><span class="lineNum">     971 </span><span class="lineCov">     211720 :     PyObject *op, *err;</span></a>
+<a name="969"><span class="lineNum">     969 </span><span class="lineCov">     211734 :     Py_ssize_t nd;</span></a>
+<a name="970"><span class="lineNum">     970 </span><span class="lineCov">     211734 :     npy_intp i;</span></a>
+<a name="971"><span class="lineNum">     971 </span><span class="lineCov">     211734 :     PyObject *op, *err;</span></a>
 <a name="972"><span class="lineNum">     972 </span>            : </a>
 <a name="973"><span class="lineNum">     973 </span>            :     /*</a>
 <a name="974"><span class="lineNum">     974 </span>            :      * Check to see if sequence is a single integer first.</a>
 <a name="975"><span class="lineNum">     975 </span>            :      * or, can be made into one</a>
 <a name="976"><span class="lineNum">     976 </span>            :      */</a>
-<a name="977"><span class="lineNum">     977 </span><span class="lineCov">     211720 :     nd = PySequence_Length(seq);</span></a>
-<a name="978"><span class="lineNum">     978 </span><span class="lineCov">     211720 :     if (nd == -1) {</span></a>
+<a name="977"><span class="lineNum">     977 </span><span class="lineCov">     211734 :     nd = PySequence_Length(seq);</span></a>
+<a name="978"><span class="lineNum">     978 </span><span class="lineCov">     211734 :     if (nd == -1) {</span></a>
 <a name="979"><span class="lineNum">     979 </span><span class="lineCov">      50557 :         if (PyErr_Occurred()) {</span></a>
 <a name="980"><span class="lineNum">     980 </span><span class="lineCov">      50557 :             PyErr_Clear();</span></a>
 <a name="981"><span class="lineNum">     981 </span>            :         }</a>
@@ -1065,15 +1065,15 @@
 <a name="995"><span class="lineNum">     995 </span>            :         nd = 1;</a>
 <a name="996"><span class="lineNum">     996 </span>            :     }</a>
 <a name="997"><span class="lineNum">     997 </span>            :     else {</a>
-<a name="998"><span class="lineNum">     998 </span><span class="lineCov">     493143 :         for (i = 0; i &lt; PyArray_MIN(nd,maxvals); i++) {</span></a>
-<a name="999"><span class="lineNum">     999 </span><span class="lineCov">     331994 :             op = PySequence_GetItem(seq, i);</span></a>
-<a name="1000"><span class="lineNum">    1000 </span><span class="lineCov">     331994 :             if (op == NULL) {</span></a>
+<a name="998"><span class="lineNum">     998 </span><span class="lineCov">     493175 :         for (i = 0; i &lt; PyArray_MIN(nd,maxvals); i++) {</span></a>
+<a name="999"><span class="lineNum">     999 </span><span class="lineCov">     332012 :             op = PySequence_GetItem(seq, i);</span></a>
+<a name="1000"><span class="lineNum">    1000 </span><span class="lineCov">     332012 :             if (op == NULL) {</span></a>
 <a name="1001"><span class="lineNum">    1001 </span>            :                 return -1;</a>
 <a name="1002"><span class="lineNum">    1002 </span>            :             }</a>
 <a name="1003"><span class="lineNum">    1003 </span>            : </a>
-<a name="1004"><span class="lineNum">    1004 </span><span class="lineCov">     331994 :             vals[i] = PyArray_PyIntAsIntp(op);</span></a>
-<a name="1005"><span class="lineNum">    1005 </span><span class="lineCov">     331994 :             Py_DECREF(op);</span></a>
-<a name="1006"><span class="lineNum">    1006 </span><span class="lineCov">     331994 :             if(vals[i] == -1) {</span></a>
+<a name="1004"><span class="lineNum">    1004 </span><span class="lineCov">     332012 :             vals[i] = PyArray_PyIntAsIntp(op);</span></a>
+<a name="1005"><span class="lineNum">    1005 </span><span class="lineCov">     332012 :             Py_DECREF(op);</span></a>
+<a name="1006"><span class="lineNum">    1006 </span><span class="lineCov">     332012 :             if(vals[i] == -1) {</span></a>
 <a name="1007"><span class="lineNum">    1007 </span><span class="lineCov">      10629 :                 err = PyErr_Occurred();</span></a>
 <a name="1008"><span class="lineNum">    1008 </span><span class="lineCov">      10643 :                 if (err &amp;&amp;</span></a>
 <a name="1009"><span class="lineNum">    1009 </span><span class="lineCov">         14 :                         PyErr_GivenExceptionMatches(err, PyExc_OverflowError)) {</span></a>
@@ -1283,26 +1283,26 @@
 <a name="1213"><span class="lineNum">    1213 </span>            :   PyArray_IntTupleFromIntp</a>
 <a name="1214"><span class="lineNum">    1214 </span>            : */</a>
 <a name="1215"><span class="lineNum">    1215 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="1216"><span class="lineNum">    1216 </span><span class="lineCov">    1607876 : PyArray_IntTupleFromIntp(int len, npy_intp const *vals)</span></a>
+<a name="1216"><span class="lineNum">    1216 </span><span class="lineCov">    1607890 : PyArray_IntTupleFromIntp(int len, npy_intp const *vals)</span></a>
 <a name="1217"><span class="lineNum">    1217 </span>            : {</a>
-<a name="1218"><span class="lineNum">    1218 </span><span class="lineCov">    1607876 :     int i;</span></a>
-<a name="1219"><span class="lineNum">    1219 </span><span class="lineCov">    1607876 :     PyObject *intTuple = PyTuple_New(len);</span></a>
+<a name="1218"><span class="lineNum">    1218 </span><span class="lineCov">    1607890 :     int i;</span></a>
+<a name="1219"><span class="lineNum">    1219 </span><span class="lineCov">    1607890 :     PyObject *intTuple = PyTuple_New(len);</span></a>
 <a name="1220"><span class="lineNum">    1220 </span>            : </a>
-<a name="1221"><span class="lineNum">    1221 </span><span class="lineCov">    1607876 :     if (!intTuple) {</span></a>
+<a name="1221"><span class="lineNum">    1221 </span><span class="lineCov">    1607890 :     if (!intTuple) {</span></a>
 <a name="1222"><span class="lineNum">    1222 </span><span class="lineNoCov">          0 :         goto fail;</span></a>
 <a name="1223"><span class="lineNum">    1223 </span>            :     }</a>
-<a name="1224"><span class="lineNum">    1224 </span><span class="lineCov">    5251980 :     for (i = 0; i &lt; len; i++) {</span></a>
-<a name="1225"><span class="lineNum">    1225 </span><span class="lineCov">    3644104 :         PyObject *o = PyArray_PyIntFromIntp(vals[i]);</span></a>
-<a name="1226"><span class="lineNum">    1226 </span><span class="lineCov">    3644104 :         if (!o) {</span></a>
+<a name="1224"><span class="lineNum">    1224 </span><span class="lineCov">    5252012 :     for (i = 0; i &lt; len; i++) {</span></a>
+<a name="1225"><span class="lineNum">    1225 </span><span class="lineCov">    3644122 :         PyObject *o = PyArray_PyIntFromIntp(vals[i]);</span></a>
+<a name="1226"><span class="lineNum">    1226 </span><span class="lineCov">    3644122 :         if (!o) {</span></a>
 <a name="1227"><span class="lineNum">    1227 </span><span class="lineNoCov">          0 :             Py_DECREF(intTuple);</span></a>
 <a name="1228"><span class="lineNum">    1228 </span><span class="lineNoCov">          0 :             intTuple = NULL;</span></a>
 <a name="1229"><span class="lineNum">    1229 </span><span class="lineNoCov">          0 :             goto fail;</span></a>
 <a name="1230"><span class="lineNum">    1230 </span>            :         }</a>
-<a name="1231"><span class="lineNum">    1231 </span><span class="lineCov">    3644104 :         PyTuple_SET_ITEM(intTuple, i, o);</span></a>
+<a name="1231"><span class="lineNum">    1231 </span><span class="lineCov">    3644122 :         PyTuple_SET_ITEM(intTuple, i, o);</span></a>
 <a name="1232"><span class="lineNum">    1232 </span>            :     }</a>
 <a name="1233"><span class="lineNum">    1233 </span>            : </a>
-<a name="1234"><span class="lineNum">    1234 </span><span class="lineCov">    1607876 :  fail:</span></a>
-<a name="1235"><span class="lineNum">    1235 </span><span class="lineCov">    1607876 :     return intTuple;</span></a>
+<a name="1234"><span class="lineNum">    1234 </span><span class="lineCov">    1607890 :  fail:</span></a>
+<a name="1235"><span class="lineNum">    1235 </span><span class="lineCov">    1607890 :     return intTuple;</span></a>
 <a name="1236"><span class="lineNum">    1236 </span>            : }</a>
 </pre>
       </td>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -82,8 +82,8 @@
 <a name="12"><span class="lineNum">      12 </span>            : #define npyv_sqrt_f64 _mm_sqrt_pd</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : // Reciprocal</a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">     254033 : NPY_FINLINE npyv_f32 npyv_recip_f32(npyv_f32 a)</span></a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">     254033 : { return _mm_div_ps(_mm_set1_ps(1.0f), a); }</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">     254783 : NPY_FINLINE npyv_f32 npyv_recip_f32(npyv_f32 a)</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">     254783 : { return _mm_div_ps(_mm_set1_ps(1.0f), a); }</span></a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineCov">     390551 : NPY_FINLINE npyv_f64 npyv_recip_f64(npyv_f64 a)</span></a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineCov">     183315 : { return _mm_div_pd(_mm_set1_pd(1.0), a); }</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
@@ -104,8 +104,8 @@
 <a name="34"><span class="lineNum">      34 </span>            : // Square</a>
 <a name="35"><span class="lineNum">      35 </span><span class="lineCov">       1282 : NPY_FINLINE npyv_f32 npyv_square_f32(npyv_f32 a)</span></a>
 <a name="36"><span class="lineNum">      36 </span><span class="lineCov">       1282 : { return _mm_mul_ps(a, a); }</span></a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      19579 : NPY_FINLINE npyv_f64 npyv_square_f64(npyv_f64 a)</span></a>
-<a name="38"><span class="lineNum">      38 </span><span class="lineCov">      19177 : { return _mm_mul_pd(a, a); }</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      19581 : NPY_FINLINE npyv_f64 npyv_square_f64(npyv_f64 a)</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">      19179 : { return _mm_mul_pd(a, a); }</span></a>
 <a name="39"><span class="lineNum">      39 </span>            : </a>
 <a name="40"><span class="lineNum">      40 </span>            : // Maximum, natively mapping with no guarantees to handle NaN.</a>
 <a name="41"><span class="lineNum">      41 </span>            : #define npyv_max_f32 _mm_max_ps</a>

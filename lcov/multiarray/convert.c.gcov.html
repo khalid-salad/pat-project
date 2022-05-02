@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -609,16 +609,16 @@
 <a name="539"><span class="lineNum">     539 </span>            :  * Copy an array.</a>
 <a name="540"><span class="lineNum">     540 </span>            :  */</a>
 <a name="541"><span class="lineNum">     541 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="542"><span class="lineNum">     542 </span><span class="lineCov">     122721 : PyArray_NewCopy(PyArrayObject *obj, NPY_ORDER order)</span></a>
+<a name="542"><span class="lineNum">     542 </span><span class="lineCov">     122726 : PyArray_NewCopy(PyArrayObject *obj, NPY_ORDER order)</span></a>
 <a name="543"><span class="lineNum">     543 </span>            : {</a>
-<a name="544"><span class="lineNum">     544 </span><span class="lineCov">     122721 :     PyArrayObject *ret;</span></a>
+<a name="544"><span class="lineNum">     544 </span><span class="lineCov">     122726 :     PyArrayObject *ret;</span></a>
 <a name="545"><span class="lineNum">     545 </span>            : </a>
-<a name="546"><span class="lineNum">     546 </span><span class="lineCov">     122721 :     ret = (PyArrayObject *)PyArray_NewLikeArray(obj, order, NULL, 1);</span></a>
-<a name="547"><span class="lineNum">     547 </span><span class="lineCov">     122721 :     if (ret == NULL) {</span></a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineCov">     122726 :     ret = (PyArrayObject *)PyArray_NewLikeArray(obj, order, NULL, 1);</span></a>
+<a name="547"><span class="lineNum">     547 </span><span class="lineCov">     122726 :     if (ret == NULL) {</span></a>
 <a name="548"><span class="lineNum">     548 </span>            :         return NULL;</a>
 <a name="549"><span class="lineNum">     549 </span>            :     }</a>
 <a name="550"><span class="lineNum">     550 </span>            : </a>
-<a name="551"><span class="lineNum">     551 </span><span class="lineCov">     122716 :     if (PyArray_AssignArray(ret, obj, NULL, NPY_UNSAFE_CASTING) &lt; 0) {</span></a>
+<a name="551"><span class="lineNum">     551 </span><span class="lineCov">     122721 :     if (PyArray_AssignArray(ret, obj, NULL, NPY_UNSAFE_CASTING) &lt; 0) {</span></a>
 <a name="552"><span class="lineNum">     552 </span><span class="lineNoCov">          0 :         Py_DECREF(ret);</span></a>
 <a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 :         return NULL;</span></a>
 <a name="554"><span class="lineNum">     554 </span>            :     }</a>
@@ -631,36 +631,36 @@
 <a name="561"><span class="lineNum">     561 </span>            :  * steals a reference to type -- accepts NULL</a>
 <a name="562"><span class="lineNum">     562 </span>            :  */</a>
 <a name="563"><span class="lineNum">     563 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="564"><span class="lineNum">     564 </span><span class="lineCov">     350887 : PyArray_View(PyArrayObject *self, PyArray_Descr *type, PyTypeObject *pytype)</span></a>
+<a name="564"><span class="lineNum">     564 </span><span class="lineCov">     350985 : PyArray_View(PyArrayObject *self, PyArray_Descr *type, PyTypeObject *pytype)</span></a>
 <a name="565"><span class="lineNum">     565 </span>            : {</a>
-<a name="566"><span class="lineNum">     566 </span><span class="lineCov">     350887 :     PyArrayObject *ret = NULL;</span></a>
-<a name="567"><span class="lineNum">     567 </span><span class="lineCov">     350887 :     PyArray_Descr *dtype;</span></a>
-<a name="568"><span class="lineNum">     568 </span><span class="lineCov">     350887 :     PyTypeObject *subtype;</span></a>
-<a name="569"><span class="lineNum">     569 </span><span class="lineCov">     350887 :     int flags;</span></a>
+<a name="566"><span class="lineNum">     566 </span><span class="lineCov">     350985 :     PyArrayObject *ret = NULL;</span></a>
+<a name="567"><span class="lineNum">     567 </span><span class="lineCov">     350985 :     PyArray_Descr *dtype;</span></a>
+<a name="568"><span class="lineNum">     568 </span><span class="lineCov">     350985 :     PyTypeObject *subtype;</span></a>
+<a name="569"><span class="lineNum">     569 </span><span class="lineCov">     350985 :     int flags;</span></a>
 <a name="570"><span class="lineNum">     570 </span>            : </a>
-<a name="571"><span class="lineNum">     571 </span><span class="lineCov">     350887 :     if (pytype) {</span></a>
+<a name="571"><span class="lineNum">     571 </span><span class="lineCov">     350985 :     if (pytype) {</span></a>
 <a name="572"><span class="lineNum">     572 </span>            :         subtype = pytype;</a>
 <a name="573"><span class="lineNum">     573 </span>            :     }</a>
 <a name="574"><span class="lineNum">     574 </span>            :     else {</a>
-<a name="575"><span class="lineNum">     575 </span><span class="lineCov">     150003 :         subtype = Py_TYPE(self);</span></a>
+<a name="575"><span class="lineNum">     575 </span><span class="lineCov">     150031 :         subtype = Py_TYPE(self);</span></a>
 <a name="576"><span class="lineNum">     576 </span>            :     }</a>
 <a name="577"><span class="lineNum">     577 </span>            : </a>
-<a name="578"><span class="lineNum">     578 </span><span class="lineCov">     350887 :     dtype = PyArray_DESCR(self);</span></a>
-<a name="579"><span class="lineNum">     579 </span><span class="lineCov">     350887 :     flags = PyArray_FLAGS(self);</span></a>
+<a name="578"><span class="lineNum">     578 </span><span class="lineCov">     350985 :     dtype = PyArray_DESCR(self);</span></a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineCov">     350985 :     flags = PyArray_FLAGS(self);</span></a>
 <a name="580"><span class="lineNum">     580 </span>            : </a>
-<a name="581"><span class="lineNum">     581 </span><span class="lineCov">     350887 :     Py_INCREF(dtype);</span></a>
-<a name="582"><span class="lineNum">     582 </span><span class="lineCov">     350887 :     ret = (PyArrayObject *)PyArray_NewFromDescr_int(</span></a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineCov">     350985 :     Py_INCREF(dtype);</span></a>
+<a name="582"><span class="lineNum">     582 </span><span class="lineCov">     350985 :     ret = (PyArrayObject *)PyArray_NewFromDescr_int(</span></a>
 <a name="583"><span class="lineNum">     583 </span>            :             subtype, dtype,</a>
-<a name="584"><span class="lineNum">     584 </span><span class="lineCov">     350887 :             PyArray_NDIM(self), PyArray_DIMS(self), PyArray_STRIDES(self),</span></a>
+<a name="584"><span class="lineNum">     584 </span><span class="lineCov">     350985 :             PyArray_NDIM(self), PyArray_DIMS(self), PyArray_STRIDES(self),</span></a>
 <a name="585"><span class="lineNum">     585 </span>            :             PyArray_DATA(self),</a>
 <a name="586"><span class="lineNum">     586 </span>            :             flags, (PyObject *)self, (PyObject *)self,</a>
 <a name="587"><span class="lineNum">     587 </span>            :             0, 1);</a>
-<a name="588"><span class="lineNum">     588 </span><span class="lineCov">     350887 :     if (ret == NULL) {</span></a>
+<a name="588"><span class="lineNum">     588 </span><span class="lineCov">     350985 :     if (ret == NULL) {</span></a>
 <a name="589"><span class="lineNum">     589 </span><span class="lineCov">          2 :         Py_XDECREF(type);</span></a>
 <a name="590"><span class="lineNum">     590 </span><span class="lineCov">          2 :         return NULL;</span></a>
 <a name="591"><span class="lineNum">     591 </span>            :     }</a>
 <a name="592"><span class="lineNum">     592 </span>            : </a>
-<a name="593"><span class="lineNum">     593 </span><span class="lineCov">     350885 :     if (type != NULL) {</span></a>
+<a name="593"><span class="lineNum">     593 </span><span class="lineCov">     350983 :     if (type != NULL) {</span></a>
 <a name="594"><span class="lineNum">     594 </span><span class="lineCov">      28422 :         if (PyObject_SetAttrString((PyObject *)ret, &quot;dtype&quot;,</span></a>
 <a name="595"><span class="lineNum">     595 </span>            :                                    (PyObject *)type) &lt; 0) {</a>
 <a name="596"><span class="lineNum">     596 </span><span class="lineCov">          6 :             Py_DECREF(ret);</span></a>

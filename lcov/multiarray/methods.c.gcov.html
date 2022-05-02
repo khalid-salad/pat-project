@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">79</td>
@@ -108,21 +108,21 @@
 <a name="38"><span class="lineNum">      38 </span>            :  *</a>
 <a name="39"><span class="lineNum">      39 </span>            :  */</a>
 <a name="40"><span class="lineNum">      40 </span>            : static int</a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">      41179 : NpyArg_ParseKeywords(PyObject *keys, const char *format, char **kwlist, ...)</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">      41193 : NpyArg_ParseKeywords(PyObject *keys, const char *format, char **kwlist, ...)</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : {</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">      41179 :     PyObject *args = PyTuple_New(0);</span></a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineCov">      41179 :     int ret;</span></a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">      41179 :     va_list va;</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">      41193 :     PyObject *args = PyTuple_New(0);</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">      41193 :     int ret;</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">      41193 :     va_list va;</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">      41179 :     if (args == NULL) {</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">      41193 :     if (args == NULL) {</span></a>
 <a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 :         PyErr_SetString(PyExc_RuntimeError,</span></a>
 <a name="49"><span class="lineNum">      49 </span>            :                 &quot;Failed to allocate new tuple&quot;);</a>
 <a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :         return 0;</span></a>
 <a name="51"><span class="lineNum">      51 </span>            :     }</a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">      41179 :     va_start(va, kwlist);</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">      41179 :     ret = PyArg_VaParseTupleAndKeywords(args, keys, format, kwlist, va);</span></a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">      41179 :     va_end(va);</span></a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">      41179 :     Py_DECREF(args);</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">      41193 :     va_start(va, kwlist);</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">      41193 :     ret = PyArg_VaParseTupleAndKeywords(args, keys, format, kwlist, va);</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">      41193 :     va_end(va);</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">      41193 :     Py_DECREF(args);</span></a>
 <a name="56"><span class="lineNum">      56 </span>            :     return ret;</a>
 <a name="57"><span class="lineNum">      57 </span>            : }</a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
@@ -232,24 +232,24 @@
 <a name="162"><span class="lineNum">     162 </span>            : }</a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
 <a name="164"><span class="lineNum">     164 </span>            : static PyObject *</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">      40951 : array_reshape(PyArrayObject *self, PyObject *args, PyObject *kwds)</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">      40965 : array_reshape(PyArrayObject *self, PyObject *args, PyObject *kwds)</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : {</a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">      40951 :     static char *keywords[] = {&quot;order&quot;, NULL};</span></a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">      40951 :     PyArray_Dims newshape;</span></a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">      40951 :     PyObject *ret;</span></a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">      40951 :     NPY_ORDER order = NPY_CORDER;</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">      40951 :     Py_ssize_t n = PyTuple_Size(args);</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">      40965 :     static char *keywords[] = {&quot;order&quot;, NULL};</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">      40965 :     PyArray_Dims newshape;</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">      40965 :     PyObject *ret;</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">      40965 :     NPY_ORDER order = NPY_CORDER;</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">      40965 :     Py_ssize_t n = PyTuple_Size(args);</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : </a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">      40951 :     if (!NpyArg_ParseKeywords(kwds, &quot;|O&amp;&quot;, keywords,</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">      40965 :     if (!NpyArg_ParseKeywords(kwds, &quot;|O&amp;&quot;, keywords,</span></a>
 <a name="174"><span class="lineNum">     174 </span>            :                 PyArray_OrderConverter, &amp;order)) {</a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">      40951 :         return NULL;</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">      40965 :         return NULL;</span></a>
 <a name="176"><span class="lineNum">     176 </span>            :     }</a>
 <a name="177"><span class="lineNum">     177 </span>            : </a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">      40951 :     if (n &lt;= 1) {</span></a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">      34043 :         if (n != 0 &amp;&amp; PyTuple_GET_ITEM(args, 0) == Py_None) {</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">      40965 :     if (n &lt;= 1) {</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">      34057 :         if (n != 0 &amp;&amp; PyTuple_GET_ITEM(args, 0) == Py_None) {</span></a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :             return PyArray_View(self, NULL, NULL);</span></a>
 <a name="181"><span class="lineNum">     181 </span>            :         }</a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">      34043 :         if (!PyArg_ParseTuple(args, &quot;O&amp;:reshape&quot;, PyArray_IntpConverter,</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">      34057 :         if (!PyArg_ParseTuple(args, &quot;O&amp;:reshape&quot;, PyArray_IntpConverter,</span></a>
 <a name="183"><span class="lineNum">     183 </span>            :                               &amp;newshape)) {</a>
 <a name="184"><span class="lineNum">     184 </span>            :             return NULL;</a>
 <a name="185"><span class="lineNum">     185 </span>            :         }</a>
@@ -263,9 +263,9 @@
 <a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :             goto fail;</span></a>
 <a name="194"><span class="lineNum">     194 </span>            :         }</a>
 <a name="195"><span class="lineNum">     195 </span>            :     }</a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">      40901 :     ret = PyArray_Newshape(self, &amp;newshape, order);</span></a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">      40901 :     npy_free_cache_dim_obj(newshape);</span></a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">      40901 :     return ret;</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">      40915 :     ret = PyArray_Newshape(self, &amp;newshape, order);</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">      40915 :     npy_free_cache_dim_obj(newshape);</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">      40915 :     return ret;</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :  fail:</span></a>
 <a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :     npy_free_cache_dim_obj(newshape);</span></a>
@@ -300,52 +300,52 @@
 <a name="230"><span class="lineNum">     230 </span>            : }</a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
 <a name="232"><span class="lineNum">     232 </span>            : static PyObject *</a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">     306885 : array_view(PyArrayObject *self,</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">     306969 : array_view(PyArrayObject *self,</span></a>
 <a name="234"><span class="lineNum">     234 </span>            :         PyObject *const *args, Py_ssize_t len_args, PyObject *kwnames)</a>
 <a name="235"><span class="lineNum">     235 </span>            : {</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">     306885 :     PyObject *out_dtype = NULL;</span></a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">     306885 :     PyObject *out_type = NULL;</span></a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineCov">     306885 :     PyArray_Descr *dtype = NULL;</span></a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">     306885 :     NPY_PREPARE_ARGPARSER;</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">     306969 :     PyObject *out_dtype = NULL;</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">     306969 :     PyObject *out_type = NULL;</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">     306969 :     PyArray_Descr *dtype = NULL;</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">     306969 :     NPY_PREPARE_ARGPARSER;</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">     306885 :     if (npy_parse_arguments(&quot;view&quot;, args, len_args, kwnames,</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">     306969 :     if (npy_parse_arguments(&quot;view&quot;, args, len_args, kwnames,</span></a>
 <a name="242"><span class="lineNum">     242 </span>            :             &quot;|dtype&quot;, NULL, &amp;out_dtype,</a>
 <a name="243"><span class="lineNum">     243 </span>            :             &quot;|type&quot;, NULL, &amp;out_type,</a>
 <a name="244"><span class="lineNum">     244 </span>            :             NULL, NULL, NULL) &lt; 0) {</a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">     306885 :         return NULL;</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">     306969 :         return NULL;</span></a>
 <a name="246"><span class="lineNum">     246 </span>            :     }</a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
 <a name="248"><span class="lineNum">     248 </span>            :     /* If user specified a positional argument, guess whether it</a>
 <a name="249"><span class="lineNum">     249 </span>            :        represents a type or a dtype for backward compatibility. */</a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineCov">     306885 :     if (out_dtype) {</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">     306969 :     if (out_dtype) {</span></a>
 <a name="251"><span class="lineNum">     251 </span>            :         /* type specified? */</a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineCov">     430734 :         if (PyType_Check(out_dtype) &amp;&amp;</span></a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineCov">     214352 :             PyType_IsSubtype((PyTypeObject *)out_dtype,</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">     430874 :         if (PyType_Check(out_dtype) &amp;&amp;</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">     214422 :             PyType_IsSubtype((PyTypeObject *)out_dtype,</span></a>
 <a name="254"><span class="lineNum">     254 </span>            :                              &amp;PyArray_Type)) {</a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">     188026 :             if (out_type) {</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">     188096 :             if (out_type) {</span></a>
 <a name="256"><span class="lineNum">     256 </span><span class="lineNoCov">          0 :                 PyErr_SetString(PyExc_ValueError,</span></a>
 <a name="257"><span class="lineNum">     257 </span>            :                                 &quot;Cannot specify output type twice.&quot;);</a>
 <a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 :                 return NULL;</span></a>
 <a name="259"><span class="lineNum">     259 </span>            :             }</a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">     188026 :             out_type = out_dtype;</span></a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">     188026 :             out_dtype = NULL;</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">     188096 :             out_type = out_dtype;</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">     188096 :             out_dtype = NULL;</span></a>
 <a name="262"><span class="lineNum">     262 </span>            :         }</a>
 <a name="263"><span class="lineNum">     263 </span>            :     }</a>
 <a name="264"><span class="lineNum">     264 </span>            : </a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineCov">     495542 :     if ((out_type) &amp;&amp; (!PyType_Check(out_type) ||</span></a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">     188657 :                        !PyType_IsSubtype((PyTypeObject *)out_type,</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">     495696 :     if ((out_type) &amp;&amp; (!PyType_Check(out_type) ||</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineCov">     188727 :                        !PyType_IsSubtype((PyTypeObject *)out_type,</span></a>
 <a name="267"><span class="lineNum">     267 </span>            :                                          &amp;PyArray_Type))) {</a>
 <a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :         PyErr_SetString(PyExc_ValueError,</span></a>
 <a name="269"><span class="lineNum">     269 </span>            :                         &quot;Type must be a sub-type of ndarray type&quot;);</a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :         return NULL;</span></a>
 <a name="271"><span class="lineNum">     271 </span>            :     }</a>
 <a name="272"><span class="lineNum">     272 </span>            : </a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">     335241 :     if ((out_dtype) &amp;&amp;</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">     335325 :     if ((out_dtype) &amp;&amp;</span></a>
 <a name="274"><span class="lineNum">     274 </span><span class="lineCov">      28356 :         (PyArray_DescrConverter(out_dtype, &amp;dtype) == NPY_FAIL)) {</span></a>
 <a name="275"><span class="lineNum">     275 </span>            :         return NULL;</a>
 <a name="276"><span class="lineNum">     276 </span>            :     }</a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineCov">     306885 :     return PyArray_View(self, dtype, (PyTypeObject*)out_type);</span></a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineCov">     306969 :     return PyArray_View(self, dtype, (PyTypeObject*)out_type);</span></a>
 <a name="279"><span class="lineNum">     279 </span>            : }</a>
 <a name="280"><span class="lineNum">     280 </span>            : </a>
 <a name="281"><span class="lineNum">     281 </span>            : static PyObject *</a>

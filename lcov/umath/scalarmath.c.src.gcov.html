@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">306</td>
@@ -674,13 +674,13 @@
 <a name="604"><span class="lineNum">     604 </span>            :  */</a>
 <a name="605"><span class="lineNum">     605 </span>            : </a>
 <a name="606"><span class="lineNum">     606 </span>            : static int</a>
-<a name="607"><span class="lineNum">     607 </span><span class="lineCov">    1786248 : _@name@_convert_to_ctype(PyObject *a, @type@ *arg1)</span></a>
+<a name="607"><span class="lineNum">     607 </span><span class="lineCov">    1786276 : _@name@_convert_to_ctype(PyObject *a, @type@ *arg1)</span></a>
 <a name="608"><span class="lineNum">     608 </span>            : {</a>
-<a name="609"><span class="lineNum">     609 </span><span class="lineCov">    1786248 :     PyObject *temp;</span></a>
+<a name="609"><span class="lineNum">     609 </span><span class="lineCov">    1786276 :     PyObject *temp;</span></a>
 <a name="610"><span class="lineNum">     610 </span>            : </a>
-<a name="611"><span class="lineNum">     611 </span><span class="lineCov">    1786248 :     if (PyArray_IsScalar(a, @Name@)) {</span></a>
-<a name="612"><span class="lineNum">     612 </span><span class="lineCov">    1555083 :         *arg1 = PyArrayScalar_VAL(a, @Name@);</span></a>
-<a name="613"><span class="lineNum">     613 </span><span class="lineCov">    1555083 :         return 0;</span></a>
+<a name="611"><span class="lineNum">     611 </span><span class="lineCov">    1786276 :     if (PyArray_IsScalar(a, @Name@)) {</span></a>
+<a name="612"><span class="lineNum">     612 </span><span class="lineCov">    1555111 :         *arg1 = PyArrayScalar_VAL(a, @Name@);</span></a>
+<a name="613"><span class="lineNum">     613 </span><span class="lineCov">    1555111 :         return 0;</span></a>
 <a name="614"><span class="lineNum">     614 </span>            :     }</a>
 <a name="615"><span class="lineNum">     615 </span><span class="lineCov">     231165 :     else if (PyArray_IsScalar(a, Generic)) {</span></a>
 <a name="616"><span class="lineNum">     616 </span><span class="lineCov">      67202 :         PyArray_Descr *descr1;</span></a>
@@ -780,16 +780,16 @@
 <a name="710"><span class="lineNum">     710 </span>            :  *         npy_half, npy_float, npy_double, npy_cfloat, npy_cdouble#</a>
 <a name="711"><span class="lineNum">     711 </span>            :  */</a>
 <a name="712"><span class="lineNum">     712 </span>            : static int</a>
-<a name="713"><span class="lineNum">     713 </span><span class="lineCov">    1049367 : _@name@_convert2_to_ctypes(PyObject *a, @type@ *arg1,</span></a>
+<a name="713"><span class="lineNum">     713 </span><span class="lineCov">    1049381 : _@name@_convert2_to_ctypes(PyObject *a, @type@ *arg1,</span></a>
 <a name="714"><span class="lineNum">     714 </span>            :                            PyObject *b, @type@ *arg2)</a>
 <a name="715"><span class="lineNum">     715 </span>            : {</a>
-<a name="716"><span class="lineNum">     716 </span><span class="lineCov">    1049367 :     int ret;</span></a>
-<a name="717"><span class="lineNum">     717 </span><span class="lineCov">    1049367 :     ret = _@name@_convert_to_ctype(a, arg1);</span></a>
-<a name="718"><span class="lineNum">     718 </span><span class="lineCov">    1049367 :     if (ret &lt; 0) {</span></a>
+<a name="716"><span class="lineNum">     716 </span><span class="lineCov">    1049381 :     int ret;</span></a>
+<a name="717"><span class="lineNum">     717 </span><span class="lineCov">    1049381 :     ret = _@name@_convert_to_ctype(a, arg1);</span></a>
+<a name="718"><span class="lineNum">     718 </span><span class="lineCov">    1049381 :     if (ret &lt; 0) {</span></a>
 <a name="719"><span class="lineNum">     719 </span>            :         return ret;</a>
 <a name="720"><span class="lineNum">     720 </span>            :     }</a>
-<a name="721"><span class="lineNum">     721 </span><span class="lineCov">    1046262 :     ret = _@name@_convert_to_ctype(b, arg2);</span></a>
-<a name="722"><span class="lineNum">     722 </span><span class="lineCov">    1046262 :     if (ret &lt; 0) {</span></a>
+<a name="721"><span class="lineNum">     721 </span><span class="lineCov">    1046276 :     ret = _@name@_convert_to_ctype(b, arg2);</span></a>
+<a name="722"><span class="lineNum">     722 </span><span class="lineCov">    1046276 :     if (ret &lt; 0) {</span></a>
 <a name="723"><span class="lineNum">     723 </span>            :         return ret;</a>
 <a name="724"><span class="lineNum">     724 </span>            :     }</a>
 <a name="725"><span class="lineNum">     725 </span>            :     return 0;</a>
@@ -1431,14 +1431,14 @@
 <a name="1361"><span class="lineNum">    1361 </span>            :  * #simp = def*10, def_half, def*3, cmplx*3#</a>
 <a name="1362"><span class="lineNum">    1362 </span>            :  */</a>
 <a name="1363"><span class="lineNum">    1363 </span>            : static PyObject*</a>
-<a name="1364"><span class="lineNum">    1364 </span><span class="lineCov">     251617 : @name@_richcompare(PyObject *self, PyObject *other, int cmp_op)</span></a>
+<a name="1364"><span class="lineNum">    1364 </span><span class="lineCov">     251631 : @name@_richcompare(PyObject *self, PyObject *other, int cmp_op)</span></a>
 <a name="1365"><span class="lineNum">    1365 </span>            : {</a>
-<a name="1366"><span class="lineNum">    1366 </span><span class="lineCov">     251617 :     npy_@name@ arg1, arg2;</span></a>
-<a name="1367"><span class="lineNum">    1367 </span><span class="lineCov">     251617 :     int out=0;</span></a>
+<a name="1366"><span class="lineNum">    1366 </span><span class="lineCov">     251631 :     npy_@name@ arg1, arg2;</span></a>
+<a name="1367"><span class="lineNum">    1367 </span><span class="lineCov">     251631 :     int out=0;</span></a>
 <a name="1368"><span class="lineNum">    1368 </span>            : </a>
-<a name="1369"><span class="lineNum">    1369 </span><span class="lineCov">     251617 :     RICHCMP_GIVE_UP_IF_NEEDED(self, other);</span></a>
+<a name="1369"><span class="lineNum">    1369 </span><span class="lineCov">     251631 :     RICHCMP_GIVE_UP_IF_NEEDED(self, other);</span></a>
 <a name="1370"><span class="lineNum">    1370 </span>            : </a>
-<a name="1371"><span class="lineNum">    1371 </span><span class="lineCov">     251617 :     switch(_@name@_convert2_to_ctypes(self, &amp;arg1, other, &amp;arg2)) {</span></a>
+<a name="1371"><span class="lineNum">    1371 </span><span class="lineCov">     251631 :     switch(_@name@_convert2_to_ctypes(self, &amp;arg1, other, &amp;arg2)) {</span></a>
 <a name="1372"><span class="lineNum">    1372 </span>            :     case 0:</a>
 <a name="1373"><span class="lineNum">    1373 </span>            :         break;</a>
 <a name="1374"><span class="lineNum">    1374 </span><span class="lineCov">      48985 :     case -1:</span></a>
@@ -1459,7 +1459,7 @@
 <a name="1389"><span class="lineNum">    1389 </span>            :     }</a>
 <a name="1390"><span class="lineNum">    1390 </span>            : </a>
 <a name="1391"><span class="lineNum">    1391 </span>            :     /* here we do the actual calculation with arg1 and arg2 */</a>
-<a name="1392"><span class="lineNum">    1392 </span><span class="lineCov">     202533 :     switch (cmp_op) {</span></a>
+<a name="1392"><span class="lineNum">    1392 </span><span class="lineCov">     202547 :     switch (cmp_op) {</span></a>
 <a name="1393"><span class="lineNum">    1393 </span><span class="lineCov">     116099 :     case Py_EQ:</span></a>
 <a name="1394"><span class="lineNum">    1394 </span><span class="lineCov">     116099 :         out = @simp@_cmp_eq(arg1, arg2);</span></a>
 <a name="1395"><span class="lineNum">    1395 </span><span class="lineCov">     112076 :         break;</span></a>
@@ -1472,19 +1472,19 @@
 <a name="1402"><span class="lineNum">    1402 </span><span class="lineCov">      11743 :     case Py_GE:</span></a>
 <a name="1403"><span class="lineNum">    1403 </span><span class="lineCov">      11743 :         out = @simp@_cmp_ge(arg1, arg2);</span></a>
 <a name="1404"><span class="lineNum">    1404 </span><span class="lineCov">      11735 :         break;</span></a>
-<a name="1405"><span class="lineNum">    1405 </span><span class="lineCov">      27994 :     case Py_LT:</span></a>
-<a name="1406"><span class="lineNum">    1406 </span><span class="lineCov">      27994 :         out = @simp@_cmp_lt(arg1, arg2);</span></a>
-<a name="1407"><span class="lineNum">    1407 </span><span class="lineCov">      27978 :         break;</span></a>
+<a name="1405"><span class="lineNum">    1405 </span><span class="lineCov">      28008 :     case Py_LT:</span></a>
+<a name="1406"><span class="lineNum">    1406 </span><span class="lineCov">      28008 :         out = @simp@_cmp_lt(arg1, arg2);</span></a>
+<a name="1407"><span class="lineNum">    1407 </span><span class="lineCov">      27992 :         break;</span></a>
 <a name="1408"><span class="lineNum">    1408 </span><span class="lineCov">       7815 :     case Py_GT:</span></a>
 <a name="1409"><span class="lineNum">    1409 </span><span class="lineCov">       7815 :         out = @simp@_cmp_gt(arg1, arg2);</span></a>
 <a name="1410"><span class="lineNum">    1410 </span><span class="lineCov">       7799 :         break;</span></a>
 <a name="1411"><span class="lineNum">    1411 </span>            :     }</a>
 <a name="1412"><span class="lineNum">    1412 </span>            : </a>
-<a name="1413"><span class="lineNum">    1413 </span><span class="lineCov">     202533 :     if (out) {</span></a>
-<a name="1414"><span class="lineNum">    1414 </span><span class="lineCov">     100132 :         PyArrayScalar_RETURN_TRUE;</span></a>
+<a name="1413"><span class="lineNum">    1413 </span><span class="lineCov">     202547 :     if (out) {</span></a>
+<a name="1414"><span class="lineNum">    1414 </span><span class="lineCov">     100122 :         PyArrayScalar_RETURN_TRUE;</span></a>
 <a name="1415"><span class="lineNum">    1415 </span>            :     }</a>
 <a name="1416"><span class="lineNum">    1416 </span>            :     else {</a>
-<a name="1417"><span class="lineNum">    1417 </span><span class="lineCov">     102401 :         PyArrayScalar_RETURN_FALSE;</span></a>
+<a name="1417"><span class="lineNum">    1417 </span><span class="lineCov">     102425 :         PyArrayScalar_RETURN_FALSE;</span></a>
 <a name="1418"><span class="lineNum">    1418 </span>            :     }</a>
 <a name="1419"><span class="lineNum">    1419 </span>            : }</a>
 <a name="1420"><span class="lineNum">    1420 </span>            : /**end repeat**/</a>

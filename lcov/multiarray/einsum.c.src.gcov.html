@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -135,10 +135,10 @@
 <a name="65"><span class="lineNum">      65 </span>            : </a>
 <a name="66"><span class="lineNum">      66 </span><span class="lineCov">      29177 :             op_labels[idim++] = label;</span></a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineCov">      29177 :             if (label &lt; *min_label) {</span></a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">      16231 :                 *min_label = label;</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">      16153 :                 *min_label = label;</span></a>
 <a name="69"><span class="lineNum">      69 </span>            :             }</a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">      29177 :             if (label &gt; *max_label) {</span></a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">      18712 :                 *max_label = label;</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">      18709 :                 *max_label = label;</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :             }</a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineCov">      29177 :             label_counts[label]++;</span></a>
 <a name="74"><span class="lineNum">      74 </span>            :         }</a>
@@ -1021,8 +1021,8 @@
 <a name="951"><span class="lineNum">     951 </span>            :      */</a>
 <a name="952"><span class="lineNum">     952 </span><span class="lineCov">      14774 :     iter_labels = output_labels;</span></a>
 <a name="953"><span class="lineNum">     953 </span><span class="lineCov">      14774 :     ndim_iter = ndim_output;</span></a>
-<a name="954"><span class="lineNum">     954 </span><span class="lineCov">      55394 :     for (label = min_label; label &lt;= max_label; ++label) {</span></a>
-<a name="955"><span class="lineNum">     955 </span><span class="lineCov">      40620 :         if (label_counts[label] &gt; 0 &amp;&amp;</span></a>
+<a name="954"><span class="lineNum">     954 </span><span class="lineCov">      48729 :     for (label = min_label; label &lt;= max_label; ++label) {</span></a>
+<a name="955"><span class="lineNum">     955 </span><span class="lineCov">      33955 :         if (label_counts[label] &gt; 0 &amp;&amp;</span></a>
 <a name="956"><span class="lineNum">     956 </span><span class="lineCov">      20774 :                 memchr(output_labels, label, ndim_output) == NULL) {</span></a>
 <a name="957"><span class="lineNum">     957 </span><span class="lineCov">      10911 :             if (ndim_iter &gt;= NPY_MAXDIMS) {</span></a>
 <a name="958"><span class="lineNum">     958 </span><span class="lineNoCov">          0 :                 PyErr_SetString(PyExc_ValueError,</span></a>

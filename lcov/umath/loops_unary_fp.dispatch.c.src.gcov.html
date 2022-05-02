@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">30</td>
@@ -214,17 +214,17 @@
 <a name="144"><span class="lineNum">     144 </span>            :  * #DTYPE  = CONTIG, CONTIG,  NCONTIG, NCONTIG#</a>
 <a name="145"><span class="lineNum">     145 </span>            :  * #unroll = 4,      4,       2,       2#</a>
 <a name="146"><span class="lineNum">     146 </span>            :  */</a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     247611 : static void simd_@TYPE@_@kind@_@STYPE@_@DTYPE@</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     248613 : static void simd_@TYPE@_@kind@_@STYPE@_@DTYPE@</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : (const void *_src, npy_intp ssrc, void *_dst, npy_intp sdst, npy_intp len)</a>
 <a name="149"><span class="lineNum">     149 </span>            : {</a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">     247611 :     const npyv_lanetype_@sfx@ *src = _src;</span></a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">     247611 :           npyv_lanetype_@sfx@ *dst = _dst;</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">     248613 :     const npyv_lanetype_@sfx@ *src = _src;</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">     248613 :           npyv_lanetype_@sfx@ *dst = _dst;</span></a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">     247611 :     const int vstep = npyv_nlanes_@sfx@;</span></a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">     247611 :     const int wstep = vstep * @unroll@;</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">     248613 :     const int vstep = npyv_nlanes_@sfx@;</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">     248613 :     const int wstep = vstep * @unroll@;</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
 <a name="156"><span class="lineNum">     156 </span>            :     // unrolled iterations</a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">    1000950 :     for (; len &gt;= wstep; len -= wstep, src += ssrc*wstep, dst += sdst*wstep) {</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">    1001827 :     for (; len &gt;= wstep; len -= wstep, src += ssrc*wstep, dst += sdst*wstep) {</span></a>
 <a name="158"><span class="lineNum">     158 </span>            :         /**begin repeat3</a>
 <a name="159"><span class="lineNum">     159 </span>            :          * #N  = 0, 1, 2, 3#</a>
 <a name="160"><span class="lineNum">     160 </span>            :          */</a>
@@ -232,9 +232,9 @@
 <a name="162"><span class="lineNum">     162 </span>            :             #if @STYPE@ == CONTIG</a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineCov">     614524 :                 npyv_@sfx@ v_src@N@ = npyv_load_@sfx@(src + vstep*@N@);</span></a>
 <a name="164"><span class="lineNum">     164 </span>            :             #else</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">     138815 :                 npyv_@sfx@ v_src@N@ = npyv_loadn_@sfx@(src + ssrc*vstep*@N@, ssrc);</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">     138690 :                 npyv_@sfx@ v_src@N@ = npyv_loadn_@sfx@(src + ssrc*vstep*@N@, ssrc);</span></a>
 <a name="166"><span class="lineNum">     166 </span>            :             #endif</a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     862975 :             npyv_@sfx@ v_unary@N@ = npyv_@intr@_@sfx@(v_src@N@);</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     862725 :             npyv_@sfx@ v_unary@N@ = npyv_@intr@_@sfx@(v_src@N@);</span></a>
 <a name="168"><span class="lineNum">     168 </span>            :         #endif</a>
 <a name="169"><span class="lineNum">     169 </span>            :         /**end repeat3**/</a>
 <a name="170"><span class="lineNum">     170 </span>            :         /**begin repeat3</a>
@@ -244,34 +244,34 @@
 <a name="174"><span class="lineNum">     174 </span>            :             #if @DTYPE@ == CONTIG</a>
 <a name="175"><span class="lineNum">     175 </span><span class="lineCov">     709839 :                 npyv_store_@sfx@(dst + vstep*@N@, v_unary@N@);</span></a>
 <a name="176"><span class="lineNum">     176 </span>            :             #else</a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">      72500 :                 npyv_storen_@sfx@(dst + sdst*vstep*@N@, sdst, v_unary@N@);</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">      72125 :                 npyv_storen_@sfx@(dst + sdst*vstep*@N@, sdst, v_unary@N@);</span></a>
 <a name="178"><span class="lineNum">     178 </span>            :             #endif</a>
 <a name="179"><span class="lineNum">     179 </span>            :         #endif</a>
 <a name="180"><span class="lineNum">     180 </span>            :         /**end repeat3**/</a>
 <a name="181"><span class="lineNum">     181 </span>            :     }</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span>            :     // vector-sized iterations</a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineCov">     362085 :     for (; len &gt;= vstep; len -= vstep, src += ssrc*vstep, dst += sdst*vstep) {</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">     363085 :     for (; len &gt;= vstep; len -= vstep, src += ssrc*vstep, dst += sdst*vstep) {</span></a>
 <a name="185"><span class="lineNum">     185 </span>            :     #if @STYPE@ == CONTIG</a>
 <a name="186"><span class="lineNum">     186 </span><span class="lineCov">      69941 :         npyv_@sfx@ v_src0 = npyv_load_@sfx@(src);</span></a>
 <a name="187"><span class="lineNum">     187 </span>            :     #else</a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">      44533 :         npyv_@sfx@ v_src0 = npyv_loadn_@sfx@(src, ssrc);</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">      44531 :         npyv_@sfx@ v_src0 = npyv_loadn_@sfx@(src, ssrc);</span></a>
 <a name="189"><span class="lineNum">     189 </span>            :     #endif</a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">     114474 :         npyv_@sfx@ v_unary0 = npyv_@intr@_@sfx@(v_src0);</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">     114472 :         npyv_@sfx@ v_unary0 = npyv_@intr@_@sfx@(v_src0);</span></a>
 <a name="191"><span class="lineNum">     191 </span>            :     #if @DTYPE@ == CONTIG</a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">     114474 :         npyv_store_@sfx@(dst, v_unary0);</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">     114472 :         npyv_store_@sfx@(dst, v_unary0);</span></a>
 <a name="193"><span class="lineNum">     193 </span>            :     #else</a>
 <a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :         npyv_storen_@sfx@(dst, sdst, v_unary0);</span></a>
 <a name="195"><span class="lineNum">     195 </span>            :     #endif</a>
 <a name="196"><span class="lineNum">     196 </span>            :     }</a>
 <a name="197"><span class="lineNum">     197 </span>            : </a>
 <a name="198"><span class="lineNum">     198 </span>            :     // last partial iteration, if needed</a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">     247611 :     if(len &gt; 0){</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">     248613 :     if(len &gt; 0){</span></a>
 <a name="200"><span class="lineNum">     200 </span>            :     #if @STYPE@ == CONTIG</a>
 <a name="201"><span class="lineNum">     201 </span>            :         #if @repl_0w1@</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">     110215 :             npyv_@sfx@ v_src0 = npyv_load_till_@sfx@(src, len, 1);</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">     111215 :             npyv_@sfx@ v_src0 = npyv_load_till_@sfx@(src, len, 1);</span></a>
 <a name="203"><span class="lineNum">     203 </span>            :         #else</a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">      30362 :             npyv_@sfx@ v_src0 = npyv_load_tillz_@sfx@(src, len);</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">      30366 :             npyv_@sfx@ v_src0 = npyv_load_tillz_@sfx@(src, len);</span></a>
 <a name="205"><span class="lineNum">     205 </span>            :         #endif</a>
 <a name="206"><span class="lineNum">     206 </span>            :     #else</a>
 <a name="207"><span class="lineNum">     207 </span>            :         #if @repl_0w1@</a>
@@ -289,16 +289,16 @@
 <a name="219"><span class="lineNum">     219 </span>            :              */</a>
 <a name="220"><span class="lineNum">     220 </span>            :              volatile npyv_@sfx@ unused_but_workaround_bug = v_src0;</a>
 <a name="221"><span class="lineNum">     221 </span>            :         #endif // @RECIP_WORKAROUND@</a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">     200139 :         npyv_@sfx@ v_unary0 = npyv_@intr@_@sfx@(v_src0);</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">     201143 :         npyv_@sfx@ v_unary0 = npyv_@intr@_@sfx@(v_src0);</span></a>
 <a name="223"><span class="lineNum">     223 </span>            :     #if @DTYPE@ == CONTIG</a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">     200130 :         npyv_store_till_@sfx@(dst, len, v_unary0);</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">     201134 :         npyv_store_till_@sfx@(dst, len, v_unary0);</span></a>
 <a name="225"><span class="lineNum">     225 </span>            :     #else</a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineCov">          9 :         npyv_storen_till_@sfx@(dst, sdst, len, v_unary0);</span></a>
 <a name="227"><span class="lineNum">     227 </span>            :     #endif</a>
 <a name="228"><span class="lineNum">     228 </span>            :     }</a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">     247611 :     npyv_cleanup();</span></a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">     247611 : }</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">     248613 :     npyv_cleanup();</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">     248613 : }</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : /**end repeat2**/</a>
 <a name="233"><span class="lineNum">     233 </span>            : /**end repeat1**/</a>
 <a name="234"><span class="lineNum">     234 </span>            : #endif // @VCHK@</a>
@@ -330,38 +330,38 @@
 <a name="260"><span class="lineNum">     260 </span><span class="lineCov">     141717 :     const int lsize = sizeof(npyv_lanetype_@sfx@);</span></a>
 <a name="261"><span class="lineNum">     261 </span><span class="lineCov">     141717 :     assert(src_step % lsize == 0 &amp;&amp; dst_step % lsize == 0);</span></a>
 <a name="262"><span class="lineNum">     262 </span><span class="lineCov">     283434 :     if (is_mem_overlap(src, src_step, dst, dst_step, len)) {</span></a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineCov">        106 :         goto no_unroll;</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">        108 :         goto no_unroll;</span></a>
 <a name="264"><span class="lineNum">     264 </span>            :     }</a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineCov">     141611 :     const npy_intp ssrc = src_step / lsize;</span></a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">     141611 :     const npy_intp sdst = dst_step / lsize;</span></a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">     141611 :     if (!npyv_loadable_stride_@sfx@(ssrc) || !npyv_storable_stride_@sfx@(sdst)) {</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">     141609 :     const npy_intp ssrc = src_step / lsize;</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineCov">     141609 :     const npy_intp sdst = dst_step / lsize;</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">     141609 :     if (!npyv_loadable_stride_@sfx@(ssrc) || !npyv_storable_stride_@sfx@(sdst)) {</span></a>
 <a name="268"><span class="lineNum">     268 </span>            :         goto no_unroll;</a>
 <a name="269"><span class="lineNum">     269 </span>            :     }</a>
-<a name="270"><span class="lineNum">     270 </span><span class="lineCov">     141611 :     if (ssrc == 1 &amp;&amp; sdst == 1) {</span></a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineCov">     141609 :     if (ssrc == 1 &amp;&amp; sdst == 1) {</span></a>
 <a name="271"><span class="lineNum">     271 </span><span class="lineCov">      64002 :         simd_@TYPE@_@kind@_CONTIG_CONTIG(src, 1, dst, 1, len);</span></a>
 <a name="272"><span class="lineNum">     272 </span>            :     }</a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">      77609 :     else if (sdst == 1) {</span></a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineCov">      76844 :         simd_@TYPE@_@kind@_NCONTIG_CONTIG(src, ssrc, dst, 1, len);</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">      77607 :     else if (sdst == 1) {</span></a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineCov">      76843 :         simd_@TYPE@_@kind@_NCONTIG_CONTIG(src, ssrc, dst, 1, len);</span></a>
 <a name="275"><span class="lineNum">     275 </span>            :     }</a>
-<a name="276"><span class="lineNum">     276 </span><span class="lineCov">        765 :     else if (ssrc == 1) {</span></a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineCov">        764 :     else if (ssrc == 1) {</span></a>
 <a name="277"><span class="lineNum">     277 </span><span class="lineCov">         29 :         simd_@TYPE@_@kind@_CONTIG_NCONTIG(src, 1, dst, sdst, len);</span></a>
 <a name="278"><span class="lineNum">     278 </span>            :     } else {</a>
-<a name="279"><span class="lineNum">     279 </span><span class="lineCov">        736 :         simd_@TYPE@_@kind@_NCONTIG_NCONTIG(src, ssrc, dst, sdst, len);</span></a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineCov">        735 :         simd_@TYPE@_@kind@_NCONTIG_NCONTIG(src, ssrc, dst, sdst, len);</span></a>
 <a name="280"><span class="lineNum">     280 </span>            :     }</a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineCov">     141611 :     goto clear;</span></a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">        106 : no_unroll:</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineCov">     141609 :     goto clear;</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">        108 : no_unroll:</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : #endif // @VCHK@</a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">     106106 :     for (; len &gt; 0; --len, src += src_step, dst += dst_step) {</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">     107112 :     for (; len &gt; 0; --len, src += src_step, dst += dst_step) {</span></a>
 <a name="285"><span class="lineNum">     285 </span>            :     #if @VCHK@</a>
 <a name="286"><span class="lineNum">     286 </span>            :         // to guarantee the same precsion and fp/domain errors for both scalars and vectors</a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">     106000 :         simd_@TYPE@_@kind@_CONTIG_CONTIG(src, 0, dst, 0, 1);</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">     107004 :         simd_@TYPE@_@kind@_CONTIG_CONTIG(src, 0, dst, 0, 1);</span></a>
 <a name="288"><span class="lineNum">     288 </span>            :     #else</a>
 <a name="289"><span class="lineNum">     289 </span>            :         const npyv_lanetype_@sfx@ src0 = *(npyv_lanetype_@sfx@*)src;</a>
 <a name="290"><span class="lineNum">     290 </span>            :         *(npyv_lanetype_@sfx@*)dst = c_@intr@_@sfx@(src0);</a>
 <a name="291"><span class="lineNum">     291 </span>            :     #endif</a>
 <a name="292"><span class="lineNum">     292 </span>            :     }</a>
 <a name="293"><span class="lineNum">     293 </span>            : #if @VCHK@</a>
-<a name="294"><span class="lineNum">     294 </span><span class="lineCov">        106 : clear:;</span></a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineCov">        108 : clear:;</span></a>
 <a name="295"><span class="lineNum">     295 </span>            : #endif</a>
 <a name="296"><span class="lineNum">     296 </span>            : #if @clear@</a>
 <a name="297"><span class="lineNum">     297 </span><span class="lineCov">      62747 :     npy_clear_floatstatus_barrier((char*)dimensions);</span></a>

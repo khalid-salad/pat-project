@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -725,57 +725,57 @@
 <a name="655"><span class="lineNum">     655 </span>            : </a>
 <a name="656"><span class="lineNum">     656 </span>            : /* Gets a half-open range [start, end) of offsets from the data pointer */</a>
 <a name="657"><span class="lineNum">     657 </span>            : NPY_VISIBILITY_HIDDEN void</a>
-<a name="658"><span class="lineNum">     658 </span><span class="lineCov">    2023504 : offset_bounds_from_strides(const int itemsize, const int nd,</span></a>
+<a name="658"><span class="lineNum">     658 </span><span class="lineCov">    2023502 : offset_bounds_from_strides(const int itemsize, const int nd,</span></a>
 <a name="659"><span class="lineNum">     659 </span>            :                            const npy_intp *dims, const npy_intp *strides,</a>
 <a name="660"><span class="lineNum">     660 </span>            :                            npy_intp *lower_offset, npy_intp *upper_offset)</a>
 <a name="661"><span class="lineNum">     661 </span>            : {</a>
-<a name="662"><span class="lineNum">     662 </span><span class="lineCov">    2023504 :     npy_intp max_axis_offset;</span></a>
-<a name="663"><span class="lineNum">     663 </span><span class="lineCov">    2023504 :     npy_intp lower = 0;</span></a>
-<a name="664"><span class="lineNum">     664 </span><span class="lineCov">    2023504 :     npy_intp upper = 0;</span></a>
-<a name="665"><span class="lineNum">     665 </span><span class="lineCov">    2023504 :     int i;</span></a>
+<a name="662"><span class="lineNum">     662 </span><span class="lineCov">    2023502 :     npy_intp max_axis_offset;</span></a>
+<a name="663"><span class="lineNum">     663 </span><span class="lineCov">    2023502 :     npy_intp lower = 0;</span></a>
+<a name="664"><span class="lineNum">     664 </span><span class="lineCov">    2023502 :     npy_intp upper = 0;</span></a>
+<a name="665"><span class="lineNum">     665 </span><span class="lineCov">    2023502 :     int i;</span></a>
 <a name="666"><span class="lineNum">     666 </span>            : </a>
-<a name="667"><span class="lineNum">     667 </span><span class="lineCov">    4846276 :     for (i = 0; i &lt; nd; i++) {</span></a>
-<a name="668"><span class="lineNum">     668 </span><span class="lineCov">    2886643 :         if (dims[i] == 0) {</span></a>
+<a name="667"><span class="lineNum">     667 </span><span class="lineCov">    4846270 :     for (i = 0; i &lt; nd; i++) {</span></a>
+<a name="668"><span class="lineNum">     668 </span><span class="lineCov">    2886639 :         if (dims[i] == 0) {</span></a>
 <a name="669"><span class="lineNum">     669 </span>            :             /* If the array size is zero, return an empty range */</a>
 <a name="670"><span class="lineNum">     670 </span><span class="lineCov">      63871 :             *lower_offset = 0;</span></a>
 <a name="671"><span class="lineNum">     671 </span><span class="lineCov">      63871 :             *upper_offset = 0;</span></a>
 <a name="672"><span class="lineNum">     672 </span><span class="lineCov">      63871 :             return;</span></a>
 <a name="673"><span class="lineNum">     673 </span>            :         }</a>
 <a name="674"><span class="lineNum">     674 </span>            :         /* Expand either upwards or downwards depending on stride */</a>
-<a name="675"><span class="lineNum">     675 </span><span class="lineCov">    2822772 :         max_axis_offset = strides[i] * (dims[i] - 1);</span></a>
-<a name="676"><span class="lineNum">     676 </span><span class="lineCov">    2822772 :         if (max_axis_offset &gt; 0) {</span></a>
-<a name="677"><span class="lineNum">     677 </span><span class="lineCov">    2446721 :             upper += max_axis_offset;</span></a>
+<a name="675"><span class="lineNum">     675 </span><span class="lineCov">    2822768 :         max_axis_offset = strides[i] * (dims[i] - 1);</span></a>
+<a name="676"><span class="lineNum">     676 </span><span class="lineCov">    2822768 :         if (max_axis_offset &gt; 0) {</span></a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineCov">    2446717 :             upper += max_axis_offset;</span></a>
 <a name="678"><span class="lineNum">     678 </span>            :         }</a>
 <a name="679"><span class="lineNum">     679 </span>            :         else {</a>
 <a name="680"><span class="lineNum">     680 </span><span class="lineCov">     376051 :             lower += max_axis_offset;</span></a>
 <a name="681"><span class="lineNum">     681 </span>            :         }</a>
 <a name="682"><span class="lineNum">     682 </span>            :     }</a>
 <a name="683"><span class="lineNum">     683 </span>            :     /* Return a half-open range */</a>
-<a name="684"><span class="lineNum">     684 </span><span class="lineCov">    1959633 :     upper += itemsize;</span></a>
-<a name="685"><span class="lineNum">     685 </span><span class="lineCov">    1959633 :     *lower_offset = lower;</span></a>
-<a name="686"><span class="lineNum">     686 </span><span class="lineCov">    1959633 :     *upper_offset = upper;</span></a>
+<a name="684"><span class="lineNum">     684 </span><span class="lineCov">    1959631 :     upper += itemsize;</span></a>
+<a name="685"><span class="lineNum">     685 </span><span class="lineCov">    1959631 :     *lower_offset = lower;</span></a>
+<a name="686"><span class="lineNum">     686 </span><span class="lineCov">    1959631 :     *upper_offset = upper;</span></a>
 <a name="687"><span class="lineNum">     687 </span>            : }</a>
 <a name="688"><span class="lineNum">     688 </span>            : </a>
 <a name="689"><span class="lineNum">     689 </span>            : </a>
 <a name="690"><span class="lineNum">     690 </span>            : /* Gets a half-open range [start, end) which contains the array data */</a>
 <a name="691"><span class="lineNum">     691 </span>            : static void</a>
-<a name="692"><span class="lineNum">     692 </span><span class="lineCov">    2023456 : get_array_memory_extents(PyArrayObject *arr,</span></a>
+<a name="692"><span class="lineNum">     692 </span><span class="lineCov">    2023454 : get_array_memory_extents(PyArrayObject *arr,</span></a>
 <a name="693"><span class="lineNum">     693 </span>            :                          npy_uintp *out_start, npy_uintp *out_end,</a>
 <a name="694"><span class="lineNum">     694 </span>            :                          npy_uintp *num_bytes)</a>
 <a name="695"><span class="lineNum">     695 </span>            : {</a>
-<a name="696"><span class="lineNum">     696 </span><span class="lineCov">    2023456 :     npy_intp low, upper;</span></a>
-<a name="697"><span class="lineNum">     697 </span><span class="lineCov">    2023456 :     int j;</span></a>
-<a name="698"><span class="lineNum">     698 </span><span class="lineCov">    2023456 :     offset_bounds_from_strides(PyArray_ITEMSIZE(arr), PyArray_NDIM(arr),</span></a>
-<a name="699"><span class="lineNum">     699 </span><span class="lineCov">    2023456 :                                PyArray_DIMS(arr), PyArray_STRIDES(arr),</span></a>
+<a name="696"><span class="lineNum">     696 </span><span class="lineCov">    2023454 :     npy_intp low, upper;</span></a>
+<a name="697"><span class="lineNum">     697 </span><span class="lineCov">    2023454 :     int j;</span></a>
+<a name="698"><span class="lineNum">     698 </span><span class="lineCov">    2023454 :     offset_bounds_from_strides(PyArray_ITEMSIZE(arr), PyArray_NDIM(arr),</span></a>
+<a name="699"><span class="lineNum">     699 </span><span class="lineCov">    2023454 :                                PyArray_DIMS(arr), PyArray_STRIDES(arr),</span></a>
 <a name="700"><span class="lineNum">     700 </span>            :                                &amp;low, &amp;upper);</a>
-<a name="701"><span class="lineNum">     701 </span><span class="lineCov">    2023456 :     *out_start = (npy_uintp)PyArray_DATA(arr) + (npy_uintp)low;</span></a>
-<a name="702"><span class="lineNum">     702 </span><span class="lineCov">    2023456 :     *out_end = (npy_uintp)PyArray_DATA(arr) + (npy_uintp)upper;</span></a>
+<a name="701"><span class="lineNum">     701 </span><span class="lineCov">    2023454 :     *out_start = (npy_uintp)PyArray_DATA(arr) + (npy_uintp)low;</span></a>
+<a name="702"><span class="lineNum">     702 </span><span class="lineCov">    2023454 :     *out_end = (npy_uintp)PyArray_DATA(arr) + (npy_uintp)upper;</span></a>
 <a name="703"><span class="lineNum">     703 </span>            : </a>
-<a name="704"><span class="lineNum">     704 </span><span class="lineCov">    2023456 :     *num_bytes = PyArray_ITEMSIZE(arr);</span></a>
-<a name="705"><span class="lineNum">     705 </span><span class="lineCov">    4928469 :     for (j = 0; j &lt; PyArray_NDIM(arr); ++j) {</span></a>
-<a name="706"><span class="lineNum">     706 </span><span class="lineCov">    2905013 :         *num_bytes *= PyArray_DIM(arr, j);</span></a>
+<a name="704"><span class="lineNum">     704 </span><span class="lineCov">    2023454 :     *num_bytes = PyArray_ITEMSIZE(arr);</span></a>
+<a name="705"><span class="lineNum">     705 </span><span class="lineCov">    4928463 :     for (j = 0; j &lt; PyArray_NDIM(arr); ++j) {</span></a>
+<a name="706"><span class="lineNum">     706 </span><span class="lineCov">    2905009 :         *num_bytes *= PyArray_DIM(arr, j);</span></a>
 <a name="707"><span class="lineNum">     707 </span>            :     }</a>
-<a name="708"><span class="lineNum">     708 </span><span class="lineCov">    2023456 : }</span></a>
+<a name="708"><span class="lineNum">     708 </span><span class="lineCov">    2023454 : }</span></a>
 <a name="709"><span class="lineNum">     709 </span>            : </a>
 <a name="710"><span class="lineNum">     710 </span>            : </a>
 <a name="711"><span class="lineNum">     711 </span>            : static int</a>
@@ -823,23 +823,23 @@
 <a name="753"><span class="lineNum">     753 </span>            :  * max_work &gt; 0 for the number of solution candidates considered.</a>
 <a name="754"><span class="lineNum">     754 </span>            :  */</a>
 <a name="755"><span class="lineNum">     755 </span>            : NPY_VISIBILITY_HIDDEN mem_overlap_t</a>
-<a name="756"><span class="lineNum">     756 </span><span class="lineCov">    1011728 : solve_may_share_memory(PyArrayObject *a, PyArrayObject *b,</span></a>
+<a name="756"><span class="lineNum">     756 </span><span class="lineCov">    1011727 : solve_may_share_memory(PyArrayObject *a, PyArrayObject *b,</span></a>
 <a name="757"><span class="lineNum">     757 </span>            :                        Py_ssize_t max_work)</a>
 <a name="758"><span class="lineNum">     758 </span>            : {</a>
-<a name="759"><span class="lineNum">     759 </span><span class="lineCov">    1011728 :     npy_int64 rhs;</span></a>
-<a name="760"><span class="lineNum">     760 </span><span class="lineCov">    1011728 :     diophantine_term_t terms[2*NPY_MAXDIMS + 2];</span></a>
-<a name="761"><span class="lineNum">     761 </span><span class="lineCov">    1011728 :     npy_uintp start1 = 0, end1 = 0, size1 = 0;</span></a>
-<a name="762"><span class="lineNum">     762 </span><span class="lineCov">    1011728 :     npy_uintp start2 = 0, end2 = 0, size2 = 0;</span></a>
-<a name="763"><span class="lineNum">     763 </span><span class="lineCov">    1011728 :     npy_uintp uintp_rhs;</span></a>
-<a name="764"><span class="lineNum">     764 </span><span class="lineCov">    1011728 :     npy_int64 x[2*NPY_MAXDIMS + 2];</span></a>
-<a name="765"><span class="lineNum">     765 </span><span class="lineCov">    1011728 :     unsigned int nterms;</span></a>
+<a name="759"><span class="lineNum">     759 </span><span class="lineCov">    1011727 :     npy_int64 rhs;</span></a>
+<a name="760"><span class="lineNum">     760 </span><span class="lineCov">    1011727 :     diophantine_term_t terms[2*NPY_MAXDIMS + 2];</span></a>
+<a name="761"><span class="lineNum">     761 </span><span class="lineCov">    1011727 :     npy_uintp start1 = 0, end1 = 0, size1 = 0;</span></a>
+<a name="762"><span class="lineNum">     762 </span><span class="lineCov">    1011727 :     npy_uintp start2 = 0, end2 = 0, size2 = 0;</span></a>
+<a name="763"><span class="lineNum">     763 </span><span class="lineCov">    1011727 :     npy_uintp uintp_rhs;</span></a>
+<a name="764"><span class="lineNum">     764 </span><span class="lineCov">    1011727 :     npy_int64 x[2*NPY_MAXDIMS + 2];</span></a>
+<a name="765"><span class="lineNum">     765 </span><span class="lineCov">    1011727 :     unsigned int nterms;</span></a>
 <a name="766"><span class="lineNum">     766 </span>            : </a>
-<a name="767"><span class="lineNum">     767 </span><span class="lineCov">    1011728 :     get_array_memory_extents(a, &amp;start1, &amp;end1, &amp;size1);</span></a>
-<a name="768"><span class="lineNum">     768 </span><span class="lineCov">    1011728 :     get_array_memory_extents(b, &amp;start2, &amp;end2, &amp;size2);</span></a>
+<a name="767"><span class="lineNum">     767 </span><span class="lineCov">    1011727 :     get_array_memory_extents(a, &amp;start1, &amp;end1, &amp;size1);</span></a>
+<a name="768"><span class="lineNum">     768 </span><span class="lineCov">    1011727 :     get_array_memory_extents(b, &amp;start2, &amp;end2, &amp;size2);</span></a>
 <a name="769"><span class="lineNum">     769 </span>            : </a>
-<a name="770"><span class="lineNum">     770 </span><span class="lineCov">    1011728 :     if (!(start1 &lt; end2 &amp;&amp; start2 &lt; end1 &amp;&amp; start1 &lt; end1 &amp;&amp; start2 &lt; end2)) {</span></a>
+<a name="770"><span class="lineNum">     770 </span><span class="lineCov">    1011727 :     if (!(start1 &lt; end2 &amp;&amp; start2 &lt; end1 &amp;&amp; start1 &lt; end1 &amp;&amp; start2 &lt; end2)) {</span></a>
 <a name="771"><span class="lineNum">     771 </span>            :         /* Memory extents don't overlap */</a>
-<a name="772"><span class="lineNum">     772 </span><span class="lineCov">    1011728 :         return MEM_OVERLAP_NO;</span></a>
+<a name="772"><span class="lineNum">     772 </span><span class="lineCov">    1011727 :         return MEM_OVERLAP_NO;</span></a>
 <a name="773"><span class="lineNum">     773 </span>            :     }</a>
 <a name="774"><span class="lineNum">     774 </span>            : </a>
 <a name="775"><span class="lineNum">     775 </span><span class="lineCov">     256945 :     if (max_work == 0) {</span></a>

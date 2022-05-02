@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">204</td>
@@ -188,30 +188,30 @@
 <a name="118"><span class="lineNum">     118 </span>            : }</a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
 <a name="120"><span class="lineNum">     120 </span>            : static PyObject *</a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">     385656 : gentype_generic_method(PyObject *self, PyObject *args, PyObject *kwds,</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">     385670 : gentype_generic_method(PyObject *self, PyObject *args, PyObject *kwds,</span></a>
 <a name="122"><span class="lineNum">     122 </span>            :         char *str)</a>
 <a name="123"><span class="lineNum">     123 </span>            : {</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">     385656 :     PyObject *arr, *meth, *ret;</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">     385670 :     PyObject *arr, *meth, *ret;</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : </a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">     385656 :     arr = PyArray_FromScalar(self, NULL);</span></a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">     385656 :     if (arr == NULL) {</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">     385670 :     arr = PyArray_FromScalar(self, NULL);</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">     385670 :     if (arr == NULL) {</span></a>
 <a name="128"><span class="lineNum">     128 </span>            :         return NULL;</a>
 <a name="129"><span class="lineNum">     129 </span>            :     }</a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">     385656 :     meth = PyObject_GetAttrString(arr, str);</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">     385656 :     if (meth == NULL) {</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">     385670 :     meth = PyObject_GetAttrString(arr, str);</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">     385670 :     if (meth == NULL) {</span></a>
 <a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :         Py_DECREF(arr);</span></a>
 <a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :         return NULL;</span></a>
 <a name="134"><span class="lineNum">     134 </span>            :     }</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">     385656 :     if (kwds == NULL) {</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">     366649 :         ret = PyObject_CallObject(meth, args);</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">     385670 :     if (kwds == NULL) {</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">     366663 :         ret = PyObject_CallObject(meth, args);</span></a>
 <a name="137"><span class="lineNum">     137 </span>            :     }</a>
 <a name="138"><span class="lineNum">     138 </span>            :     else {</a>
 <a name="139"><span class="lineNum">     139 </span><span class="lineCov">      19007 :         ret = PyObject_Call(meth, args, kwds);</span></a>
 <a name="140"><span class="lineNum">     140 </span>            :     }</a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     385656 :     Py_DECREF(meth);</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">     385656 :     Py_DECREF(arr);</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     385656 :     if (ret &amp;&amp; PyArray_Check(ret)) {</span></a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">      78202 :         return PyArray_Return((PyArrayObject *)ret);</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     385670 :     Py_DECREF(meth);</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">     385670 :     Py_DECREF(arr);</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     385670 :     if (ret &amp;&amp; PyArray_Check(ret)) {</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">      78216 :         return PyArray_Return((PyArrayObject *)ret);</span></a>
 <a name="145"><span class="lineNum">     145 </span>            :     }</a>
 <a name="146"><span class="lineNum">     146 </span>            :     else {</a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineCov">     307454 :         return ret;</span></a>
@@ -395,17 +395,17 @@
 <a name="325"><span class="lineNum">     325 </span>            :  */</a>
 <a name="326"><span class="lineNum">     326 </span>            : </a>
 <a name="327"><span class="lineNum">     327 </span>            : NPY_NO_EXPORT PyObject *</a>
-<a name="328"><span class="lineNum">     328 </span><span class="lineCov">     113555 : format_@name@(@type@ val, npy_bool scientific,</span></a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineCov">     113543 : format_@name@(@type@ val, npy_bool scientific,</span></a>
 <a name="329"><span class="lineNum">     329 </span>            :               int precision, int sign, TrimMode trim,</a>
 <a name="330"><span class="lineNum">     330 </span>            :               int pad_left, int pad_right, int exp_digits)</a>
 <a name="331"><span class="lineNum">     331 </span>            : {</a>
-<a name="332"><span class="lineNum">     332 </span><span class="lineCov">     113555 :     if (scientific) {</span></a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineCov">     113543 :     if (scientific) {</span></a>
 <a name="333"><span class="lineNum">     333 </span><span class="lineCov">       2284 :         return Dragon4_Scientific_@Name@(&amp;val,</span></a>
 <a name="334"><span class="lineNum">     334 </span>            :                         DigitMode_Unique, precision, -1,</a>
 <a name="335"><span class="lineNum">     335 </span>            :                         sign, trim, pad_left, exp_digits);</a>
 <a name="336"><span class="lineNum">     336 </span>            :     }</a>
 <a name="337"><span class="lineNum">     337 </span>            :     else {</a>
-<a name="338"><span class="lineNum">     338 </span><span class="lineCov">     111271 :         return Dragon4_Positional_@Name@(&amp;val,</span></a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineCov">     111259 :         return Dragon4_Positional_@Name@(&amp;val,</span></a>
 <a name="339"><span class="lineNum">     339 </span>            :                         DigitMode_Unique, CutoffMode_TotalLength, precision,</a>
 <a name="340"><span class="lineNum">     340 </span>            :                         -1, sign, trim, pad_left, pad_right);</a>
 <a name="341"><span class="lineNum">     341 </span>            :     }</a>
@@ -931,19 +931,19 @@
 <a name="861"><span class="lineNum">     861 </span>            : </a>
 <a name="862"><span class="lineNum">     862 </span>            : /* helper function choose scientific of fractional output, based on a cutoff */</a>
 <a name="863"><span class="lineNum">     863 </span>            : static PyObject *</a>
-<a name="864"><span class="lineNum">     864 </span><span class="lineCov">      97785 : @name@type_@kind@_either(npy_@name@ val, TrimMode trim_pos, TrimMode trim_sci,</span></a>
+<a name="864"><span class="lineNum">     864 </span><span class="lineCov">      97773 : @name@type_@kind@_either(npy_@name@ val, TrimMode trim_pos, TrimMode trim_sci,</span></a>
 <a name="865"><span class="lineNum">     865 </span>            :                          npy_bool sign)</a>
 <a name="866"><span class="lineNum">     866 </span>            : {</a>
-<a name="867"><span class="lineNum">     867 </span><span class="lineCov">      97785 :     npy_@name@ absval;</span></a>
+<a name="867"><span class="lineNum">     867 </span><span class="lineCov">      97773 :     npy_@name@ absval;</span></a>
 <a name="868"><span class="lineNum">     868 </span>            : </a>
-<a name="869"><span class="lineNum">     869 </span><span class="lineCov">      97785 :     if (npy_legacy_print_mode == 113) {</span></a>
+<a name="869"><span class="lineNum">     869 </span><span class="lineCov">      97773 :     if (npy_legacy_print_mode == 113) {</span></a>
 <a name="870"><span class="lineNum">     870 </span><span class="lineCov">          1 :         return legacy_@name@_format@kind@(val);</span></a>
 <a name="871"><span class="lineNum">     871 </span>            :     }</a>
 <a name="872"><span class="lineNum">     872 </span>            : </a>
-<a name="873"><span class="lineNum">     873 </span><span class="lineCov">      97784 :     absval = val &lt; 0 ? -val : val;</span></a>
+<a name="873"><span class="lineNum">     873 </span><span class="lineCov">      97772 :     absval = val &lt; 0 ? -val : val;</span></a>
 <a name="874"><span class="lineNum">     874 </span>            : </a>
-<a name="875"><span class="lineNum">     875 </span><span class="lineCov">      97784 :     if (absval == 0 || (absval &lt; 1.e16L &amp;&amp; absval &gt;= 1.e-4L) ) {</span></a>
-<a name="876"><span class="lineNum">     876 </span><span class="lineCov">      95640 :         return format_@name@(val, 0, -1, sign, trim_pos, -1, -1, -1);</span></a>
+<a name="875"><span class="lineNum">     875 </span><span class="lineCov">      97772 :     if (absval == 0 || (absval &lt; 1.e16L &amp;&amp; absval &gt;= 1.e-4L) ) {</span></a>
+<a name="876"><span class="lineNum">     876 </span><span class="lineCov">      95628 :         return format_@name@(val, 0, -1, sign, trim_pos, -1, -1, -1);</span></a>
 <a name="877"><span class="lineNum">     877 </span>            :     }</a>
 <a name="878"><span class="lineNum">     878 </span><span class="lineCov">       2144 :     return format_@name@(val, 1, -1, sign, trim_sci, -1, -1, -1);</span></a>
 <a name="879"><span class="lineNum">     879 </span>            : }</a>
@@ -967,17 +967,17 @@
 <a name="897"><span class="lineNum">     897 </span>            :     }</a>
 <a name="898"><span class="lineNum">     898 </span>            : </a>
 <a name="899"><span class="lineNum">     899 </span><span class="lineCov">      23279 :     if (val.real == 0.0 &amp;&amp; npy_signbit(val.real) == 0) {</span></a>
-<a name="900"><span class="lineNum">     900 </span><span class="lineCov">        162 :         istr = @name@type_@kind@_either(val.imag, trim, trim, 0);</span></a>
-<a name="901"><span class="lineNum">     901 </span><span class="lineCov">        162 :         if (istr == NULL) {</span></a>
+<a name="900"><span class="lineNum">     900 </span><span class="lineCov">        174 :         istr = @name@type_@kind@_either(val.imag, trim, trim, 0);</span></a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineCov">        174 :         if (istr == NULL) {</span></a>
 <a name="902"><span class="lineNum">     902 </span>            :             return NULL;</a>
 <a name="903"><span class="lineNum">     903 </span>            :         }</a>
-<a name="904"><span class="lineNum">     904 </span><span class="lineCov">        162 :         PyObject *ret = PyUnicode_FromFormat(&quot;%Sj&quot;, istr);</span></a>
-<a name="905"><span class="lineNum">     905 </span><span class="lineCov">        162 :         Py_DECREF(istr);</span></a>
-<a name="906"><span class="lineNum">     906 </span><span class="lineCov">        162 :         return ret;</span></a>
+<a name="904"><span class="lineNum">     904 </span><span class="lineCov">        174 :         PyObject *ret = PyUnicode_FromFormat(&quot;%Sj&quot;, istr);</span></a>
+<a name="905"><span class="lineNum">     905 </span><span class="lineCov">        174 :         Py_DECREF(istr);</span></a>
+<a name="906"><span class="lineNum">     906 </span><span class="lineCov">        174 :         return ret;</span></a>
 <a name="907"><span class="lineNum">     907 </span>            :     }</a>
 <a name="908"><span class="lineNum">     908 </span>            : </a>
-<a name="909"><span class="lineNum">     909 </span><span class="lineCov">      23117 :     if (npy_isfinite(val.real)) {</span></a>
-<a name="910"><span class="lineNum">     910 </span><span class="lineCov">      22983 :         rstr = @name@type_@kind@_either(val.real, trim, trim, 0);</span></a>
+<a name="909"><span class="lineNum">     909 </span><span class="lineCov">      23105 :     if (npy_isfinite(val.real)) {</span></a>
+<a name="910"><span class="lineNum">     910 </span><span class="lineCov">      22971 :         rstr = @name@type_@kind@_either(val.real, trim, trim, 0);</span></a>
 <a name="911"><span class="lineNum">     911 </span>            :     }</a>
 <a name="912"><span class="lineNum">     912 </span><span class="lineCov">        134 :     else if (npy_isnan(val.real)) {</span></a>
 <a name="913"><span class="lineNum">     913 </span><span class="lineCov">        101 :         rstr = PyUnicode_FromString(&quot;nan&quot;);</span></a>
@@ -988,12 +988,12 @@
 <a name="918"><span class="lineNum">     918 </span>            :     else {</a>
 <a name="919"><span class="lineNum">     919 </span><span class="lineCov">         15 :         rstr = PyUnicode_FromString(&quot;-inf&quot;);</span></a>
 <a name="920"><span class="lineNum">     920 </span>            :     }</a>
-<a name="921"><span class="lineNum">     921 </span><span class="lineCov">      23117 :     if (rstr == NULL) {</span></a>
+<a name="921"><span class="lineNum">     921 </span><span class="lineCov">      23105 :     if (rstr == NULL) {</span></a>
 <a name="922"><span class="lineNum">     922 </span>            :         return NULL;</a>
 <a name="923"><span class="lineNum">     923 </span>            :     }</a>
 <a name="924"><span class="lineNum">     924 </span>            : </a>
-<a name="925"><span class="lineNum">     925 </span><span class="lineCov">      23117 :     if (npy_isfinite(val.imag)) {</span></a>
-<a name="926"><span class="lineNum">     926 </span><span class="lineCov">      23100 :         istr = @name@type_@kind@_either(val.imag, trim, trim, 1);</span></a>
+<a name="925"><span class="lineNum">     925 </span><span class="lineCov">      23105 :     if (npy_isfinite(val.imag)) {</span></a>
+<a name="926"><span class="lineNum">     926 </span><span class="lineCov">      23088 :         istr = @name@type_@kind@_either(val.imag, trim, trim, 1);</span></a>
 <a name="927"><span class="lineNum">     927 </span>            :     }</a>
 <a name="928"><span class="lineNum">     928 </span><span class="lineCov">         17 :     else if (npy_isnan(val.imag)) {</span></a>
 <a name="929"><span class="lineNum">     929 </span><span class="lineCov">         11 :         istr = PyUnicode_FromString(&quot;+nan&quot;);</span></a>
@@ -1004,14 +1004,14 @@
 <a name="934"><span class="lineNum">     934 </span>            :     else {</a>
 <a name="935"><span class="lineNum">     935 </span><span class="lineCov">          3 :         istr = PyUnicode_FromString(&quot;-inf&quot;);</span></a>
 <a name="936"><span class="lineNum">     936 </span>            :     }</a>
-<a name="937"><span class="lineNum">     937 </span><span class="lineCov">      23117 :     if (istr == NULL) {</span></a>
+<a name="937"><span class="lineNum">     937 </span><span class="lineCov">      23105 :     if (istr == NULL) {</span></a>
 <a name="938"><span class="lineNum">     938 </span><span class="lineNoCov">          0 :         Py_DECREF(rstr);</span></a>
 <a name="939"><span class="lineNum">     939 </span><span class="lineNoCov">          0 :         return NULL;</span></a>
 <a name="940"><span class="lineNum">     940 </span>            :     }</a>
 <a name="941"><span class="lineNum">     941 </span>            : </a>
-<a name="942"><span class="lineNum">     942 </span><span class="lineCov">      23117 :     PyObject *ret = PyUnicode_FromFormat(&quot;(%S%Sj)&quot;, rstr, istr);</span></a>
-<a name="943"><span class="lineNum">     943 </span><span class="lineCov">      23117 :     Py_DECREF(rstr);</span></a>
-<a name="944"><span class="lineNum">     944 </span><span class="lineCov">      23117 :     Py_DECREF(istr);</span></a>
+<a name="942"><span class="lineNum">     942 </span><span class="lineCov">      23105 :     PyObject *ret = PyUnicode_FromFormat(&quot;(%S%Sj)&quot;, rstr, istr);</span></a>
+<a name="943"><span class="lineNum">     943 </span><span class="lineCov">      23105 :     Py_DECREF(rstr);</span></a>
+<a name="944"><span class="lineNum">     944 </span><span class="lineCov">      23105 :     Py_DECREF(istr);</span></a>
 <a name="945"><span class="lineNum">     945 </span>            :     return ret;</a>
 <a name="946"><span class="lineNum">     946 </span>            : }</a>
 <a name="947"><span class="lineNum">     947 </span>            : </a>
@@ -1608,9 +1608,9 @@
 <a name="1538"><span class="lineNum">    1538 </span>            :  *         flatten, ravel, squeeze#</a>
 <a name="1539"><span class="lineNum">    1539 </span>            :  */</a>
 <a name="1540"><span class="lineNum">    1540 </span>            : static PyObject *</a>
-<a name="1541"><span class="lineNum">    1541 </span><span class="lineCov">     112687 : gentype_@name@(PyObject *self, PyObject *args, PyObject *kwds)</span></a>
+<a name="1541"><span class="lineNum">    1541 </span><span class="lineCov">     112701 : gentype_@name@(PyObject *self, PyObject *args, PyObject *kwds)</span></a>
 <a name="1542"><span class="lineNum">    1542 </span>            : {</a>
-<a name="1543"><span class="lineNum">    1543 </span><span class="lineCov">     112687 :     return gentype_generic_method(self, args, kwds, &quot;@name@&quot;);</span></a>
+<a name="1543"><span class="lineNum">    1543 </span><span class="lineCov">     112701 :     return gentype_generic_method(self, args, kwds, &quot;@name@&quot;);</span></a>
 <a name="1544"><span class="lineNum">    1544 </span>            : }</a>
 <a name="1545"><span class="lineNum">    1545 </span>            : /**end repeat**/</a>
 <a name="1546"><span class="lineNum">    1546 </span>            : </a>
@@ -3008,9 +3008,9 @@
 <a name="2938"><span class="lineNum">    2938 </span>            : }</a>
 <a name="2939"><span class="lineNum">    2939 </span>            : </a>
 <a name="2940"><span class="lineNum">    2940 </span>            : static int</a>
-<a name="2941"><span class="lineNum">    2941 </span><span class="lineCov">    1366772 : bool_arrtype_nonzero(PyObject *a)</span></a>
+<a name="2941"><span class="lineNum">    2941 </span><span class="lineCov">    1366786 : bool_arrtype_nonzero(PyObject *a)</span></a>
 <a name="2942"><span class="lineNum">    2942 </span>            : {</a>
-<a name="2943"><span class="lineNum">    2943 </span><span class="lineCov">    1366772 :     return a == PyArrayScalar_True;</span></a>
+<a name="2943"><span class="lineNum">    2943 </span><span class="lineCov">    1366786 :     return a == PyArrayScalar_True;</span></a>
 <a name="2944"><span class="lineNum">    2944 </span>            : }</a>
 <a name="2945"><span class="lineNum">    2945 </span>            : </a>
 <a name="2946"><span class="lineNum">    2946 </span>            : /**begin repeat</a>
@@ -4188,17 +4188,17 @@
 <a name="4118"><span class="lineNum">    4118 </span>            : </a>
 <a name="4119"><span class="lineNum">    4119 </span>            : </a>
 <a name="4120"><span class="lineNum">    4120 </span>            : NPY_NO_EXPORT int</a>
-<a name="4121"><span class="lineNum">    4121 </span><span class="lineCov">    5197229 : get_typeobj_idx(PyTypeObject * obj)</span></a>
+<a name="4121"><span class="lineNum">    4121 </span><span class="lineCov">    5197243 : get_typeobj_idx(PyTypeObject * obj)</span></a>
 <a name="4122"><span class="lineNum">    4122 </span>            : {</a>
-<a name="4123"><span class="lineNum">    4123 </span><span class="lineCov">    5197229 :     npy_intp imin = 0, imax = sizeof(typeobjects) / sizeof(typeobjects[0]) - 1;</span></a>
-<a name="4124"><span class="lineNum">    4124 </span><span class="lineCov">   26774950 :     while (imax &gt;= imin)</span></a>
+<a name="4123"><span class="lineNum">    4123 </span><span class="lineCov">    5197243 :     npy_intp imin = 0, imax = sizeof(typeobjects) / sizeof(typeobjects[0]) - 1;</span></a>
+<a name="4124"><span class="lineNum">    4124 </span><span class="lineCov">   26775006 :     while (imax &gt;= imin)</span></a>
 <a name="4125"><span class="lineNum">    4125 </span>            :     {</a>
-<a name="4126"><span class="lineNum">    4126 </span><span class="lineCov">   23791820 :         npy_intp imid = ((imax - imin) / 2) + imin;</span></a>
-<a name="4127"><span class="lineNum">    4127 </span><span class="lineCov">   23791820 :         if(typeobjects[imid].type == obj) {</span></a>
-<a name="4128"><span class="lineNum">    4128 </span><span class="lineCov">    2214099 :             return imid;</span></a>
+<a name="4126"><span class="lineNum">    4126 </span><span class="lineCov">   23791876 :         npy_intp imid = ((imax - imin) / 2) + imin;</span></a>
+<a name="4127"><span class="lineNum">    4127 </span><span class="lineCov">   23791876 :         if(typeobjects[imid].type == obj) {</span></a>
+<a name="4128"><span class="lineNum">    4128 </span><span class="lineCov">    2214113 :             return imid;</span></a>
 <a name="4129"><span class="lineNum">    4129 </span>            :         }</a>
-<a name="4130"><span class="lineNum">    4130 </span><span class="lineCov">   21577721 :         else if (typeobjects[imid].type &lt; obj) {</span></a>
-<a name="4131"><span class="lineNum">    4131 </span><span class="lineCov">   19676051 :             imin = imid + 1;</span></a>
+<a name="4130"><span class="lineNum">    4130 </span><span class="lineCov">   21577763 :         else if (typeobjects[imid].type &lt; obj) {</span></a>
+<a name="4131"><span class="lineNum">    4131 </span><span class="lineCov">   19676093 :             imin = imid + 1;</span></a>
 <a name="4132"><span class="lineNum">    4132 </span>            :         }</a>
 <a name="4133"><span class="lineNum">    4133 </span>            :         else {</a>
 <a name="4134"><span class="lineNum">    4134 </span><span class="lineCov">    1901670 :             imax = imid - 1;</span></a>
@@ -4215,27 +4215,27 @@
 <a name="4145"><span class="lineNum">    4145 </span>            : }</a>
 <a name="4146"><span class="lineNum">    4146 </span>            : </a>
 <a name="4147"><span class="lineNum">    4147 </span>            : NPY_NO_EXPORT int</a>
-<a name="4148"><span class="lineNum">    4148 </span><span class="lineCov">    1795302 : _typenum_fromtypeobj(PyObject *type, int user)</span></a>
+<a name="4148"><span class="lineNum">    4148 </span><span class="lineCov">    1795316 : _typenum_fromtypeobj(PyObject *type, int user)</span></a>
 <a name="4149"><span class="lineNum">    4149 </span>            : {</a>
-<a name="4150"><span class="lineNum">    4150 </span><span class="lineCov">    1795302 :     int typenum, i;</span></a>
+<a name="4150"><span class="lineNum">    4150 </span><span class="lineCov">    1795316 :     int typenum, i;</span></a>
 <a name="4151"><span class="lineNum">    4151 </span>            : </a>
-<a name="4152"><span class="lineNum">    4152 </span><span class="lineCov">    1795302 :     typenum = NPY_NOTYPE;</span></a>
-<a name="4153"><span class="lineNum">    4153 </span><span class="lineCov">    1795302 :     i = get_typeobj_idx((PyTypeObject*)type);</span></a>
-<a name="4154"><span class="lineNum">    4154 </span><span class="lineCov">    1795302 :     if (i &gt;= 0) {</span></a>
-<a name="4155"><span class="lineNum">    4155 </span><span class="lineCov">    1792837 :         typenum = typeobjects[i].typenum;</span></a>
+<a name="4152"><span class="lineNum">    4152 </span><span class="lineCov">    1795316 :     typenum = NPY_NOTYPE;</span></a>
+<a name="4153"><span class="lineNum">    4153 </span><span class="lineCov">    1795316 :     i = get_typeobj_idx((PyTypeObject*)type);</span></a>
+<a name="4154"><span class="lineNum">    4154 </span><span class="lineCov">    1795316 :     if (i &gt;= 0) {</span></a>
+<a name="4155"><span class="lineNum">    4155 </span><span class="lineCov">    1792851 :         typenum = typeobjects[i].typenum;</span></a>
 <a name="4156"><span class="lineNum">    4156 </span>            :     }</a>
 <a name="4157"><span class="lineNum">    4157 </span>            : </a>
-<a name="4158"><span class="lineNum">    4158 </span><span class="lineCov">    1795302 :     if (!user) {</span></a>
+<a name="4158"><span class="lineNum">    4158 </span><span class="lineCov">    1795316 :     if (!user) {</span></a>
 <a name="4159"><span class="lineNum">    4159 </span>            :         return typenum;</a>
 <a name="4160"><span class="lineNum">    4160 </span>            :     }</a>
 <a name="4161"><span class="lineNum">    4161 </span>            :     /* Search any registered types */</a>
 <a name="4162"><span class="lineNum">    4162 </span>            :     i = 0;</a>
-<a name="4163"><span class="lineNum">    4163 </span><span class="lineCov">    5216433 :     while (i &lt; NPY_NUMUSERTYPES) {</span></a>
-<a name="4164"><span class="lineNum">    4164 </span><span class="lineCov">    3421163 :         if (type == (PyObject *)(userdescrs[i]-&gt;typeobj)) {</span></a>
+<a name="4163"><span class="lineNum">    4163 </span><span class="lineCov">    5216475 :     while (i &lt; NPY_NUMUSERTYPES) {</span></a>
+<a name="4164"><span class="lineNum">    4164 </span><span class="lineCov">    3421191 :         if (type == (PyObject *)(userdescrs[i]-&gt;typeobj)) {</span></a>
 <a name="4165"><span class="lineNum">    4165 </span><span class="lineCov">         32 :             typenum = i + NPY_USERDEF;</span></a>
 <a name="4166"><span class="lineNum">    4166 </span><span class="lineCov">         32 :             break;</span></a>
 <a name="4167"><span class="lineNum">    4167 </span>            :         }</a>
-<a name="4168"><span class="lineNum">    4168 </span><span class="lineCov">    3421131 :         i++;</span></a>
+<a name="4168"><span class="lineNum">    4168 </span><span class="lineCov">    3421159 :         i++;</span></a>
 <a name="4169"><span class="lineNum">    4169 </span>            :     }</a>
 <a name="4170"><span class="lineNum">    4170 </span>            :     return typenum;</a>
 <a name="4171"><span class="lineNum">    4171 </span>            : }</a>

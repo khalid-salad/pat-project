@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">19</td>
@@ -276,26 +276,26 @@
 <a name="206"><span class="lineNum">     206 </span>            :  * @return DType, None if it a known non-scalar, or NULL if an unknown object.</a>
 <a name="207"><span class="lineNum">     207 </span>            :  */</a>
 <a name="208"><span class="lineNum">     208 </span>            : static NPY_INLINE PyArray_DTypeMeta *</a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">    6742605 : npy_discover_dtype_from_pytype(PyTypeObject *pytype)</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">    6742647 : npy_discover_dtype_from_pytype(PyTypeObject *pytype)</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : {</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">    6742605 :     PyObject *DType;</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">    6742647 :     PyObject *DType;</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">    6742605 :     if (pytype == &amp;PyArray_Type) {</span></a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineCov">    1431079 :         Py_INCREF(Py_None);</span></a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">    1431079 :         return (PyArray_DTypeMeta *)Py_None;</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">    6742647 :     if (pytype == &amp;PyArray_Type) {</span></a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineCov">    1431120 :         Py_INCREF(Py_None);</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">    1431120 :         return (PyArray_DTypeMeta *)Py_None;</span></a>
 <a name="216"><span class="lineNum">     216 </span>            :     }</a>
 <a name="217"><span class="lineNum">     217 </span>            : </a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">    5311526 :     DType = PyDict_GetItem(_global_pytype_to_type_dict, (PyObject *)pytype);</span></a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">    5311526 :     if (DType == NULL) {</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">    5311527 :     DType = PyDict_GetItem(_global_pytype_to_type_dict, (PyObject *)pytype);</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">    5311527 :     if (DType == NULL) {</span></a>
 <a name="220"><span class="lineNum">     220 </span>            :         /* the python type is not known */</a>
 <a name="221"><span class="lineNum">     221 </span>            :         return NULL;</a>
 <a name="222"><span class="lineNum">     222 </span>            :     }</a>
 <a name="223"><span class="lineNum">     223 </span>            : </a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">    5187328 :     Py_INCREF(DType);</span></a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">    5187328 :     if (DType == Py_None) {</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">    5187327 :     Py_INCREF(DType);</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">    5187327 :     if (DType == Py_None) {</span></a>
 <a name="226"><span class="lineNum">     226 </span>            :         return (PyArray_DTypeMeta *)Py_None;</a>
 <a name="227"><span class="lineNum">     227 </span>            :     }</a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">    4761683 :     assert(PyObject_TypeCheck(DType, (PyTypeObject *)&amp;PyArrayDTypeMeta_Type));</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">    4761682 :     assert(PyObject_TypeCheck(DType, (PyTypeObject *)&amp;PyArrayDTypeMeta_Type));</span></a>
 <a name="229"><span class="lineNum">     229 </span>            :     return (PyArray_DTypeMeta *)DType;</a>
 <a name="230"><span class="lineNum">     230 </span>            : }</a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
@@ -315,27 +315,27 @@
 <a name="245"><span class="lineNum">     245 </span>            :  * @return New reference to either a DType class, Py_None, or NULL on error.</a>
 <a name="246"><span class="lineNum">     246 </span>            :  */</a>
 <a name="247"><span class="lineNum">     247 </span>            : static NPY_INLINE PyArray_DTypeMeta *</a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">   25748073 : discover_dtype_from_pyobject(</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">   25748115 : discover_dtype_from_pyobject(</span></a>
 <a name="249"><span class="lineNum">     249 </span>            :         PyObject *obj, enum _dtype_discovery_flags *flags,</a>
 <a name="250"><span class="lineNum">     250 </span>            :         PyArray_DTypeMeta *fixed_DType)</a>
 <a name="251"><span class="lineNum">     251 </span>            : {</a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineCov">   25748073 :     if (fixed_DType != NULL) {</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">   25748115 :     if (fixed_DType != NULL) {</span></a>
 <a name="253"><span class="lineNum">     253 </span>            :         /*</a>
 <a name="254"><span class="lineNum">     254 </span>            :          * Let the given DType handle the discovery.  This is when the</a>
 <a name="255"><span class="lineNum">     255 </span>            :          * scalar-type matches exactly, or the DType signals that it can</a>
 <a name="256"><span class="lineNum">     256 </span>            :          * handle the scalar-type.  (Even if it cannot handle here it may be</a>
 <a name="257"><span class="lineNum">     257 </span>            :          * asked to attempt to do so later, if no other matching DType exists.)</a>
 <a name="258"><span class="lineNum">     258 </span>            :          */</a>
-<a name="259"><span class="lineNum">     259 </span><span class="lineCov">   19883697 :         if ((Py_TYPE(obj) == fixed_DType-&gt;scalar_type) ||</span></a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">   34448584 :                 (fixed_DType-&gt;is_known_scalar_type != NULL &amp;&amp;</span></a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">   17224292 :                  fixed_DType-&gt;is_known_scalar_type(fixed_DType, Py_TYPE(obj)))) {</span></a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineCov">   19883739 :         if ((Py_TYPE(obj) == fixed_DType-&gt;scalar_type) ||</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">   34448668 :                 (fixed_DType-&gt;is_known_scalar_type != NULL &amp;&amp;</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">   17224334 :                  fixed_DType-&gt;is_known_scalar_type(fixed_DType, Py_TYPE(obj)))) {</span></a>
 <a name="262"><span class="lineNum">     262 </span><span class="lineCov">   19005468 :             Py_INCREF(fixed_DType);</span></a>
 <a name="263"><span class="lineNum">     263 </span><span class="lineCov">   19005468 :             return fixed_DType;</span></a>
 <a name="264"><span class="lineNum">     264 </span>            :         }</a>
 <a name="265"><span class="lineNum">     265 </span>            :     }</a>
 <a name="266"><span class="lineNum">     266 </span>            : </a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">    6742605 :     PyArray_DTypeMeta *DType = npy_discover_dtype_from_pytype(Py_TYPE(obj));</span></a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineCov">    6742605 :     if (DType != NULL) {</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">    6742647 :     PyArray_DTypeMeta *DType = npy_discover_dtype_from_pytype(Py_TYPE(obj));</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineCov">    6742647 :     if (DType != NULL) {</span></a>
 <a name="269"><span class="lineNum">     269 </span>            :         return DType;</a>
 <a name="270"><span class="lineNum">     270 </span>            :     }</a>
 <a name="271"><span class="lineNum">     271 </span>            :     /*</a>
@@ -343,28 +343,28 @@
 <a name="273"><span class="lineNum">     273 </span>            :      * backward compatibility we have to make some further attempts at</a>
 <a name="274"><span class="lineNum">     274 </span>            :      * interpreting the input as a known scalar type.</a>
 <a name="275"><span class="lineNum">     275 </span>            :      */</a>
-<a name="276"><span class="lineNum">     276 </span><span class="lineCov">     124198 :     PyArray_Descr *legacy_descr;</span></a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineCov">     124198 :     if (PyArray_IsScalar(obj, Generic)) {</span></a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineCov">     124200 :     PyArray_Descr *legacy_descr;</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">     124200 :     if (PyArray_IsScalar(obj, Generic)) {</span></a>
 <a name="278"><span class="lineNum">     278 </span><span class="lineCov">        135 :         legacy_descr = PyArray_DescrFromScalar(obj);</span></a>
 <a name="279"><span class="lineNum">     279 </span><span class="lineCov">        135 :         if (legacy_descr == NULL) {</span></a>
 <a name="280"><span class="lineNum">     280 </span>            :             return NULL;</a>
 <a name="281"><span class="lineNum">     281 </span>            :         }</a>
 <a name="282"><span class="lineNum">     282 </span>            :     }</a>
-<a name="283"><span class="lineNum">     283 </span><span class="lineCov">     124063 :     else if (flags == NULL) {</span></a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineCov">     124065 :     else if (flags == NULL) {</span></a>
 <a name="284"><span class="lineNum">     284 </span><span class="lineCov">        875 :         Py_INCREF(Py_None);</span></a>
 <a name="285"><span class="lineNum">     285 </span><span class="lineCov">        875 :         return (PyArray_DTypeMeta *)Py_None;</span></a>
 <a name="286"><span class="lineNum">     286 </span>            :     }</a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">     123188 :     else if (PyBytes_Check(obj)) {</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">     123190 :     else if (PyBytes_Check(obj)) {</span></a>
 <a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :         legacy_descr = PyArray_DescrFromType(NPY_BYTE);</span></a>
 <a name="289"><span class="lineNum">     289 </span>            :     }</a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineCov">     123188 :     else if (PyUnicode_Check(obj)) {</span></a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineCov">     123190 :     else if (PyUnicode_Check(obj)) {</span></a>
 <a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :         legacy_descr = PyArray_DescrFromType(NPY_UNICODE);</span></a>
 <a name="292"><span class="lineNum">     292 </span>            :     }</a>
 <a name="293"><span class="lineNum">     293 </span>            :     else {</a>
-<a name="294"><span class="lineNum">     294 </span><span class="lineCov">     123188 :         legacy_descr = _array_find_python_scalar_type(obj);</span></a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineCov">     123190 :         legacy_descr = _array_find_python_scalar_type(obj);</span></a>
 <a name="295"><span class="lineNum">     295 </span>            :     }</a>
 <a name="296"><span class="lineNum">     296 </span>            : </a>
-<a name="297"><span class="lineNum">     297 </span><span class="lineCov">     123323 :     if (legacy_descr != NULL) {</span></a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineCov">     123325 :     if (legacy_descr != NULL) {</span></a>
 <a name="298"><span class="lineNum">     298 </span><span class="lineCov">        141 :         DType = NPY_DTYPE(legacy_descr);</span></a>
 <a name="299"><span class="lineNum">     299 </span><span class="lineCov">        141 :         Py_INCREF(DType);</span></a>
 <a name="300"><span class="lineNum">     300 </span><span class="lineCov">        141 :         Py_DECREF(legacy_descr);</span></a>
@@ -382,8 +382,8 @@
 <a name="312"><span class="lineNum">     312 </span>            :         }</a>
 <a name="313"><span class="lineNum">     313 </span><span class="lineCov">        141 :         return DType;</span></a>
 <a name="314"><span class="lineNum">     314 </span>            :     }</a>
-<a name="315"><span class="lineNum">     315 </span><span class="lineCov">     123182 :     Py_INCREF(Py_None);</span></a>
-<a name="316"><span class="lineNum">     316 </span><span class="lineCov">     123182 :     return (PyArray_DTypeMeta *)Py_None;</span></a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineCov">     123184 :     Py_INCREF(Py_None);</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineCov">     123184 :     return (PyArray_DTypeMeta *)Py_None;</span></a>
 <a name="317"><span class="lineNum">     317 </span>            : }</a>
 <a name="318"><span class="lineNum">     318 </span>            : </a>
 <a name="319"><span class="lineNum">     319 </span>            : </a>
@@ -464,22 +464,22 @@
 <a name="394"><span class="lineNum">     394 </span>            :  * TODO: This function should possibly be public API.</a>
 <a name="395"><span class="lineNum">     395 </span>            :  */</a>
 <a name="396"><span class="lineNum">     396 </span>            : NPY_NO_EXPORT int</a>
-<a name="397"><span class="lineNum">     397 </span><span class="lineCov">   14035417 : PyArray_Pack(PyArray_Descr *descr, char *item, PyObject *value)</span></a>
+<a name="397"><span class="lineNum">     397 </span><span class="lineCov">   14035409 : PyArray_Pack(PyArray_Descr *descr, char *item, PyObject *value)</span></a>
 <a name="398"><span class="lineNum">     398 </span>            : {</a>
-<a name="399"><span class="lineNum">     399 </span><span class="lineCov">   14035417 :     PyArrayObject_fields arr_fields = {</span></a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineCov">   14035409 :     PyArrayObject_fields arr_fields = {</span></a>
 <a name="400"><span class="lineNum">     400 </span>            :             .flags = NPY_ARRAY_WRITEABLE,  /* assume array is not behaved. */</a>
 <a name="401"><span class="lineNum">     401 </span>            :         };</a>
-<a name="402"><span class="lineNum">     402 </span><span class="lineCov">   14035417 :     Py_SET_TYPE(&amp;arr_fields, &amp;PyArray_Type);</span></a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineCov">   14035417 :     Py_SET_REFCNT(&amp;arr_fields, 1);</span></a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineCov">   14035409 :     Py_SET_TYPE(&amp;arr_fields, &amp;PyArray_Type);</span></a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineCov">   14035409 :     Py_SET_REFCNT(&amp;arr_fields, 1);</span></a>
 <a name="404"><span class="lineNum">     404 </span>            : </a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineCov">   14035417 :     if (NPY_UNLIKELY(descr-&gt;type_num == NPY_OBJECT)) {</span></a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineCov">   14035409 :     if (NPY_UNLIKELY(descr-&gt;type_num == NPY_OBJECT)) {</span></a>
 <a name="406"><span class="lineNum">     406 </span>            :         /*</a>
 <a name="407"><span class="lineNum">     407 </span>            :          * We always have store objects directly, casting will lose some</a>
 <a name="408"><span class="lineNum">     408 </span>            :          * type information. Any other dtype discards the type information.</a>
 <a name="409"><span class="lineNum">     409 </span>            :          * TODO: For a Categorical[object] this path may be necessary?</a>
 <a name="410"><span class="lineNum">     410 </span>            :          */</a>
-<a name="411"><span class="lineNum">     411 </span><span class="lineCov">     190520 :         arr_fields.descr = descr;</span></a>
-<a name="412"><span class="lineNum">     412 </span><span class="lineCov">     190520 :         return descr-&gt;f-&gt;setitem(value, item, &amp;arr_fields);</span></a>
+<a name="411"><span class="lineNum">     411 </span><span class="lineCov">     190512 :         arr_fields.descr = descr;</span></a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineCov">     190512 :         return descr-&gt;f-&gt;setitem(value, item, &amp;arr_fields);</span></a>
 <a name="413"><span class="lineNum">     413 </span>            :     }</a>
 <a name="414"><span class="lineNum">     414 </span>            : </a>
 <a name="415"><span class="lineNum">     415 </span>            :     /* discover_dtype_from_pyobject includes a check for is_known_scalar_type */</a>
@@ -551,20 +551,20 @@
 <a name="481"><span class="lineNum">     481 </span>            : </a>
 <a name="482"><span class="lineNum">     482 </span>            : </a>
 <a name="483"><span class="lineNum">     483 </span>            : static int</a>
-<a name="484"><span class="lineNum">     484 </span><span class="lineCov">   10508304 : update_shape(int curr_ndim, int *max_ndim,</span></a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineCov">   10508302 : update_shape(int curr_ndim, int *max_ndim,</span></a>
 <a name="485"><span class="lineNum">     485 </span>            :              npy_intp out_shape[NPY_MAXDIMS], int new_ndim,</a>
 <a name="486"><span class="lineNum">     486 </span>            :              const npy_intp new_shape[NPY_MAXDIMS], npy_bool sequence,</a>
 <a name="487"><span class="lineNum">     487 </span>            :              enum _dtype_discovery_flags *flags)</a>
 <a name="488"><span class="lineNum">     488 </span>            : {</a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineCov">   10508304 :     int success = 0;  /* unsuccessful if array is ragged */</span></a>
-<a name="490"><span class="lineNum">     490 </span><span class="lineCov">   10508304 :     const npy_bool max_dims_reached = *flags &amp; MAX_DIMS_WAS_REACHED;</span></a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineCov">   10508302 :     int success = 0;  /* unsuccessful if array is ragged */</span></a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineCov">   10508302 :     const npy_bool max_dims_reached = *flags &amp; MAX_DIMS_WAS_REACHED;</span></a>
 <a name="491"><span class="lineNum">     491 </span>            : </a>
-<a name="492"><span class="lineNum">     492 </span><span class="lineCov">   10508304 :     if (curr_ndim + new_ndim &gt; *max_ndim) {</span></a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineCov">   10508302 :     if (curr_ndim + new_ndim &gt; *max_ndim) {</span></a>
 <a name="493"><span class="lineNum">     493 </span><span class="lineCov">         60 :         success = -1;</span></a>
 <a name="494"><span class="lineNum">     494 </span>            :         /* Only update/check as many dims as possible, max_ndim is unchanged */</a>
 <a name="495"><span class="lineNum">     495 </span><span class="lineCov">         60 :         new_ndim = *max_ndim - curr_ndim;</span></a>
 <a name="496"><span class="lineNum">     496 </span>            :     }</a>
-<a name="497"><span class="lineNum">     497 </span><span class="lineCov">   10508244 :     else if (!sequence &amp;&amp; (*max_ndim != curr_ndim + new_ndim)) {</span></a>
+<a name="497"><span class="lineNum">     497 </span><span class="lineCov">   10508242 :     else if (!sequence &amp;&amp; (*max_ndim != curr_ndim + new_ndim)) {</span></a>
 <a name="498"><span class="lineNum">     498 </span>            :         /*</a>
 <a name="499"><span class="lineNum">     499 </span>            :          * Sequences do not update max_ndim, otherwise shrink and check.</a>
 <a name="500"><span class="lineNum">     500 </span>            :          * This is depth first, so if it is already set, `out_shape` is filled.</a>
@@ -575,7 +575,7 @@
 <a name="505"><span class="lineNum">     505 </span><span class="lineCov">         36 :             success = -1;</span></a>
 <a name="506"><span class="lineNum">     506 </span>            :         }</a>
 <a name="507"><span class="lineNum">     507 </span>            :     }</a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineCov">   10906168 :     for (int i = 0; i &lt; new_ndim; i++) {</span></a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineCov">   10906166 :     for (int i = 0; i &lt; new_ndim; i++) {</span></a>
 <a name="509"><span class="lineNum">     509 </span><span class="lineCov">     397905 :         npy_intp curr_dim = out_shape[curr_ndim + i];</span></a>
 <a name="510"><span class="lineNum">     510 </span><span class="lineCov">     397905 :         npy_intp new_dim = new_shape[i];</span></a>
 <a name="511"><span class="lineNum">     511 </span>            : </a>
@@ -597,10 +597,10 @@
 <a name="527"><span class="lineNum">     527 </span>            :             break;</a>
 <a name="528"><span class="lineNum">     528 </span>            :         }</a>
 <a name="529"><span class="lineNum">     529 </span>            :     }</a>
-<a name="530"><span class="lineNum">     530 </span><span class="lineCov">   10508304 :     if (!sequence) {</span></a>
-<a name="531"><span class="lineNum">     531 </span><span class="lineCov">   10114214 :         *flags |= MAX_DIMS_WAS_REACHED;</span></a>
+<a name="530"><span class="lineNum">     530 </span><span class="lineCov">   10508302 :     if (!sequence) {</span></a>
+<a name="531"><span class="lineNum">     531 </span><span class="lineCov">   10114212 :         *flags |= MAX_DIMS_WAS_REACHED;</span></a>
 <a name="532"><span class="lineNum">     532 </span>            :     }</a>
-<a name="533"><span class="lineNum">     533 </span><span class="lineCov">   10508304 :     return success;</span></a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineCov">   10508302 :     return success;</span></a>
 <a name="534"><span class="lineNum">     534 </span>            : }</a>
 <a name="535"><span class="lineNum">     535 </span>            : </a>
 <a name="536"><span class="lineNum">     536 </span>            : </a>
@@ -612,30 +612,30 @@
 <a name="542"><span class="lineNum">     542 </span>            :  * Steals a reference to the object.</a>
 <a name="543"><span class="lineNum">     543 </span>            :  */</a>
 <a name="544"><span class="lineNum">     544 </span>            : static NPY_INLINE int</a>
-<a name="545"><span class="lineNum">     545 </span><span class="lineCov">    1837369 : npy_new_coercion_cache(</span></a>
+<a name="545"><span class="lineNum">     545 </span><span class="lineCov">    1837413 : npy_new_coercion_cache(</span></a>
 <a name="546"><span class="lineNum">     546 </span>            :         PyObject *converted_obj, PyObject *arr_or_sequence, npy_bool sequence,</a>
 <a name="547"><span class="lineNum">     547 </span>            :         coercion_cache_obj ***next_ptr, int ndim)</a>
 <a name="548"><span class="lineNum">     548 </span>            : {</a>
-<a name="549"><span class="lineNum">     549 </span><span class="lineCov">    1837369 :     coercion_cache_obj *cache;</span></a>
-<a name="550"><span class="lineNum">     550 </span><span class="lineCov">    1837369 :     if (_coercion_cache_num &gt; 0) {</span></a>
-<a name="551"><span class="lineNum">     551 </span><span class="lineCov">    1532554 :         _coercion_cache_num--;</span></a>
-<a name="552"><span class="lineNum">     552 </span><span class="lineCov">    1532554 :         cache = _coercion_cache_cache[_coercion_cache_num];</span></a>
+<a name="549"><span class="lineNum">     549 </span><span class="lineCov">    1837413 :     coercion_cache_obj *cache;</span></a>
+<a name="550"><span class="lineNum">     550 </span><span class="lineCov">    1837413 :     if (_coercion_cache_num &gt; 0) {</span></a>
+<a name="551"><span class="lineNum">     551 </span><span class="lineCov">    1532602 :         _coercion_cache_num--;</span></a>
+<a name="552"><span class="lineNum">     552 </span><span class="lineCov">    1532602 :         cache = _coercion_cache_cache[_coercion_cache_num];</span></a>
 <a name="553"><span class="lineNum">     553 </span>            :     }</a>
 <a name="554"><span class="lineNum">     554 </span>            :     else {</a>
-<a name="555"><span class="lineNum">     555 </span><span class="lineCov">     304815 :         cache = PyMem_Malloc(sizeof(coercion_cache_obj));</span></a>
+<a name="555"><span class="lineNum">     555 </span><span class="lineCov">     304811 :         cache = PyMem_Malloc(sizeof(coercion_cache_obj));</span></a>
 <a name="556"><span class="lineNum">     556 </span>            :     }</a>
-<a name="557"><span class="lineNum">     557 </span><span class="lineCov">    1837369 :     if (cache == NULL) {</span></a>
+<a name="557"><span class="lineNum">     557 </span><span class="lineCov">    1837413 :     if (cache == NULL) {</span></a>
 <a name="558"><span class="lineNum">     558 </span><span class="lineNoCov">          0 :         PyErr_NoMemory();</span></a>
 <a name="559"><span class="lineNum">     559 </span><span class="lineNoCov">          0 :         return -1;</span></a>
 <a name="560"><span class="lineNum">     560 </span>            :     }</a>
-<a name="561"><span class="lineNum">     561 </span><span class="lineCov">    1837369 :     cache-&gt;converted_obj = converted_obj;</span></a>
-<a name="562"><span class="lineNum">     562 </span><span class="lineCov">    1837369 :     cache-&gt;arr_or_sequence = arr_or_sequence;</span></a>
-<a name="563"><span class="lineNum">     563 </span><span class="lineCov">    1837369 :     cache-&gt;sequence = sequence;</span></a>
-<a name="564"><span class="lineNum">     564 </span><span class="lineCov">    1837369 :     cache-&gt;depth = ndim;</span></a>
-<a name="565"><span class="lineNum">     565 </span><span class="lineCov">    1837369 :     cache-&gt;next = NULL;</span></a>
-<a name="566"><span class="lineNum">     566 </span><span class="lineCov">    1837369 :     **next_ptr = cache;</span></a>
-<a name="567"><span class="lineNum">     567 </span><span class="lineCov">    1837369 :     *next_ptr = &amp;(cache-&gt;next);</span></a>
-<a name="568"><span class="lineNum">     568 </span><span class="lineCov">    1837369 :     return 0;</span></a>
+<a name="561"><span class="lineNum">     561 </span><span class="lineCov">    1837413 :     cache-&gt;converted_obj = converted_obj;</span></a>
+<a name="562"><span class="lineNum">     562 </span><span class="lineCov">    1837413 :     cache-&gt;arr_or_sequence = arr_or_sequence;</span></a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineCov">    1837413 :     cache-&gt;sequence = sequence;</span></a>
+<a name="564"><span class="lineNum">     564 </span><span class="lineCov">    1837413 :     cache-&gt;depth = ndim;</span></a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineCov">    1837413 :     cache-&gt;next = NULL;</span></a>
+<a name="566"><span class="lineNum">     566 </span><span class="lineCov">    1837413 :     **next_ptr = cache;</span></a>
+<a name="567"><span class="lineNum">     567 </span><span class="lineCov">    1837413 :     *next_ptr = &amp;(cache-&gt;next);</span></a>
+<a name="568"><span class="lineNum">     568 </span><span class="lineCov">    1837413 :     return 0;</span></a>
 <a name="569"><span class="lineNum">     569 </span>            : }</a>
 <a name="570"><span class="lineNum">     570 </span>            : </a>
 <a name="571"><span class="lineNum">     571 </span>            : /**</a>
@@ -645,27 +645,27 @@
 <a name="575"><span class="lineNum">     575 </span>            :  * @return next coercion cache object (or NULL)</a>
 <a name="576"><span class="lineNum">     576 </span>            :  */</a>
 <a name="577"><span class="lineNum">     577 </span>            : NPY_NO_EXPORT coercion_cache_obj *</a>
-<a name="578"><span class="lineNum">     578 </span><span class="lineCov">    1837369 : npy_unlink_coercion_cache(coercion_cache_obj *current)</span></a>
+<a name="578"><span class="lineNum">     578 </span><span class="lineCov">    1837413 : npy_unlink_coercion_cache(coercion_cache_obj *current)</span></a>
 <a name="579"><span class="lineNum">     579 </span>            : {</a>
-<a name="580"><span class="lineNum">     580 </span><span class="lineCov">    1837369 :     coercion_cache_obj *next = current-&gt;next;</span></a>
-<a name="581"><span class="lineNum">     581 </span><span class="lineCov">    1837369 :     Py_DECREF(current-&gt;arr_or_sequence);</span></a>
-<a name="582"><span class="lineNum">     582 </span><span class="lineCov">    1837369 :     if (_coercion_cache_num &lt; COERCION_CACHE_CACHE_SIZE) {</span></a>
-<a name="583"><span class="lineNum">     583 </span><span class="lineCov">    1532655 :         _coercion_cache_cache[_coercion_cache_num] = current;</span></a>
-<a name="584"><span class="lineNum">     584 </span><span class="lineCov">    1532655 :         _coercion_cache_num++;</span></a>
+<a name="580"><span class="lineNum">     580 </span><span class="lineCov">    1837413 :     coercion_cache_obj *next = current-&gt;next;</span></a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineCov">    1837413 :     Py_DECREF(current-&gt;arr_or_sequence);</span></a>
+<a name="582"><span class="lineNum">     582 </span><span class="lineCov">    1837413 :     if (_coercion_cache_num &lt; COERCION_CACHE_CACHE_SIZE) {</span></a>
+<a name="583"><span class="lineNum">     583 </span><span class="lineCov">    1532703 :         _coercion_cache_cache[_coercion_cache_num] = current;</span></a>
+<a name="584"><span class="lineNum">     584 </span><span class="lineCov">    1532703 :         _coercion_cache_num++;</span></a>
 <a name="585"><span class="lineNum">     585 </span>            :     }</a>
 <a name="586"><span class="lineNum">     586 </span>            :     else {</a>
-<a name="587"><span class="lineNum">     587 </span><span class="lineCov">     304714 :         PyMem_Free(current);</span></a>
+<a name="587"><span class="lineNum">     587 </span><span class="lineCov">     304710 :         PyMem_Free(current);</span></a>
 <a name="588"><span class="lineNum">     588 </span>            :     }</a>
-<a name="589"><span class="lineNum">     589 </span><span class="lineCov">    1837369 :     return next;</span></a>
+<a name="589"><span class="lineNum">     589 </span><span class="lineCov">    1837413 :     return next;</span></a>
 <a name="590"><span class="lineNum">     590 </span>            : }</a>
 <a name="591"><span class="lineNum">     591 </span>            : </a>
 <a name="592"><span class="lineNum">     592 </span>            : NPY_NO_EXPORT void</a>
-<a name="593"><span class="lineNum">     593 </span><span class="lineCov">     191454 : npy_free_coercion_cache(coercion_cache_obj *next) {</span></a>
+<a name="593"><span class="lineNum">     593 </span><span class="lineCov">     191498 : npy_free_coercion_cache(coercion_cache_obj *next) {</span></a>
 <a name="594"><span class="lineNum">     594 </span>            :     /* We only need to check from the last used cache pos */</a>
-<a name="595"><span class="lineNum">     595 </span><span class="lineCov">     344367 :     while (next != NULL) {</span></a>
-<a name="596"><span class="lineNum">     596 </span><span class="lineCov">     152913 :         next = npy_unlink_coercion_cache(next);</span></a>
+<a name="595"><span class="lineNum">     595 </span><span class="lineCov">     344455 :     while (next != NULL) {</span></a>
+<a name="596"><span class="lineNum">     596 </span><span class="lineCov">     152957 :         next = npy_unlink_coercion_cache(next);</span></a>
 <a name="597"><span class="lineNum">     597 </span>            :     }</a>
-<a name="598"><span class="lineNum">     598 </span><span class="lineCov">     191359 : }</span></a>
+<a name="598"><span class="lineNum">     598 </span><span class="lineCov">     191403 : }</span></a>
 <a name="599"><span class="lineNum">     599 </span>            : </a>
 <a name="600"><span class="lineNum">     600 </span>            : #undef COERCION_CACHE_CACHE_SIZE</a>
 <a name="601"><span class="lineNum">     601 </span>            : </a>
@@ -726,22 +726,22 @@
 <a name="656"><span class="lineNum">     656 </span>            :  * @return 0 on success -1 on error</a>
 <a name="657"><span class="lineNum">     657 </span>            :  */</a>
 <a name="658"><span class="lineNum">     658 </span>            : static NPY_INLINE int</a>
-<a name="659"><span class="lineNum">     659 </span><span class="lineCov">   10065773 : handle_scalar(</span></a>
+<a name="659"><span class="lineNum">     659 </span><span class="lineCov">   10065771 : handle_scalar(</span></a>
 <a name="660"><span class="lineNum">     660 </span>            :         PyObject *obj, int curr_dims, int *max_dims,</a>
 <a name="661"><span class="lineNum">     661 </span>            :         PyArray_Descr **out_descr, npy_intp *out_shape,</a>
 <a name="662"><span class="lineNum">     662 </span>            :         PyArray_DTypeMeta *fixed_DType,</a>
 <a name="663"><span class="lineNum">     663 </span>            :         enum _dtype_discovery_flags *flags, PyArray_DTypeMeta *DType)</a>
 <a name="664"><span class="lineNum">     664 </span>            : {</a>
-<a name="665"><span class="lineNum">     665 </span><span class="lineCov">   10065773 :     PyArray_Descr *descr;</span></a>
+<a name="665"><span class="lineNum">     665 </span><span class="lineCov">   10065771 :     PyArray_Descr *descr;</span></a>
 <a name="666"><span class="lineNum">     666 </span>            : </a>
-<a name="667"><span class="lineNum">     667 </span><span class="lineCov">   10065773 :     if (update_shape(curr_dims, max_dims, out_shape,</span></a>
+<a name="667"><span class="lineNum">     667 </span><span class="lineCov">   10065771 :     if (update_shape(curr_dims, max_dims, out_shape,</span></a>
 <a name="668"><span class="lineNum">     668 </span>            :             0, NULL, NPY_FALSE, flags) &lt; 0) {</a>
 <a name="669"><span class="lineNum">     669 </span><span class="lineCov">         32 :         *flags |= FOUND_RAGGED_ARRAY;</span></a>
 <a name="670"><span class="lineNum">     670 </span><span class="lineCov">         32 :         return *max_dims;</span></a>
 <a name="671"><span class="lineNum">     671 </span>            :     }</a>
-<a name="672"><span class="lineNum">     672 </span><span class="lineCov">   10065741 :     if (*flags &amp; DESCRIPTOR_WAS_SET) {</span></a>
+<a name="672"><span class="lineNum">     672 </span><span class="lineCov">   10065739 :     if (*flags &amp; DESCRIPTOR_WAS_SET) {</span></a>
 <a name="673"><span class="lineNum">     673 </span>            :         /* no need to do any promotion */</a>
-<a name="674"><span class="lineNum">     674 </span><span class="lineCov">    5199271 :         return *max_dims;</span></a>
+<a name="674"><span class="lineNum">     674 </span><span class="lineCov">    5199269 :         return *max_dims;</span></a>
 <a name="675"><span class="lineNum">     675 </span>            :     }</a>
 <a name="676"><span class="lineNum">     676 </span>            :     /* This is a scalar, so find the descriptor */</a>
 <a name="677"><span class="lineNum">     677 </span><span class="lineCov">    4866470 :     descr = find_scalar_descriptor(fixed_DType, DType, obj);</span></a>
@@ -931,23 +931,23 @@
 <a name="861"><span class="lineNum">     861 </span>            :  *         this to the current dimensions).</a>
 <a name="862"><span class="lineNum">     862 </span>            :  */</a>
 <a name="863"><span class="lineNum">     863 </span>            : NPY_NO_EXPORT int</a>
-<a name="864"><span class="lineNum">     864 </span><span class="lineCov">   11903076 : PyArray_DiscoverDTypeAndShape_Recursive(</span></a>
+<a name="864"><span class="lineNum">     864 </span><span class="lineCov">   11903118 : PyArray_DiscoverDTypeAndShape_Recursive(</span></a>
 <a name="865"><span class="lineNum">     865 </span>            :         PyObject *obj, int curr_dims, int max_dims, PyArray_Descr**out_descr,</a>
 <a name="866"><span class="lineNum">     866 </span>            :         npy_intp out_shape[NPY_MAXDIMS],</a>
 <a name="867"><span class="lineNum">     867 </span>            :         coercion_cache_obj ***coercion_cache_tail_ptr,</a>
 <a name="868"><span class="lineNum">     868 </span>            :         PyArray_DTypeMeta *fixed_DType, enum _dtype_discovery_flags *flags)</a>
 <a name="869"><span class="lineNum">     869 </span>            : {</a>
-<a name="870"><span class="lineNum">     870 </span><span class="lineCov">   11903076 :     PyArrayObject *arr = NULL;</span></a>
-<a name="871"><span class="lineNum">     871 </span><span class="lineCov">   11903076 :     PyObject *seq;</span></a>
+<a name="870"><span class="lineNum">     870 </span><span class="lineCov">   11903118 :     PyArrayObject *arr = NULL;</span></a>
+<a name="871"><span class="lineNum">     871 </span><span class="lineCov">   11903118 :     PyObject *seq;</span></a>
 <a name="872"><span class="lineNum">     872 </span>            : </a>
 <a name="873"><span class="lineNum">     873 </span>            :     /*</a>
 <a name="874"><span class="lineNum">     874 </span>            :      * The first step is to find the DType class if it was not provided,</a>
 <a name="875"><span class="lineNum">     875 </span>            :      * alternatively we have to find out that this is not a scalar at all</a>
 <a name="876"><span class="lineNum">     876 </span>            :      * (which could fail and lead us to `object` dtype).</a>
 <a name="877"><span class="lineNum">     877 </span>            :      */</a>
-<a name="878"><span class="lineNum">     878 </span><span class="lineCov">   11903076 :     PyArray_DTypeMeta *DType = NULL;</span></a>
+<a name="878"><span class="lineNum">     878 </span><span class="lineCov">   11903118 :     PyArray_DTypeMeta *DType = NULL;</span></a>
 <a name="879"><span class="lineNum">     879 </span>            : </a>
-<a name="880"><span class="lineNum">     880 </span><span class="lineCov">   11903076 :     if (NPY_UNLIKELY(*flags &amp; DISCOVER_STRINGS_AS_SEQUENCES)) {</span></a>
+<a name="880"><span class="lineNum">     880 </span><span class="lineCov">   11903118 :     if (NPY_UNLIKELY(*flags &amp; DISCOVER_STRINGS_AS_SEQUENCES)) {</span></a>
 <a name="881"><span class="lineNum">     881 </span>            :         /*</a>
 <a name="882"><span class="lineNum">     882 </span>            :          * We currently support that bytes/strings are considered sequences,</a>
 <a name="883"><span class="lineNum">     883 </span>            :          * if the dtype is np.dtype('c'), this should be deprecated probably,</a>
@@ -962,19 +962,19 @@
 <a name="892"><span class="lineNum">     892 </span>            :     }</a>
 <a name="893"><span class="lineNum">     893 </span>            : </a>
 <a name="894"><span class="lineNum">     894 </span>            :     /* If this is a known scalar, find the corresponding DType class */</a>
-<a name="895"><span class="lineNum">     895 </span><span class="lineCov">   11903068 :     DType = discover_dtype_from_pyobject(obj, flags, fixed_DType);</span></a>
-<a name="896"><span class="lineNum">     896 </span><span class="lineCov">   11903068 :     if (DType == NULL) {</span></a>
-<a name="897"><span class="lineNum">     897 </span><span class="lineCov">   11903076 :         return -1;</span></a>
+<a name="895"><span class="lineNum">     895 </span><span class="lineCov">   11903110 :     DType = discover_dtype_from_pyobject(obj, flags, fixed_DType);</span></a>
+<a name="896"><span class="lineNum">     896 </span><span class="lineCov">   11903110 :     if (DType == NULL) {</span></a>
+<a name="897"><span class="lineNum">     897 </span><span class="lineCov">   11903118 :         return -1;</span></a>
 <a name="898"><span class="lineNum">     898 </span>            :     }</a>
-<a name="899"><span class="lineNum">     899 </span><span class="lineCov">   11903068 :     else if (DType == (PyArray_DTypeMeta *)Py_None) {</span></a>
-<a name="900"><span class="lineNum">     900 </span><span class="lineCov">    1959679 :         Py_DECREF(Py_None);</span></a>
+<a name="899"><span class="lineNum">     899 </span><span class="lineCov">   11903110 :     else if (DType == (PyArray_DTypeMeta *)Py_None) {</span></a>
+<a name="900"><span class="lineNum">     900 </span><span class="lineCov">    1959722 :         Py_DECREF(Py_None);</span></a>
 <a name="901"><span class="lineNum">     901 </span>            :     }</a>
 <a name="902"><span class="lineNum">     902 </span>            :     else {</a>
-<a name="903"><span class="lineNum">     903 </span><span class="lineCov">    9943389 :         max_dims = handle_scalar(</span></a>
+<a name="903"><span class="lineNum">     903 </span><span class="lineCov">    9943388 :         max_dims = handle_scalar(</span></a>
 <a name="904"><span class="lineNum">     904 </span>            :                 obj, curr_dims, &amp;max_dims, out_descr, out_shape, fixed_DType,</a>
 <a name="905"><span class="lineNum">     905 </span>            :                 flags, DType);</a>
-<a name="906"><span class="lineNum">     906 </span><span class="lineCov">    9943389 :         Py_DECREF(DType);</span></a>
-<a name="907"><span class="lineNum">     907 </span><span class="lineCov">    9943389 :         return max_dims;</span></a>
+<a name="906"><span class="lineNum">     906 </span><span class="lineCov">    9943388 :         Py_DECREF(DType);</span></a>
+<a name="907"><span class="lineNum">     907 </span><span class="lineCov">    9943388 :         return max_dims;</span></a>
 <a name="908"><span class="lineNum">     908 </span>            :     }</a>
 <a name="909"><span class="lineNum">     909 </span>            : </a>
 <a name="910"><span class="lineNum">     910 </span>            :     /*</a>
@@ -982,23 +982,23 @@
 <a name="912"><span class="lineNum">     912 </span>            :      * Although it is still possible that this fails and we have to use</a>
 <a name="913"><span class="lineNum">     913 </span>            :      * `object`.</a>
 <a name="914"><span class="lineNum">     914 </span>            :      */</a>
-<a name="915"><span class="lineNum">     915 </span><span class="lineCov">    1959679 :     if (PyArray_Check(obj)) {</span></a>
-<a name="916"><span class="lineNum">     916 </span><span class="lineCov">    1434854 :         arr = (PyArrayObject *)obj;</span></a>
-<a name="917"><span class="lineNum">     917 </span><span class="lineCov">    1434854 :         Py_INCREF(arr);</span></a>
+<a name="915"><span class="lineNum">     915 </span><span class="lineCov">    1959722 :     if (PyArray_Check(obj)) {</span></a>
+<a name="916"><span class="lineNum">     916 </span><span class="lineCov">    1434898 :         arr = (PyArrayObject *)obj;</span></a>
+<a name="917"><span class="lineNum">     917 </span><span class="lineCov">    1434898 :         Py_INCREF(arr);</span></a>
 <a name="918"><span class="lineNum">     918 </span>            :     }</a>
 <a name="919"><span class="lineNum">     919 </span>            :     else {</a>
-<a name="920"><span class="lineNum">     920 </span><span class="lineCov">     524825 :         PyArray_Descr *requested_descr = NULL;</span></a>
-<a name="921"><span class="lineNum">     921 </span><span class="lineCov">     524825 :         if (*flags &amp; DESCRIPTOR_WAS_SET) {</span></a>
+<a name="920"><span class="lineNum">     920 </span><span class="lineCov">     524824 :         PyArray_Descr *requested_descr = NULL;</span></a>
+<a name="921"><span class="lineNum">     921 </span><span class="lineCov">     524824 :         if (*flags &amp; DESCRIPTOR_WAS_SET) {</span></a>
 <a name="922"><span class="lineNum">     922 </span>            :             /* __array__ may be passed the requested descriptor if provided */</a>
-<a name="923"><span class="lineNum">     923 </span><span class="lineCov">     330669 :             requested_descr = *out_descr;</span></a>
+<a name="923"><span class="lineNum">     923 </span><span class="lineCov">     330668 :             requested_descr = *out_descr;</span></a>
 <a name="924"><span class="lineNum">     924 </span>            :         }</a>
-<a name="925"><span class="lineNum">     925 </span><span class="lineCov">     524825 :         arr = (PyArrayObject *)_array_from_array_like(obj,</span></a>
+<a name="925"><span class="lineNum">     925 </span><span class="lineCov">     524824 :         arr = (PyArrayObject *)_array_from_array_like(obj,</span></a>
 <a name="926"><span class="lineNum">     926 </span>            :                 requested_descr, 0, NULL);</a>
-<a name="927"><span class="lineNum">     927 </span><span class="lineCov">     524825 :         if (arr == NULL) {</span></a>
+<a name="927"><span class="lineNum">     927 </span><span class="lineCov">     524824 :         if (arr == NULL) {</span></a>
 <a name="928"><span class="lineNum">     928 </span>            :             return -1;</a>
 <a name="929"><span class="lineNum">     929 </span>            :         }</a>
-<a name="930"><span class="lineNum">     930 </span><span class="lineCov">     524795 :         else if (arr == (PyArrayObject *)Py_NotImplemented) {</span></a>
-<a name="931"><span class="lineNum">     931 </span><span class="lineCov">     516361 :             Py_DECREF(arr);</span></a>
+<a name="930"><span class="lineNum">     930 </span><span class="lineCov">     524794 :         else if (arr == (PyArrayObject *)Py_NotImplemented) {</span></a>
+<a name="931"><span class="lineNum">     931 </span><span class="lineCov">     516360 :             Py_DECREF(arr);</span></a>
 <a name="932"><span class="lineNum">     932 </span>            :             arr = NULL;</a>
 <a name="933"><span class="lineNum">     933 </span>            :         }</a>
 <a name="934"><span class="lineNum">     934 </span><span class="lineCov">       8434 :         else if (curr_dims &gt; 0 &amp;&amp; curr_dims != max_dims) {</span></a>
@@ -1049,24 +1049,24 @@
 <a name="979"><span class="lineNum">     979 </span>            :             }</a>
 <a name="980"><span class="lineNum">     980 </span>            :         }</a>
 <a name="981"><span class="lineNum">     981 </span>            :     }</a>
-<a name="982"><span class="lineNum">     982 </span><span class="lineCov">    1959640 :     if (arr != NULL) {</span></a>
+<a name="982"><span class="lineNum">     982 </span><span class="lineCov">    1959683 :     if (arr != NULL) {</span></a>
 <a name="983"><span class="lineNum">     983 </span>            :         /*</a>
 <a name="984"><span class="lineNum">     984 </span>            :          * This is an array object which will be added to the cache, keeps</a>
 <a name="985"><span class="lineNum">     985 </span>            :          * the reference to the array alive (takes ownership).</a>
 <a name="986"><span class="lineNum">     986 </span>            :          */</a>
-<a name="987"><span class="lineNum">     987 </span><span class="lineCov">    1443279 :         if (npy_new_coercion_cache(obj, (PyObject *)arr,</span></a>
+<a name="987"><span class="lineNum">     987 </span><span class="lineCov">    1443323 :         if (npy_new_coercion_cache(obj, (PyObject *)arr,</span></a>
 <a name="988"><span class="lineNum">     988 </span>            :                 0, coercion_cache_tail_ptr, curr_dims) &lt; 0) {</a>
-<a name="989"><span class="lineNum">     989 </span><span class="lineCov">    1443279 :             return -1;</span></a>
+<a name="989"><span class="lineNum">     989 </span><span class="lineCov">    1443323 :             return -1;</span></a>
 <a name="990"><span class="lineNum">     990 </span>            :         }</a>
 <a name="991"><span class="lineNum">     991 </span>            : </a>
-<a name="992"><span class="lineNum">     992 </span><span class="lineCov">    1443279 :         if (curr_dims == 0) {</span></a>
+<a name="992"><span class="lineNum">     992 </span><span class="lineCov">    1443323 :         if (curr_dims == 0) {</span></a>
 <a name="993"><span class="lineNum">     993 </span>            :             /*</a>
 <a name="994"><span class="lineNum">     994 </span>            :              * Special case for reverse broadcasting, ignore max_dims if this</a>
 <a name="995"><span class="lineNum">     995 </span>            :              * is a single array-like object; needed for PyArray_CopyObject.</a>
 <a name="996"><span class="lineNum">     996 </span>            :              */</a>
-<a name="997"><span class="lineNum">     997 </span><span class="lineCov">    1394844 :             memcpy(out_shape, PyArray_SHAPE(arr),</span></a>
-<a name="998"><span class="lineNum">     998 </span><span class="lineCov">    1394844 :                    PyArray_NDIM(arr) * sizeof(npy_intp));</span></a>
-<a name="999"><span class="lineNum">     999 </span><span class="lineCov">    1394844 :             max_dims = PyArray_NDIM(arr);</span></a>
+<a name="997"><span class="lineNum">     997 </span><span class="lineCov">    1394888 :             memcpy(out_shape, PyArray_SHAPE(arr),</span></a>
+<a name="998"><span class="lineNum">     998 </span><span class="lineCov">    1394888 :                    PyArray_NDIM(arr) * sizeof(npy_intp));</span></a>
+<a name="999"><span class="lineNum">     999 </span><span class="lineCov">    1394888 :             max_dims = PyArray_NDIM(arr);</span></a>
 <a name="1000"><span class="lineNum">    1000 </span>            :         }</a>
 <a name="1001"><span class="lineNum">    1001 </span><span class="lineCov">      48435 :         else if (update_shape(curr_dims, &amp;max_dims, out_shape,</span></a>
 <a name="1002"><span class="lineNum">    1002 </span><span class="lineCov">      48435 :                 PyArray_NDIM(arr), PyArray_SHAPE(arr), NPY_FALSE, flags) &lt; 0) {</span></a>
@@ -1074,8 +1074,8 @@
 <a name="1004"><span class="lineNum">    1004 </span><span class="lineCov">         70 :             return max_dims;</span></a>
 <a name="1005"><span class="lineNum">    1005 </span>            :         }</a>
 <a name="1006"><span class="lineNum">    1006 </span>            : </a>
-<a name="1007"><span class="lineNum">    1007 </span><span class="lineCov">    1443209 :         if (*flags &amp; DESCRIPTOR_WAS_SET) {</span></a>
-<a name="1008"><span class="lineNum">    1008 </span><span class="lineCov">     523177 :             return max_dims;</span></a>
+<a name="1007"><span class="lineNum">    1007 </span><span class="lineCov">    1443253 :         if (*flags &amp; DESCRIPTOR_WAS_SET) {</span></a>
+<a name="1008"><span class="lineNum">    1008 </span><span class="lineCov">     523221 :             return max_dims;</span></a>
 <a name="1009"><span class="lineNum">    1009 </span>            :         }</a>
 <a name="1010"><span class="lineNum">    1010 </span>            :         /*</a>
 <a name="1011"><span class="lineNum">    1011 </span>            :          * For arrays we may not just need to cast the dtype to the user</a>
@@ -1105,8 +1105,8 @@
 <a name="1035"><span class="lineNum">    1035 </span>            :      * and to handle it recursively. That is, unless we have hit the</a>
 <a name="1036"><span class="lineNum">    1036 </span>            :      * dimension limit.</a>
 <a name="1037"><span class="lineNum">    1037 </span>            :      */</a>
-<a name="1038"><span class="lineNum">    1038 </span><span class="lineCov">     516361 :     npy_bool is_sequence = PySequence_Check(obj);</span></a>
-<a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">     516361 :     if (is_sequence) {</span></a>
+<a name="1038"><span class="lineNum">    1038 </span><span class="lineCov">     516360 :     npy_bool is_sequence = PySequence_Check(obj);</span></a>
+<a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">     516360 :     if (is_sequence) {</span></a>
 <a name="1040"><span class="lineNum">    1040 </span><span class="lineCov">     411041 :         is_sequence = PySequence_Size(obj) &gt;= 0;</span></a>
 <a name="1041"><span class="lineNum">    1041 </span><span class="lineCov">     411041 :         if (NPY_UNLIKELY(!is_sequence)) {</span></a>
 <a name="1042"><span class="lineNum">    1042 </span>            :             /* NOTE: This should likely just raise all errors */</a>
@@ -1121,20 +1121,20 @@
 <a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">          7 :             PyErr_Clear();</span></a>
 <a name="1052"><span class="lineNum">    1052 </span>            :         }</a>
 <a name="1053"><span class="lineNum">    1053 </span>            :     }</a>
-<a name="1054"><span class="lineNum">    1054 </span><span class="lineCov">     516359 :     if (NPY_UNLIKELY(*flags &amp; DISCOVER_TUPLES_AS_ELEMENTS) &amp;&amp;</span></a>
+<a name="1054"><span class="lineNum">    1054 </span><span class="lineCov">     516358 :     if (NPY_UNLIKELY(*flags &amp; DISCOVER_TUPLES_AS_ELEMENTS) &amp;&amp;</span></a>
 <a name="1055"><span class="lineNum">    1055 </span><span class="lineCov">      17853 :             PyTuple_Check(obj)) {</span></a>
 <a name="1056"><span class="lineNum">    1056 </span><span class="lineCov">      16866 :         is_sequence = NPY_FALSE;</span></a>
 <a name="1057"><span class="lineNum">    1057 </span>            :     }</a>
-<a name="1058"><span class="lineNum">    1058 </span><span class="lineCov">     516359 :     if (curr_dims == max_dims || !is_sequence) {</span></a>
+<a name="1058"><span class="lineNum">    1058 </span><span class="lineCov">     516358 :     if (curr_dims == max_dims || !is_sequence) {</span></a>
 <a name="1059"><span class="lineNum">    1059 </span>            :         /* Clear any PySequence_Size error which would corrupts further calls */</a>
-<a name="1060"><span class="lineNum">    1060 </span><span class="lineCov">     122275 :         max_dims = handle_scalar(</span></a>
+<a name="1060"><span class="lineNum">    1060 </span><span class="lineCov">     122274 :         max_dims = handle_scalar(</span></a>
 <a name="1061"><span class="lineNum">    1061 </span>            :                 obj, curr_dims, &amp;max_dims, out_descr, out_shape, fixed_DType,</a>
 <a name="1062"><span class="lineNum">    1062 </span>            :                 flags, NULL);</a>
-<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">     122275 :         if (is_sequence) {</span></a>
+<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">     122274 :         if (is_sequence) {</span></a>
 <a name="1064"><span class="lineNum">    1064 </span>            :             /* Flag as ragged or too deep array */</a>
 <a name="1065"><span class="lineNum">    1065 </span><span class="lineCov">         82 :             *flags |= FOUND_RAGGED_ARRAY;</span></a>
 <a name="1066"><span class="lineNum">    1066 </span>            :         }</a>
-<a name="1067"><span class="lineNum">    1067 </span><span class="lineCov">     122275 :         return max_dims;</span></a>
+<a name="1067"><span class="lineNum">    1067 </span><span class="lineCov">     122274 :         return max_dims;</span></a>
 <a name="1068"><span class="lineNum">    1068 </span>            :     }</a>
 <a name="1069"><span class="lineNum">    1069 </span>            :     /* If we stop supporting bytes/str subclasses, more may be required here: */</a>
 <a name="1070"><span class="lineNum">    1070 </span><span class="lineCov">     394084 :     assert(!PyBytes_Check(obj) &amp;&amp; !PyUnicode_Check(obj));</span></a>
@@ -1234,33 +1234,33 @@
 <a name="1164"><span class="lineNum">    1164 </span>            :  *         `arr1d[...] = np.array([[1,2,3,4]])`</a>
 <a name="1165"><span class="lineNum">    1165 </span>            :  */</a>
 <a name="1166"><span class="lineNum">    1166 </span>            : NPY_NO_EXPORT int</a>
-<a name="1167"><span class="lineNum">    1167 </span><span class="lineCov">    5647923 : PyArray_DiscoverDTypeAndShape(</span></a>
+<a name="1167"><span class="lineNum">    1167 </span><span class="lineCov">    5647965 : PyArray_DiscoverDTypeAndShape(</span></a>
 <a name="1168"><span class="lineNum">    1168 </span>            :         PyObject *obj, int max_dims,</a>
 <a name="1169"><span class="lineNum">    1169 </span>            :         npy_intp out_shape[NPY_MAXDIMS],</a>
 <a name="1170"><span class="lineNum">    1170 </span>            :         coercion_cache_obj **coercion_cache,</a>
 <a name="1171"><span class="lineNum">    1171 </span>            :         PyArray_DTypeMeta *fixed_DType, PyArray_Descr *requested_descr,</a>
 <a name="1172"><span class="lineNum">    1172 </span>            :         PyArray_Descr **out_descr)</a>
 <a name="1173"><span class="lineNum">    1173 </span>            : {</a>
-<a name="1174"><span class="lineNum">    1174 </span><span class="lineCov">    5647923 :     coercion_cache_obj **coercion_cache_head = coercion_cache;</span></a>
-<a name="1175"><span class="lineNum">    1175 </span><span class="lineCov">    5647923 :     *coercion_cache = NULL;</span></a>
-<a name="1176"><span class="lineNum">    1176 </span><span class="lineCov">    5647923 :     enum _dtype_discovery_flags flags = 0;</span></a>
+<a name="1174"><span class="lineNum">    1174 </span><span class="lineCov">    5647965 :     coercion_cache_obj **coercion_cache_head = coercion_cache;</span></a>
+<a name="1175"><span class="lineNum">    1175 </span><span class="lineCov">    5647965 :     *coercion_cache = NULL;</span></a>
+<a name="1176"><span class="lineNum">    1176 </span><span class="lineCov">    5647965 :     enum _dtype_discovery_flags flags = 0;</span></a>
 <a name="1177"><span class="lineNum">    1177 </span>            : </a>
 <a name="1178"><span class="lineNum">    1178 </span>            :     /*</a>
 <a name="1179"><span class="lineNum">    1179 </span>            :      * Support a passed in descriptor (but only if nothing was specified).</a>
 <a name="1180"><span class="lineNum">    1180 </span>            :      */</a>
-<a name="1181"><span class="lineNum">    1181 </span><span class="lineCov">    5647923 :     assert(*out_descr == NULL || fixed_DType == NULL);</span></a>
+<a name="1181"><span class="lineNum">    1181 </span><span class="lineCov">    5647965 :     assert(*out_descr == NULL || fixed_DType == NULL);</span></a>
 <a name="1182"><span class="lineNum">    1182 </span>            :     /* Validate input of requested descriptor and DType */</a>
-<a name="1183"><span class="lineNum">    1183 </span><span class="lineCov">    5647923 :     if (fixed_DType != NULL) {</span></a>
-<a name="1184"><span class="lineNum">    1184 </span><span class="lineCov">    1835268 :         assert(PyObject_TypeCheck(</span></a>
+<a name="1183"><span class="lineNum">    1183 </span><span class="lineCov">    5647965 :     if (fixed_DType != NULL) {</span></a>
+<a name="1184"><span class="lineNum">    1184 </span><span class="lineCov">    1835310 :         assert(PyObject_TypeCheck(</span></a>
 <a name="1185"><span class="lineNum">    1185 </span>            :                 (PyObject *)fixed_DType, (PyTypeObject *)&amp;PyArrayDTypeMeta_Type));</a>
 <a name="1186"><span class="lineNum">    1186 </span>            :     }</a>
 <a name="1187"><span class="lineNum">    1187 </span>            : </a>
-<a name="1188"><span class="lineNum">    1188 </span><span class="lineCov">    5647923 :     if (requested_descr != NULL) {</span></a>
-<a name="1189"><span class="lineNum">    1189 </span><span class="lineCov">    1833450 :         assert(fixed_DType == NPY_DTYPE(requested_descr));</span></a>
+<a name="1188"><span class="lineNum">    1188 </span><span class="lineCov">    5647965 :     if (requested_descr != NULL) {</span></a>
+<a name="1189"><span class="lineNum">    1189 </span><span class="lineCov">    1833492 :         assert(fixed_DType == NPY_DTYPE(requested_descr));</span></a>
 <a name="1190"><span class="lineNum">    1190 </span>            :         /* The output descriptor must be the input. */</a>
-<a name="1191"><span class="lineNum">    1191 </span><span class="lineCov">    1833450 :         Py_INCREF(requested_descr);</span></a>
-<a name="1192"><span class="lineNum">    1192 </span><span class="lineCov">    1833450 :         *out_descr = requested_descr;</span></a>
-<a name="1193"><span class="lineNum">    1193 </span><span class="lineCov">    1833450 :         flags |= DESCRIPTOR_WAS_SET;</span></a>
+<a name="1191"><span class="lineNum">    1191 </span><span class="lineCov">    1833492 :         Py_INCREF(requested_descr);</span></a>
+<a name="1192"><span class="lineNum">    1192 </span><span class="lineCov">    1833492 :         *out_descr = requested_descr;</span></a>
+<a name="1193"><span class="lineNum">    1193 </span><span class="lineCov">    1833492 :         flags |= DESCRIPTOR_WAS_SET;</span></a>
 <a name="1194"><span class="lineNum">    1194 </span>            :     }</a>
 <a name="1195"><span class="lineNum">    1195 </span>            : </a>
 <a name="1196"><span class="lineNum">    1196 </span>            :     /*</a>
@@ -1269,27 +1269,27 @@
 <a name="1199"><span class="lineNum">    1199 </span>            :      */</a>
 <a name="1200"><span class="lineNum">    1200 </span>            : </a>
 <a name="1201"><span class="lineNum">    1201 </span>            :     /* Legacy discovery flags */</a>
-<a name="1202"><span class="lineNum">    1202 </span><span class="lineCov">    5647923 :     if (requested_descr != NULL) {</span></a>
-<a name="1203"><span class="lineNum">    1203 </span><span class="lineCov">    1833450 :         if (requested_descr-&gt;type_num == NPY_STRING &amp;&amp;</span></a>
+<a name="1202"><span class="lineNum">    1202 </span><span class="lineCov">    5647965 :     if (requested_descr != NULL) {</span></a>
+<a name="1203"><span class="lineNum">    1203 </span><span class="lineCov">    1833492 :         if (requested_descr-&gt;type_num == NPY_STRING &amp;&amp;</span></a>
 <a name="1204"><span class="lineNum">    1204 </span>            :                 requested_descr-&gt;type == 'c') {</a>
 <a name="1205"><span class="lineNum">    1205 </span>            :             /* Character dtype variation of string (should be deprecated...) */</a>
 <a name="1206"><span class="lineNum">    1206 </span><span class="lineCov">         10 :             flags |= DISCOVER_STRINGS_AS_SEQUENCES;</span></a>
 <a name="1207"><span class="lineNum">    1207 </span>            :         }</a>
-<a name="1208"><span class="lineNum">    1208 </span><span class="lineCov">    1833440 :         else if (requested_descr-&gt;type_num == NPY_VOID &amp;&amp;</span></a>
+<a name="1208"><span class="lineNum">    1208 </span><span class="lineCov">    1833482 :         else if (requested_descr-&gt;type_num == NPY_VOID &amp;&amp;</span></a>
 <a name="1209"><span class="lineNum">    1209 </span><span class="lineCov">      12848 :                     (requested_descr-&gt;names || requested_descr-&gt;subarray))  {</span></a>
 <a name="1210"><span class="lineNum">    1210 </span>            :             /* Void is a chimera, in that it may or may not be structured... */</a>
 <a name="1211"><span class="lineNum">    1211 </span><span class="lineCov">      12809 :             flags |= DISCOVER_TUPLES_AS_ELEMENTS;</span></a>
 <a name="1212"><span class="lineNum">    1212 </span>            :         }</a>
 <a name="1213"><span class="lineNum">    1213 </span>            :     }</a>
 <a name="1214"><span class="lineNum">    1214 </span>            : </a>
-<a name="1215"><span class="lineNum">    1215 </span><span class="lineCov">    5647923 :     int ndim = PyArray_DiscoverDTypeAndShape_Recursive(</span></a>
+<a name="1215"><span class="lineNum">    1215 </span><span class="lineCov">    5647965 :     int ndim = PyArray_DiscoverDTypeAndShape_Recursive(</span></a>
 <a name="1216"><span class="lineNum">    1216 </span>            :             obj, 0, max_dims, out_descr, out_shape, &amp;coercion_cache,</a>
 <a name="1217"><span class="lineNum">    1217 </span>            :             fixed_DType, &amp;flags);</a>
-<a name="1218"><span class="lineNum">    1218 </span><span class="lineCov">    5647923 :     if (ndim &lt; 0) {</span></a>
+<a name="1218"><span class="lineNum">    1218 </span><span class="lineCov">    5647965 :     if (ndim &lt; 0) {</span></a>
 <a name="1219"><span class="lineNum">    1219 </span><span class="lineCov">         58 :         goto fail;</span></a>
 <a name="1220"><span class="lineNum">    1220 </span>            :     }</a>
 <a name="1221"><span class="lineNum">    1221 </span>            : </a>
-<a name="1222"><span class="lineNum">    1222 </span><span class="lineCov">    5647865 :     if (NPY_UNLIKELY(flags &amp; FOUND_RAGGED_ARRAY)) {</span></a>
+<a name="1222"><span class="lineNum">    1222 </span><span class="lineCov">    5647907 :     if (NPY_UNLIKELY(flags &amp; FOUND_RAGGED_ARRAY)) {</span></a>
 <a name="1223"><span class="lineNum">    1223 </span>            :         /*</a>
 <a name="1224"><span class="lineNum">    1224 </span>            :          * If max-dims was reached and the dimensions reduced, this is ragged.</a>
 <a name="1225"><span class="lineNum">    1225 </span>            :          * Otherwise, we merely reached the maximum dimensions, which is</a>
@@ -1433,9 +1433,9 @@
 <a name="1363"><span class="lineNum">    1363 </span>            :     }</a>
 <a name="1364"><span class="lineNum">    1364 </span>            :     /* We could check here for max-ndims being reached as well */</a>
 <a name="1365"><span class="lineNum">    1365 </span>            : </a>
-<a name="1366"><span class="lineNum">    1366 </span><span class="lineCov">    5647856 :     if (requested_descr != NULL) {</span></a>
+<a name="1366"><span class="lineNum">    1366 </span><span class="lineCov">    5647898 :     if (requested_descr != NULL) {</span></a>
 <a name="1367"><span class="lineNum">    1367 </span>            :         /* descriptor was provided, we did not accidentally change it */</a>
-<a name="1368"><span class="lineNum">    1368 </span><span class="lineCov">    1833439 :         assert(*out_descr == requested_descr);</span></a>
+<a name="1368"><span class="lineNum">    1368 </span><span class="lineCov">    1833481 :         assert(*out_descr == requested_descr);</span></a>
 <a name="1369"><span class="lineNum">    1369 </span>            :     }</a>
 <a name="1370"><span class="lineNum">    1370 </span><span class="lineCov">    3814417 :     else if (NPY_UNLIKELY(*out_descr == NULL)) {</span></a>
 <a name="1371"><span class="lineNum">    1371 </span>            :         /*</a>
@@ -1452,7 +1452,7 @@
 <a name="1382"><span class="lineNum">    1382 </span>            :             }</a>
 <a name="1383"><span class="lineNum">    1383 </span>            :         }</a>
 <a name="1384"><span class="lineNum">    1384 </span>            :     }</a>
-<a name="1385"><span class="lineNum">    1385 </span><span class="lineCov">    5647923 :     return ndim;</span></a>
+<a name="1385"><span class="lineNum">    1385 </span><span class="lineCov">    5647965 :     return ndim;</span></a>
 <a name="1386"><span class="lineNum">    1386 </span>            : </a>
 <a name="1387"><span class="lineNum">    1387 </span><span class="lineCov">         67 :   fail:</span></a>
 <a name="1388"><span class="lineNum">    1388 </span><span class="lineCov">         67 :     npy_free_coercion_cache(*coercion_cache_head);</span></a>

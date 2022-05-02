@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">211</td>
@@ -603,16 +603,16 @@
 <a name="533"><span class="lineNum">     533 </span>            : </a>
 <a name="534"><span class="lineNum">     534 </span>            :     /* (not strictly) ascending sequence */</a>
 <a name="535"><span class="lineNum">     535 </span><span class="lineCov">        366 :     if (!@TYPE@_LT(arr[*(pl + 1)], arr[*pl])) {</span></a>
-<a name="536"><span class="lineNum">     536 </span><span class="lineCov">        291 :         for (pi = pl + 1; pi &lt; tosort + num - 1</span></a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineCov">        290 :         for (pi = pl + 1; pi &lt; tosort + num - 1</span></a>
 <a name="537"><span class="lineNum">     537 </span><span class="lineCov">       4242 :                 &amp;&amp; !@TYPE@_LT(arr[*(pi + 1)], arr[*pi]); ++pi) {</span></a>
-<a name="538"><span class="lineNum">     538 </span><span class="lineCov">       3732 :         }</span></a>
+<a name="538"><span class="lineNum">     538 </span><span class="lineCov">       3733 :         }</span></a>
 <a name="539"><span class="lineNum">     539 </span>            :     } else {  /* (strictly) descending sequence */</a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineCov">         50 :         for (pi = pl + 1; pi &lt; tosort + num - 1</span></a>
-<a name="541"><span class="lineNum">     541 </span><span class="lineCov">        968 :                 &amp;&amp; @TYPE@_LT(arr[*(pi + 1)], arr[*pi]); ++pi) {</span></a>
-<a name="542"><span class="lineNum">     542 </span><span class="lineCov">        718 :         }</span></a>
+<a name="540"><span class="lineNum">     540 </span><span class="lineCov">         51 :         for (pi = pl + 1; pi &lt; tosort + num - 1</span></a>
+<a name="541"><span class="lineNum">     541 </span><span class="lineCov">        970 :                 &amp;&amp; @TYPE@_LT(arr[*(pi + 1)], arr[*pi]); ++pi) {</span></a>
+<a name="542"><span class="lineNum">     542 </span><span class="lineCov">        719 :         }</span></a>
 <a name="543"><span class="lineNum">     543 </span>            : </a>
-<a name="544"><span class="lineNum">     544 </span><span class="lineCov">        448 :         for (pj = pl, pr = pi; pj &lt; pr; ++pj, --pr) {</span></a>
-<a name="545"><span class="lineNum">     545 </span><span class="lineCov">        398 :             INTP_SWAP(*pj, *pr);</span></a>
+<a name="544"><span class="lineNum">     544 </span><span class="lineCov">        450 :         for (pj = pl, pr = pi; pj &lt; pr; ++pj, --pr) {</span></a>
+<a name="545"><span class="lineNum">     545 </span><span class="lineCov">        399 :             INTP_SWAP(*pj, *pr);</span></a>
 <a name="546"><span class="lineNum">     546 </span>            :         }</a>
 <a name="547"><span class="lineNum">     547 </span>            :     }</a>
 <a name="548"><span class="lineNum">     548 </span>            : </a>
@@ -629,17 +629,17 @@
 <a name="559"><span class="lineNum">     559 </span><span class="lineCov">        284 :         pr = pl + sz;</span></a>
 <a name="560"><span class="lineNum">     560 </span>            : </a>
 <a name="561"><span class="lineNum">     561 </span>            :         /* insertion sort */</a>
-<a name="562"><span class="lineNum">     562 </span><span class="lineCov">      10110 :         for (; pi &lt; pr; ++pi) {</span></a>
-<a name="563"><span class="lineNum">     563 </span><span class="lineCov">       9826 :             vi = *pi;</span></a>
-<a name="564"><span class="lineNum">     564 </span><span class="lineCov">       9826 :             vc = arr[*pi];</span></a>
-<a name="565"><span class="lineNum">     565 </span><span class="lineCov">       9826 :             pj = pi;</span></a>
+<a name="562"><span class="lineNum">     562 </span><span class="lineCov">      10109 :         for (; pi &lt; pr; ++pi) {</span></a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineCov">       9825 :             vi = *pi;</span></a>
+<a name="564"><span class="lineNum">     564 </span><span class="lineCov">       9825 :             vc = arr[*pi];</span></a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineCov">       9825 :             pj = pi;</span></a>
 <a name="566"><span class="lineNum">     566 </span>            : </a>
-<a name="567"><span class="lineNum">     567 </span><span class="lineCov">     116363 :             while (pl &lt; pj &amp;&amp; @TYPE@_LT(vc, arr[*(pj - 1)])) {</span></a>
+<a name="567"><span class="lineNum">     567 </span><span class="lineCov">     116362 :             while (pl &lt; pj &amp;&amp; @TYPE@_LT(vc, arr[*(pj - 1)])) {</span></a>
 <a name="568"><span class="lineNum">     568 </span><span class="lineCov">     102495 :                 *pj = *(pj - 1);</span></a>
 <a name="569"><span class="lineNum">     569 </span><span class="lineCov">     102495 :                 --pj;</span></a>
 <a name="570"><span class="lineNum">     570 </span>            :             }</a>
 <a name="571"><span class="lineNum">     571 </span>            : </a>
-<a name="572"><span class="lineNum">     572 </span><span class="lineCov">       9826 :             *pj = vi;</span></a>
+<a name="572"><span class="lineNum">     572 </span><span class="lineCov">       9825 :             *pj = vi;</span></a>
 <a name="573"><span class="lineNum">     573 </span>            :         }</a>
 <a name="574"><span class="lineNum">     574 </span>            :     }</a>
 <a name="575"><span class="lineNum">     575 </span>            : </a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -100,17 +100,17 @@
 <a name="30"><span class="lineNum">      30 </span>            :  * elements, as required by the copy/casting code in lowlevel_strided_loops.c</a>
 <a name="31"><span class="lineNum">      31 </span>            :  */</a>
 <a name="32"><span class="lineNum">      32 </span>            : NPY_NO_EXPORT int</a>
-<a name="33"><span class="lineNum">      33 </span><span class="lineCov">     948238 : copycast_isaligned(int ndim, npy_intp const *shape,</span></a>
+<a name="33"><span class="lineNum">      33 </span><span class="lineCov">     948342 : copycast_isaligned(int ndim, npy_intp const *shape,</span></a>
 <a name="34"><span class="lineNum">      34 </span>            :         PyArray_Descr *dtype, char *data, npy_intp const *strides)</a>
 <a name="35"><span class="lineNum">      35 </span>            : {</a>
-<a name="36"><span class="lineNum">      36 </span><span class="lineCov">     948238 :     int aligned;</span></a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">     948238 :     int big_aln, small_aln;</span></a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">     948342 :     int aligned;</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">     948342 :     int big_aln, small_aln;</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">     948238 :     int uint_aln = npy_uint_alignment(dtype-&gt;elsize);</span></a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">     948238 :     int true_aln = dtype-&gt;alignment;</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">     948342 :     int uint_aln = npy_uint_alignment(dtype-&gt;elsize);</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">     948342 :     int true_aln = dtype-&gt;alignment;</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
 <a name="42"><span class="lineNum">      42 </span>            :     /* uint alignment can be 0, meaning not uint alignable */</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">     948238 :     if (uint_aln == 0) {</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">     948342 :     if (uint_aln == 0) {</span></a>
 <a name="44"><span class="lineNum">      44 </span>            :         return 0;</a>
 <a name="45"><span class="lineNum">      45 </span>            :     }</a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
@@ -120,7 +120,7 @@
 <a name="50"><span class="lineNum">      50 </span>            :      * the two and the big is a multiple of the small aln. We check the bigger</a>
 <a name="51"><span class="lineNum">      51 </span>            :      * one first and only check the smaller if necessary.</a>
 <a name="52"><span class="lineNum">      52 </span>            :      */</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">     942459 :     if (true_aln &gt;= uint_aln) {</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">     942563 :     if (true_aln &gt;= uint_aln) {</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :         big_aln = true_aln;</a>
 <a name="55"><span class="lineNum">      55 </span>            :         small_aln = uint_aln;</a>
 <a name="56"><span class="lineNum">      56 </span>            :     }</a>
@@ -129,8 +129,8 @@
 <a name="59"><span class="lineNum">      59 </span><span class="lineCov">      22196 :         small_aln = true_aln;</span></a>
 <a name="60"><span class="lineNum">      60 </span>            :     }</a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">     942459 :     aligned = raw_array_is_aligned(ndim, shape, data, strides, big_aln);</span></a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineCov">     942459 :     if (aligned &amp;&amp; big_aln % small_aln != 0) {</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">     942563 :     aligned = raw_array_is_aligned(ndim, shape, data, strides, big_aln);</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">     942563 :     if (aligned &amp;&amp; big_aln % small_aln != 0) {</span></a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :         aligned = raw_array_is_aligned(ndim, shape, data, strides, small_aln);</span></a>
 <a name="65"><span class="lineNum">      65 </span>            :     }</a>
 <a name="66"><span class="lineNum">      66 </span>            :     return aligned;</a>
@@ -143,41 +143,41 @@
 <a name="73"><span class="lineNum">      73 </span>            :  * Returns 0 on success, -1 on failure.</a>
 <a name="74"><span class="lineNum">      74 </span>            :  */</a>
 <a name="75"><span class="lineNum">      75 </span>            : NPY_NO_EXPORT int</a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">     471526 : raw_array_assign_array(int ndim, npy_intp const *shape,</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">     471577 : raw_array_assign_array(int ndim, npy_intp const *shape,</span></a>
 <a name="77"><span class="lineNum">      77 </span>            :         PyArray_Descr *dst_dtype, char *dst_data, npy_intp const *dst_strides,</a>
 <a name="78"><span class="lineNum">      78 </span>            :         PyArray_Descr *src_dtype, char *src_data, npy_intp const *src_strides)</a>
 <a name="79"><span class="lineNum">      79 </span>            : {</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">     471526 :     int idim;</span></a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">     471526 :     npy_intp shape_it[NPY_MAXDIMS];</span></a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">     471526 :     npy_intp dst_strides_it[NPY_MAXDIMS];</span></a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">     471526 :     npy_intp src_strides_it[NPY_MAXDIMS];</span></a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineCov">     471526 :     npy_intp coord[NPY_MAXDIMS];</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">     471577 :     int idim;</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">     471577 :     npy_intp shape_it[NPY_MAXDIMS];</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">     471577 :     npy_intp dst_strides_it[NPY_MAXDIMS];</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">     471577 :     npy_intp src_strides_it[NPY_MAXDIMS];</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">     471577 :     npy_intp coord[NPY_MAXDIMS];</span></a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">     471526 :     int aligned, needs_api = 0;</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">     471577 :     int aligned, needs_api = 0;</span></a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">     471526 :     NPY_BEGIN_THREADS_DEF;</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">     471577 :     NPY_BEGIN_THREADS_DEF;</span></a>
 <a name="89"><span class="lineNum">      89 </span>            : </a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">     943052 :     aligned =</span></a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineCov">     937236 :         copycast_isaligned(ndim, shape, dst_dtype, dst_data, dst_strides) &amp;&amp;</span></a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">     465710 :         copycast_isaligned(ndim, shape, src_dtype, src_data, src_strides);</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">     943154 :     aligned =</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">     937340 :         copycast_isaligned(ndim, shape, dst_dtype, dst_data, dst_strides) &amp;&amp;</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">     465763 :         copycast_isaligned(ndim, shape, src_dtype, src_data, src_strides);</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : </a>
 <a name="94"><span class="lineNum">      94 </span>            :     /* Use raw iteration with no heap allocation */</a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineCov">     471526 :     if (PyArray_PrepareTwoRawArrayIter(</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">     471577 :     if (PyArray_PrepareTwoRawArrayIter(</span></a>
 <a name="96"><span class="lineNum">      96 </span>            :                     ndim, shape,</a>
 <a name="97"><span class="lineNum">      97 </span>            :                     dst_data, dst_strides,</a>
 <a name="98"><span class="lineNum">      98 </span>            :                     src_data, src_strides,</a>
 <a name="99"><span class="lineNum">      99 </span>            :                     &amp;ndim, shape_it,</a>
 <a name="100"><span class="lineNum">     100 </span>            :                     &amp;dst_data, dst_strides_it,</a>
 <a name="101"><span class="lineNum">     101 </span>            :                     &amp;src_data, src_strides_it) &lt; 0) {</a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">     471526 :         return -1;</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">     471577 :         return -1;</span></a>
 <a name="103"><span class="lineNum">     103 </span>            :     }</a>
 <a name="104"><span class="lineNum">     104 </span>            : </a>
 <a name="105"><span class="lineNum">     105 </span>            :     /*</a>
 <a name="106"><span class="lineNum">     106 </span>            :      * Overlap check for the 1D case. Higher dimensional arrays and</a>
 <a name="107"><span class="lineNum">     107 </span>            :      * opposite strides cause a temporary copy before getting here.</a>
 <a name="108"><span class="lineNum">     108 </span>            :      */</a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">     471526 :     if (ndim == 1 &amp;&amp; src_data &lt; dst_data &amp;&amp;</span></a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">     237690 :                 src_data + shape_it[0] * src_strides_it[0] &gt; dst_data) {</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">     471577 :     if (ndim == 1 &amp;&amp; src_data &lt; dst_data &amp;&amp;</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">     248513 :                 src_data + shape_it[0] * src_strides_it[0] &gt; dst_data) {</span></a>
 <a name="111"><span class="lineNum">     111 </span><span class="lineCov">         54 :         src_data += (shape_it[0] - 1) * src_strides_it[0];</span></a>
 <a name="112"><span class="lineNum">     112 </span><span class="lineCov">         54 :         dst_data += (shape_it[0] - 1) * dst_strides_it[0];</span></a>
 <a name="113"><span class="lineNum">     113 </span><span class="lineCov">         54 :         src_strides_it[0] = -src_strides_it[0];</span></a>
@@ -185,8 +185,8 @@
 <a name="115"><span class="lineNum">     115 </span>            :     }</a>
 <a name="116"><span class="lineNum">     116 </span>            : </a>
 <a name="117"><span class="lineNum">     117 </span>            :     /* Get the function to do the casting */</a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineCov">     471526 :     NPY_cast_info cast_info;</span></a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">     471526 :     if (PyArray_GetDTypeTransferFunction(aligned,</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">     471577 :     NPY_cast_info cast_info;</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">     471577 :     if (PyArray_GetDTypeTransferFunction(aligned,</span></a>
 <a name="120"><span class="lineNum">     120 </span>            :                         src_strides_it[0], dst_strides_it[0],</a>
 <a name="121"><span class="lineNum">     121 </span>            :                         src_dtype, dst_dtype,</a>
 <a name="122"><span class="lineNum">     122 </span>            :                         0,</a>
@@ -194,25 +194,25 @@
 <a name="124"><span class="lineNum">     124 </span>            :         return -1;</a>
 <a name="125"><span class="lineNum">     125 </span>            :     }</a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">     471525 :     if (!needs_api) {</span></a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     467897 :         NPY_BEGIN_THREADS;</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">     471576 :     if (!needs_api) {</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     467948 :         NPY_BEGIN_THREADS;</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :     }</a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">     471525 :     npy_intp strides[2] = {src_strides_it[0], dst_strides_it[0]};</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">     471576 :     npy_intp strides[2] = {src_strides_it[0], dst_strides_it[0]};</span></a>
 <a name="132"><span class="lineNum">     132 </span>            : </a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">     471525 :     NPY_RAW_ITER_START(idim, ndim, coord, shape_it) {</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">     471576 :     NPY_RAW_ITER_START(idim, ndim, coord, shape_it) {</span></a>
 <a name="134"><span class="lineNum">     134 </span>            :         /* Process the innermost dimension */</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">    3344510 :         char *args[2] = {src_data, dst_data};</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    3344510 :         if (cast_info.func(&amp;cast_info.context,</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">    3345566 :         char *args[2] = {src_data, dst_data};</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    3345566 :         if (cast_info.func(&amp;cast_info.context,</span></a>
 <a name="137"><span class="lineNum">     137 </span>            :                 args, &amp;shape_it[0], strides, cast_info.auxdata) &lt; 0) {</a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineCov">         72 :             goto fail;</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :         }</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">    3407181 :     } NPY_RAW_ITER_TWO_NEXT(idim, ndim, coord, shape_it,</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">    3408238 :     } NPY_RAW_ITER_TWO_NEXT(idim, ndim, coord, shape_it,</span></a>
 <a name="141"><span class="lineNum">     141 </span>            :                             dst_data, dst_strides_it,</a>
 <a name="142"><span class="lineNum">     142 </span>            :                             src_data, src_strides_it);</a>
 <a name="143"><span class="lineNum">     143 </span>            : </a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">     471453 :     NPY_END_THREADS;</span></a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     471453 :     NPY_cast_info_xfree(&amp;cast_info);</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">     471504 :     NPY_END_THREADS;</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     471504 :     NPY_cast_info_xfree(&amp;cast_info);</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :     return 0;</a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineCov">         72 : fail:</span></a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineCov">         72 :     NPY_END_THREADS;</span></a>
@@ -266,7 +266,7 @@
 <a name="196"><span class="lineNum">     196 </span>            :      * a temporary copy before getting here.</a>
 <a name="197"><span class="lineNum">     197 </span>            :      */</a>
 <a name="198"><span class="lineNum">     198 </span><span class="lineCov">       5507 :     if (ndim == 1 &amp;&amp; src_data &lt; dst_data &amp;&amp;</span></a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">        784 :                 src_data + shape_it[0] * src_strides_it[0] &gt; dst_data) {</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">       2877 :                 src_data + shape_it[0] * src_strides_it[0] &gt; dst_data) {</span></a>
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :         src_data += (shape_it[0] - 1) * src_strides_it[0];</span></a>
 <a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :         dst_data += (shape_it[0] - 1) * dst_strides_it[0];</span></a>
 <a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :         wheremask_data += (shape_it[0] - 1) * wheremask_strides_it[0];</span></a>
@@ -329,18 +329,18 @@
 <a name="259"><span class="lineNum">     259 </span>            :  * Returns 0 on success, -1 on failure.</a>
 <a name="260"><span class="lineNum">     260 </span>            :  */</a>
 <a name="261"><span class="lineNum">     261 </span>            : NPY_NO_EXPORT int</a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineCov">     990678 : PyArray_AssignArray(PyArrayObject *dst, PyArrayObject *src,</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">     990719 : PyArray_AssignArray(PyArrayObject *dst, PyArrayObject *src,</span></a>
 <a name="263"><span class="lineNum">     263 </span>            :                     PyArrayObject *wheremask,</a>
 <a name="264"><span class="lineNum">     264 </span>            :                     NPY_CASTING casting)</a>
 <a name="265"><span class="lineNum">     265 </span>            : {</a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">     990678 :     int copied_src = 0;</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineCov">     990719 :     int copied_src = 0;</span></a>
 <a name="267"><span class="lineNum">     267 </span>            : </a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineCov">     990678 :     npy_intp src_strides[NPY_MAXDIMS];</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineCov">     990719 :     npy_intp src_strides[NPY_MAXDIMS];</span></a>
 <a name="269"><span class="lineNum">     269 </span>            : </a>
 <a name="270"><span class="lineNum">     270 </span>            :     /* Use array_assign_scalar if 'src' NDIM is 0 */</a>
-<a name="271"><span class="lineNum">     271 </span><span class="lineCov">     990678 :     if (PyArray_NDIM(src) == 0) {</span></a>
-<a name="272"><span class="lineNum">     272 </span><span class="lineCov">     505833 :         return PyArray_AssignRawScalar(</span></a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">     505833 :                             dst, PyArray_DESCR(src), PyArray_DATA(src),</span></a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineCov">     990719 :     if (PyArray_NDIM(src) == 0) {</span></a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineCov">     505823 :         return PyArray_AssignRawScalar(</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">     505823 :                             dst, PyArray_DESCR(src), PyArray_DATA(src),</span></a>
 <a name="274"><span class="lineNum">     274 </span>            :                             wheremask, casting);</a>
 <a name="275"><span class="lineNum">     275 </span>            :     }</a>
 <a name="276"><span class="lineNum">     276 </span>            : </a>
@@ -363,7 +363,7 @@
 <a name="293"><span class="lineNum">     293 </span>            :      * with a complicated comparison.  The comparisons are ordered to</a>
 <a name="294"><span class="lineNum">     294 </span>            :      * try and reject this with as little work as possible.</a>
 <a name="295"><span class="lineNum">     295 </span>            :      */</a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineCov">     484845 :     if (PyArray_DATA(src) == PyArray_DATA(dst) &amp;&amp;</span></a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineCov">     484896 :     if (PyArray_DATA(src) == PyArray_DATA(dst) &amp;&amp;</span></a>
 <a name="297"><span class="lineNum">     297 </span><span class="lineCov">       7773 :                         PyArray_DESCR(src) == PyArray_DESCR(dst) &amp;&amp;</span></a>
 <a name="298"><span class="lineNum">     298 </span><span class="lineCov">      15542 :                         PyArray_NDIM(src) == PyArray_NDIM(dst) &amp;&amp;</span></a>
 <a name="299"><span class="lineNum">     299 </span><span class="lineCov">       7771 :                         PyArray_CompareLists(PyArray_DIMS(src),</span></a>
@@ -376,12 +376,12 @@
 <a name="306"><span class="lineNum">     306 </span>            :         return 0;</a>
 <a name="307"><span class="lineNum">     307 </span>            :     }</a>
 <a name="308"><span class="lineNum">     308 </span>            : </a>
-<a name="309"><span class="lineNum">     309 </span><span class="lineCov">     477085 :     if (PyArray_FailUnlessWriteable(dst, &quot;assignment destination&quot;) &lt; 0) {</span></a>
+<a name="309"><span class="lineNum">     309 </span><span class="lineCov">     477136 :     if (PyArray_FailUnlessWriteable(dst, &quot;assignment destination&quot;) &lt; 0) {</span></a>
 <a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :         goto fail;</span></a>
 <a name="311"><span class="lineNum">     311 </span>            :     }</a>
 <a name="312"><span class="lineNum">     312 </span>            : </a>
 <a name="313"><span class="lineNum">     313 </span>            :     /* Check the casting rule */</a>
-<a name="314"><span class="lineNum">     314 </span><span class="lineCov">     477085 :     if (!PyArray_CanCastTypeTo(PyArray_DESCR(src),</span></a>
+<a name="314"><span class="lineNum">     314 </span><span class="lineCov">     477136 :     if (!PyArray_CanCastTypeTo(PyArray_DESCR(src),</span></a>
 <a name="315"><span class="lineNum">     315 </span>            :                                 PyArray_DESCR(dst), casting)) {</a>
 <a name="316"><span class="lineNum">     316 </span><span class="lineCov">         33 :         npy_set_invalid_cast_error(</span></a>
 <a name="317"><span class="lineNum">     317 </span>            :                 PyArray_DESCR(src), PyArray_DESCR(dst), casting, NPY_FALSE);</a>
@@ -394,11 +394,11 @@
 <a name="324"><span class="lineNum">     324 </span>            :      * of overlapping data. For bigger ndim and opposite-strided 1D</a>
 <a name="325"><span class="lineNum">     325 </span>            :      * data, we make a temporary copy of 'src' if 'src' and 'dst' overlap.'</a>
 <a name="326"><span class="lineNum">     326 </span>            :      */</a>
-<a name="327"><span class="lineNum">     327 </span><span class="lineCov">     477052 :     if (((PyArray_NDIM(dst) == 1 &amp;&amp; PyArray_NDIM(src) &gt;= 1 &amp;&amp;</span></a>
-<a name="328"><span class="lineNum">     328 </span><span class="lineCov">     396705 :                     PyArray_STRIDES(dst)[0] *</span></a>
-<a name="329"><span class="lineNum">     329 </span><span class="lineCov">     396705 :                             PyArray_STRIDES(src)[PyArray_NDIM(src) - 1] &lt; 0) ||</span></a>
-<a name="330"><span class="lineNum">     330 </span><span class="lineCov">     557833 :                     PyArray_NDIM(dst) &gt; 1 || PyArray_HASFIELDS(dst)) &amp;&amp;</span></a>
-<a name="331"><span class="lineNum">     331 </span><span class="lineCov">     106695 :                     arrays_overlap(src, dst)) {</span></a>
+<a name="327"><span class="lineNum">     327 </span><span class="lineCov">     477103 :     if (((PyArray_NDIM(dst) == 1 &amp;&amp; PyArray_NDIM(src) &gt;= 1 &amp;&amp;</span></a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineCov">     396757 :                     PyArray_STRIDES(dst)[0] *</span></a>
+<a name="329"><span class="lineNum">     329 </span><span class="lineCov">     396757 :                             PyArray_STRIDES(src)[PyArray_NDIM(src) - 1] &lt; 0) ||</span></a>
+<a name="330"><span class="lineNum">     330 </span><span class="lineCov">     557883 :                     PyArray_NDIM(dst) &gt; 1 || PyArray_HASFIELDS(dst)) &amp;&amp;</span></a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineCov">     106694 :                     arrays_overlap(src, dst)) {</span></a>
 <a name="332"><span class="lineNum">     332 </span><span class="lineCov">       1330 :         PyArrayObject *tmp;</span></a>
 <a name="333"><span class="lineNum">     333 </span>            : </a>
 <a name="334"><span class="lineNum">     334 </span>            :         /*</a>
@@ -420,7 +420,7 @@
 <a name="350"><span class="lineNum">     350 </span>            :     }</a>
 <a name="351"><span class="lineNum">     351 </span>            : </a>
 <a name="352"><span class="lineNum">     352 </span>            :     /* Broadcast 'src' to 'dst' for raw iteration */</a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineCov">     477052 :     if (PyArray_NDIM(src) &gt; PyArray_NDIM(dst)) {</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineCov">     477103 :     if (PyArray_NDIM(src) &gt; PyArray_NDIM(dst)) {</span></a>
 <a name="354"><span class="lineNum">     354 </span><span class="lineCov">        120 :         int ndim_tmp = PyArray_NDIM(src);</span></a>
 <a name="355"><span class="lineNum">     355 </span><span class="lineCov">        120 :         npy_intp *src_shape_tmp = PyArray_DIMS(src);</span></a>
 <a name="356"><span class="lineNum">     356 </span><span class="lineCov">        120 :         npy_intp *src_strides_tmp = PyArray_STRIDES(src);</span></a>
@@ -442,16 +442,16 @@
 <a name="372"><span class="lineNum">     372 </span>            :         }</a>
 <a name="373"><span class="lineNum">     373 </span>            :     }</a>
 <a name="374"><span class="lineNum">     374 </span>            :     else {</a>
-<a name="375"><span class="lineNum">     375 </span><span class="lineCov">     476932 :         if (broadcast_strides(PyArray_NDIM(dst), PyArray_DIMS(dst),</span></a>
-<a name="376"><span class="lineNum">     376 </span><span class="lineCov">     476932 :                     PyArray_NDIM(src), PyArray_DIMS(src),</span></a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineCov">     476932 :                     PyArray_STRIDES(src), &quot;input array&quot;,</span></a>
+<a name="375"><span class="lineNum">     375 </span><span class="lineCov">     476983 :         if (broadcast_strides(PyArray_NDIM(dst), PyArray_DIMS(dst),</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineCov">     476983 :                     PyArray_NDIM(src), PyArray_DIMS(src),</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineCov">     476983 :                     PyArray_STRIDES(src), &quot;input array&quot;,</span></a>
 <a name="378"><span class="lineNum">     378 </span>            :                     src_strides) &lt; 0) {</a>
 <a name="379"><span class="lineNum">     379 </span><span class="lineCov">          9 :             goto fail;</span></a>
 <a name="380"><span class="lineNum">     380 </span>            :         }</a>
 <a name="381"><span class="lineNum">     381 </span>            :     }</a>
 <a name="382"><span class="lineNum">     382 </span>            : </a>
 <a name="383"><span class="lineNum">     383 </span>            :     /* optimization: scalar boolean mask */</a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineCov">     477034 :     if (wheremask != NULL &amp;&amp;</span></a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineCov">     477085 :     if (wheremask != NULL &amp;&amp;</span></a>
 <a name="385"><span class="lineNum">     385 </span><span class="lineCov">       5510 :             PyArray_NDIM(wheremask) == 0 &amp;&amp;</span></a>
 <a name="386"><span class="lineNum">     386 </span><span class="lineCov">          3 :             PyArray_DESCR(wheremask)-&gt;type_num == NPY_BOOL) {</span></a>
 <a name="387"><span class="lineNum">     387 </span><span class="lineCov">          3 :         npy_bool value = *(npy_bool *)PyArray_DATA(wheremask);</span></a>
@@ -465,12 +465,12 @@
 <a name="395"><span class="lineNum">     395 </span>            :         }</a>
 <a name="396"><span class="lineNum">     396 </span>            :     }</a>
 <a name="397"><span class="lineNum">     397 </span>            : </a>
-<a name="398"><span class="lineNum">     398 </span><span class="lineCov">     477031 :     if (wheremask == NULL) {</span></a>
+<a name="398"><span class="lineNum">     398 </span><span class="lineCov">     477082 :     if (wheremask == NULL) {</span></a>
 <a name="399"><span class="lineNum">     399 </span>            :         /* A straightforward value assignment */</a>
 <a name="400"><span class="lineNum">     400 </span>            :         /* Do the assignment with raw array iteration */</a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineCov">     471526 :         if (raw_array_assign_array(PyArray_NDIM(dst), PyArray_DIMS(dst),</span></a>
-<a name="402"><span class="lineNum">     402 </span><span class="lineCov">     471526 :                 PyArray_DESCR(dst), PyArray_DATA(dst), PyArray_STRIDES(dst),</span></a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineCov">     471526 :                 PyArray_DESCR(src), PyArray_DATA(src), src_strides) &lt; 0) {</span></a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineCov">     471577 :         if (raw_array_assign_array(PyArray_NDIM(dst), PyArray_DIMS(dst),</span></a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineCov">     471577 :                 PyArray_DESCR(dst), PyArray_DATA(dst), PyArray_STRIDES(dst),</span></a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineCov">     471577 :                 PyArray_DESCR(src), PyArray_DATA(src), src_strides) &lt; 0) {</span></a>
 <a name="404"><span class="lineNum">     404 </span><span class="lineCov">         73 :             goto fail;</span></a>
 <a name="405"><span class="lineNum">     405 </span>            :         }</a>
 <a name="406"><span class="lineNum">     406 </span>            :     }</a>
@@ -497,7 +497,7 @@
 <a name="427"><span class="lineNum">     427 </span>            :         }</a>
 <a name="428"><span class="lineNum">     428 </span>            :     }</a>
 <a name="429"><span class="lineNum">     429 </span>            : </a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineCov">     476960 :     if (copied_src) {</span></a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineCov">     477011 :     if (copied_src) {</span></a>
 <a name="431"><span class="lineNum">     431 </span><span class="lineCov">       1330 :         Py_DECREF(src);</span></a>
 <a name="432"><span class="lineNum">     432 </span>            :     }</a>
 <a name="433"><span class="lineNum">     433 </span>            :     return 0;</a>

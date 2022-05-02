@@ -1,0 +1,231 @@
+\documentclass{article}
+\usepackage{main}
+\addbibresource{references.bib}
+\title{Numpy}
+\author{Adarsh Chagantipati, Sai Balasubrahmanya Dheeraj Gandikota, Khalid Hourani}
+\date{May 1, 2022}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\section{Introduction}
+The \href{https://github.com/numpy/numpy/}{Numpy} package is a ``fundamental package for scientific computing with Python''\cite{2020NumPy-Array}. Created in 2005, the
+package contains a mature set of libraries for numerical applications and a robust set of tests for testing both Python and C code. Numpy is used
+for linear algebra, Fourier Transform, and random number capabilities. NumPy can also be used as an efficient multi-dimensional container of generic data. The project is sophisticated with functions and tools for integrating C/C++ and Fortran code.
+
+Having a large project takes time to build, e.g. we must acquire all libraries with the exact versions supported for the build,
+check out all requirements, test requirements, etc. In order to build the project, we cloned our given repository from the Git link provided.
+It took us around 2 hours to have the setup with all the requirements, installing libraries, test suite requirements, and by using the command
+
+\begin{minted}{bash}
+pip install -r doc_requirements.txt\
+            -r linter_requirements.txt\
+            -r release_requirements.txt\
+            -r test_requirements.txt 
+python runtests.py -coverage -m
+\end{minted}
+After building, we see how many tests have passed, how many failed, how many have been skipped, and the total coverage of files. A folder coverage is added to the repository, containing a coverage report for the overall project, as well as each individual file in the project. This report covers
+the number of lines, number of missing statements, number of excluded statements, number of branches, partial code coverage, and overall code coverage of each file in the project, as well as for the project as a whole. 
+
+PyDriller is used to parse the data in repo. With it, we parse commits and observe the properties of files in each commit, such as when the file has
+been added to git, by whom, what type of commit (modify vs. new file vs. delete vs. rename), how many commits, date of modification., etc. Using this tool, we generate a report based on when the test files have been added to the project, how often they are modified, and how many people were involved.
+
+Looking at the project from the perspective of a developer, the NumPy project covers all functions and is well written. A developer must be careful to test his code (i.e., ensure that the program is working as expected) by having tests for each of the scenarios, such as
+\begin{itemize}
+    \item positive test cases
+    \item negative test cases
+    \item neutral test cases (bug free, exception handling, etc.)
+\end{itemize}
+while moving fast. On the other hand, a \emph{tester} needs to design a system that performs different types of testing, such as
+\begin{itemize}
+    \item black box testing
+    \item white box testing
+    \item regression testing
+\end{itemize}
+to test all functionality for the project.
+\section{Testing}
+\subsection{Code Structure}
+The filenames of all tests are prefixed with \texttt{test\textunderscore} and are found inside of a testing folder.
+\subsection{How to Test}
+The NumPy library provides a testing module, \texttt{runtests.py}, which can be run using with various configuration
+flags\cite{testing}. 
+
+Included is a bash script\cite{pat-project} which
+\begin{enumerate}
+    \item clones the data from GitHub\footnote{We use the release tagged \texttt{v1.21.6}.}
+    \item runs the included test suite
+    \item generates the coverage reports\footnote{Note, this script assumes no tests fail. If a test fails,
+the script will terminate early.}
+    \item parses the repo for relevant information (using \texttt{grep}\cite{grep}, \texttt{find}\cite{find}, and PyDriller\cite{PyDriller})
+    \item and generates this report\footnote{We use \LaTeX to generate this report.}
+\end{enumerate}
+Our coverage report is run using the \texttt{--mode fast} flag. A more comprehensive set of tests
+can be run by generating the report with the \texttt{--mode full} flag, i.e., by calling
+\begin{minted}{bash}
+$ bash generate_data.sh -m full
+\end{minted}
+
+\subsection{Number of Tests}
+Altogether, there are 273 test files and 221 production (Python) files. Using \texttt{find}, we are able to locate all files inside of
+\texttt{test} directories with the following command:
+\begin{minted}{bash}
+$ find "$SRCDIR" 
+    -type f\
+    ! -wholename "*/build/*"\
+    -wholename "*/tests/*.py"
+\end{minted}
+and similarly, we can locate all production (Python) files via
+\begin{minted}{bash}
+$ find "$SRCDIR"
+    -type f\
+    ! -wholename "*/build/*"\
+    ! -wholename "*/tests/*"\
+    -wholename "*.py"
+\end{minted}
+Tables of assert statement counts are given in~\cref{tbl:testasserts,tbl:prodasserts}.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lc}
+        File Name & Number of Assert Statements\\\toprule
+        utils.py & 142\\
+        timer\_comparison.py & 75\\
+        testArray.py & 66\\
+        testutils.py & 42\\
+        linalg.py & 33\\
+        testVector.py & 32\\
+        testTensor.py & 29\\
+        testSuperTensor.py & 28\\
+        testMatrix.py & 28\\
+        ccompiler\_opt.py & 20\\
+        misc\_util.py & 12\\
+        testFarray.py & 10\\
+        utils.py & 9\\
+        \_\_init\_\_.py & 8\\
+        cythonize.py & 7\\
+        versioneer.py & 6\\
+        parameterized.py & 5\\
+        \_\_init\_\_.py & 5\\
+        openblas\_support.py & 5\\
+        function\_base.py & 4\\
+        nanfunctions.py & 4\\\bottomrule
+        Total & 622
+    \end{tabular}
+        \caption{File Name and number of assert statements in production files. Only counts for the top 20 files are given, but the total is across all production files.}
+    \label{tbl:prodasserts}
+\end{table}
+
+\begin{table}[H]
+\centering
+    \begin{tabular}{lc}
+        File Name & Number of Assert Statements\\\toprule
+        test\_multiarray.py & 1806\\
+        test\_core.py & 1602\\
+        test\_numeric.py & 938\\
+        test\_function\_base.py & 926\\
+        test\_umath.py & 905\\
+        test\_datetime.py & 834\\
+        test\_nditer.py & 629\\
+        test\_generator\_mt19937.py & 527\\
+        test\_ufunc.py & 526\\
+        test\_extras.py & 494\\
+        test\_regression.py & 471\\
+        test\_randomstate.py & 431\\
+        test\_linalg.py & 396\\
+        test\_random.py & 366\\
+        test\_old\_ma.py & 351\\
+        test\_io.py & 351\\
+        test\_utils.py & 330\\
+        test\_dtype.py & 268\\
+        test\_indexing.py & 256\\
+        test\_einsum.py & 242\\\bottomrule
+        Total & 19657
+    \end{tabular}
+        \caption{File Name and number of assert statements in test files. Only counts for the top 20 files are given, but the total is across all test files.}
+    \label{tbl:testasserts}
+\end{table}
+\subsection{Coverage}
+Coverage is given in~\cref{tbl:coverage}. Notice that both the Python and C code achieve greater than 80\% coverage,
+a sign of extensive regression testing. The full coverage report, including a breakdown by file (and an ability to inspect
+coverage on a line-by-line, function-by-function, etc., basis), is given in \href{https://patdak.github.io/pat-project/coverage/index.html}{coverage/index.html}. The C code coverage
+is given in \href{https://patdak.github.io/pat-project/lcov/index.html}{lcov/index.html}.
+\begin{table}[H]
+\centering
+\begin{tabular}{lllllll}
+Language & Statements & Missing & Excluded & Branches & Partial & Coverage\\\toprule
+Python & 99472 & 12806 & 0 & 27149 & 2254 & 84\%\\
+C & 54333 & 13540 & & & & 80.1\%
+\end{tabular}
+\caption{Table of Coverage information. Python coverage is generated
+using the \texttt{Coverage} library\cite{python-coverage}. C coverage is generated using \texttt{gcov}\cite{gcov}.}
+\label{tbl:coverage}
+\end{table}
+
+\subsection{Activity}
+The \emph{number} of committers (both major and minor --- a file's minor committers are those
+who contribute to less 5\% of the file's changes) is fairly stable (see~\cref{fig:contributors_vs_year}). However, the number of commits
+overall appears to be trending upwards, with local peaks every two to three years (see~\cref{fig:activity}). Additionally,
+the graph of the number of commits and the graph of the number of major/minor contributors are all qualitatively similar.
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=\textwidth]{data/contributors_vs_year.svg}
+    \caption{Number of major/minor contributors vs. year.}
+    \label{fig:contributors_vs_year}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=\textwidth]{data/activity_vs_year.svg}
+    \caption{Number of commits vs. year. Notice the graph is qualitatively very similar to
+    \cref{fig:contributors_vs_year}.}
+    \label{fig:activity}
+\end{figure}
+
+As expected for a project like this, the commits overwhelmingly consist of modifications (see~\cref{fig:contributor_actions}).
+\begin{figure}[H]
+    \centering
+    \includesvg[width=\textwidth]{data/contributor_actions.svg}
+    \caption{A pie chart of commit types. \texttt{Modify} commits are overwhelmingly
+    the most common.}
+    \label{fig:contributor_actions}
+\end{figure}
+
+Finally, we notice that the top 10 major contributors are also the top 10 minor contributors (\cref{fig:contributions-major,fig:contributions-minor,fig:contributions-total}) and also
+make the most overall contributions (both major and minor). 
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=\textwidth]{data/author_vs_contributions_major.svg}
+    \caption{A bar graph of the top 10 largest major contributors. A major contributor
+    for a file is any contributor who contributed more than 5\% to the file. Notice that
+    Charles Harris is the largest contributor by a substantial margin.}
+    \label{fig:contributions-major}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=\textwidth]{data/author_vs_contributions_minor.svg}
+    \caption{A bar graph of the top 10 largest \emph{minor} contributors. A \emph{minor} contributor
+    for a file is any contributor who contributed less than 5\% to the file. Notice that
+    Charles Harris is the largest contributor by a substantial margin.}
+    \label{fig:contributions-minor}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=\textwidth]{data/author_vs_contributions_total.svg}
+    \caption{A bar graph of the top 10 largest \emph{total} contributors. Once again, notice that
+    Charles Harris is the largest contributor by a substantial margin.}
+    \label{fig:contributions-total}
+\end{figure}
+
+\section{Conclusion}
+Numpy is a mature library with very high quality tests. As we can see from~\cref{fig:contributors_vs_year},
+tests are added and modified regularly, with test modifications being overwhelmingly more common
+(see~\cref{fig:contributor_actions}). With test coverage greater than 80\% for both Python and C code (\cref{tbl:coverage})
+as well as a large number of assert statements (especially in test files), this code base is set up
+to be productive for developers --- able to focus on development --- while having tests that allow
+for quickly finding regressions. Additionally, the discrete separation between testing and production
+files allows for testers to quickly design and update unit and regression tests.
+\printbibliography
+\end{document}

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -72,29 +72,29 @@
 <a name="2"><span class="lineNum">       2 </span>            : #define __GET_ATTR_STRING_H</a>
 <a name="3"><span class="lineNum">       3 </span>            : </a>
 <a name="4"><span class="lineNum">       4 </span>            : static NPY_INLINE npy_bool</a>
-<a name="5"><span class="lineNum">       5 </span><span class="lineCov">    7467888 : _is_basic_python_type(PyTypeObject *tp)</span></a>
+<a name="5"><span class="lineNum">       5 </span><span class="lineCov">    7467885 : _is_basic_python_type(PyTypeObject *tp)</span></a>
 <a name="6"><span class="lineNum">       6 </span>            : {</a>
-<a name="7"><span class="lineNum">       7 </span><span class="lineCov">    7467888 :     return (</span></a>
+<a name="7"><span class="lineNum">       7 </span><span class="lineCov">    7467885 :     return (</span></a>
 <a name="8"><span class="lineNum">       8 </span>            :         /* Basic number types */</a>
-<a name="9"><span class="lineNum">       9 </span><span class="lineCov">    6180419 :         tp == &amp;PyBool_Type ||</span></a>
-<a name="10"><span class="lineNum">      10 </span><span class="lineCov">    4070262 :         tp == &amp;PyLong_Type ||</span></a>
-<a name="11"><span class="lineNum">      11 </span><span class="lineCov">    2540186 :         tp == &amp;PyFloat_Type ||</span></a>
-<a name="12"><span class="lineNum">      12 </span><span class="lineCov">    2538498 :         tp == &amp;PyComplex_Type ||</span></a>
+<a name="9"><span class="lineNum">       9 </span><span class="lineCov">    6180416 :         tp == &amp;PyBool_Type ||</span></a>
+<a name="10"><span class="lineNum">      10 </span><span class="lineCov">    4070259 :         tp == &amp;PyLong_Type ||</span></a>
+<a name="11"><span class="lineNum">      11 </span><span class="lineCov">    2540183 :         tp == &amp;PyFloat_Type ||</span></a>
+<a name="12"><span class="lineNum">      12 </span><span class="lineCov">    2538495 :         tp == &amp;PyComplex_Type ||</span></a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            :         /* Basic sequence types */</a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">    2156028 :         tp == &amp;PyList_Type ||</span></a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">    1274840 :         tp == &amp;PyTuple_Type ||</span></a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">    1274804 :         tp == &amp;PyDict_Type ||</span></a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">    1274736 :         tp == &amp;PySet_Type ||</span></a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">    1274736 :         tp == &amp;PyFrozenSet_Type ||</span></a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">    1247934 :         tp == &amp;PyUnicode_Type ||</span></a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">    1247681 :         tp == &amp;PyBytes_Type ||</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">    2156025 :         tp == &amp;PyList_Type ||</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">    1274837 :         tp == &amp;PyTuple_Type ||</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">    1274801 :         tp == &amp;PyDict_Type ||</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">    1274733 :         tp == &amp;PySet_Type ||</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">    1274733 :         tp == &amp;PyFrozenSet_Type ||</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">    1247931 :         tp == &amp;PyUnicode_Type ||</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">    1247678 :         tp == &amp;PyBytes_Type ||</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span>            :         /* other builtins */</a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">    1247283 :         tp == &amp;PySlice_Type ||</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">    1247283 :         tp == Py_TYPE(Py_None) ||</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">    1247280 :         tp == &amp;PySlice_Type ||</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">    1247280 :         tp == Py_TYPE(Py_None) ||</span></a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineCov">     963405 :         tp == Py_TYPE(Py_Ellipsis) ||</span></a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">    8431278 :         tp == Py_TYPE(Py_NotImplemented) ||</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">    8431275 :         tp == Py_TYPE(Py_NotImplemented) ||</span></a>
 <a name="28"><span class="lineNum">      28 </span>            : </a>
 <a name="29"><span class="lineNum">      29 </span>            :         /* TODO: ndarray, but we can't see PyArray_Type here */</a>
 <a name="30"><span class="lineNum">      30 </span>            : </a>
@@ -171,12 +171,12 @@
 <a name="101"><span class="lineNum">     101 </span>            :  * Kept for backwards compatibility. In future, we should deprecate this.</a>
 <a name="102"><span class="lineNum">     102 </span>            :  */</a>
 <a name="103"><span class="lineNum">     103 </span>            : static NPY_INLINE PyObject *</a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineCov">    3209613 : PyArray_LookupSpecial_OnInstance(PyObject *obj, char const *name)</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineCov">    3209610 : PyArray_LookupSpecial_OnInstance(PyObject *obj, char const *name)</span></a>
 <a name="105"><span class="lineNum">     105 </span>            : {</a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineCov">    3209613 :     PyTypeObject *tp = Py_TYPE(obj);</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">    3209610 :     PyTypeObject *tp = Py_TYPE(obj);</span></a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
 <a name="108"><span class="lineNum">     108 </span>            :     /* We do not need to check for special attributes on trivial types */</a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">    3209613 :     if (_is_basic_python_type(tp)) {</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">    3209610 :     if (_is_basic_python_type(tp)) {</span></a>
 <a name="110"><span class="lineNum">     110 </span>            :         return NULL;</a>
 <a name="111"><span class="lineNum">     111 </span>            :     }</a>
 <a name="112"><span class="lineNum">     112 </span>            : </a>

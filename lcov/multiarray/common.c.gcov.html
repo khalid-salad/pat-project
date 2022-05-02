@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -107,15 +107,15 @@
 <a name="37"><span class="lineNum">      37 </span>            : </a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span>            : NPY_NO_EXPORT PyArray_Descr *</a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">     123188 : _array_find_python_scalar_type(PyObject *op)</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">     123190 : _array_find_python_scalar_type(PyObject *op)</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : {</a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineCov">     123188 :     if (PyFloat_Check(op)) {</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">     123190 :     if (PyFloat_Check(op)) {</span></a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">          6 :         return PyArray_DescrFromType(NPY_DOUBLE);</span></a>
 <a name="44"><span class="lineNum">      44 </span>            :     }</a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">     123182 :     else if (PyComplex_Check(op)) {</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">     123184 :     else if (PyComplex_Check(op)) {</span></a>
 <a name="46"><span class="lineNum">      46 </span><span class="lineNoCov">          0 :         return PyArray_DescrFromType(NPY_CDOUBLE);</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :     }</a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">     123182 :     else if (PyLong_Check(op)) {</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">     123184 :     else if (PyLong_Check(op)) {</span></a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :         return PyArray_PyIntAbstractDType.discover_descr_from_pyobject(</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :                     &amp;PyArray_PyIntAbstractDType, op);</a>
 <a name="51"><span class="lineNum">      51 </span>            :     }</a>
@@ -412,24 +412,24 @@
 <a name="342"><span class="lineNum">     342 </span>            :  * returns -1 on failure, 0 on success.</a>
 <a name="343"><span class="lineNum">     343 </span>            :  */</a>
 <a name="344"><span class="lineNum">     344 </span>            : NPY_NO_EXPORT int</a>
-<a name="345"><span class="lineNum">     345 </span><span class="lineCov">     661743 : _unpack_field(PyObject *value, PyArray_Descr **descr, npy_intp *offset)</span></a>
+<a name="345"><span class="lineNum">     345 </span><span class="lineCov">     853809 : _unpack_field(PyObject *value, PyArray_Descr **descr, npy_intp *offset)</span></a>
 <a name="346"><span class="lineNum">     346 </span>            : {</a>
-<a name="347"><span class="lineNum">     347 </span><span class="lineCov">     661743 :     PyObject * off;</span></a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineCov">     661743 :     if (PyTuple_GET_SIZE(value) &lt; 2) {</span></a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineCov">     853809 :     PyObject * off;</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineCov">     853809 :     if (PyTuple_GET_SIZE(value) &lt; 2) {</span></a>
 <a name="349"><span class="lineNum">     349 </span>            :         return -1;</a>
 <a name="350"><span class="lineNum">     350 </span>            :     }</a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">     661743 :     *descr = (PyArray_Descr *)PyTuple_GET_ITEM(value, 0);</span></a>
-<a name="352"><span class="lineNum">     352 </span><span class="lineCov">     661743 :     off  = PyTuple_GET_ITEM(value, 1);</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">     853809 :     *descr = (PyArray_Descr *)PyTuple_GET_ITEM(value, 0);</span></a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineCov">     853809 :     off  = PyTuple_GET_ITEM(value, 1);</span></a>
 <a name="353"><span class="lineNum">     353 </span>            : </a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineCov">     661743 :     if (PyLong_Check(off)) {</span></a>
-<a name="355"><span class="lineNum">     355 </span><span class="lineCov">     661743 :         *offset = PyLong_AsSsize_t(off);</span></a>
+<a name="354"><span class="lineNum">     354 </span><span class="lineCov">     853809 :     if (PyLong_Check(off)) {</span></a>
+<a name="355"><span class="lineNum">     355 </span><span class="lineCov">     853809 :         *offset = PyLong_AsSsize_t(off);</span></a>
 <a name="356"><span class="lineNum">     356 </span>            :     }</a>
 <a name="357"><span class="lineNum">     357 </span>            :     else {</a>
 <a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :         PyErr_SetString(PyExc_IndexError, &quot;can't convert offset&quot;);</span></a>
 <a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 :         return -1;</span></a>
 <a name="360"><span class="lineNum">     360 </span>            :     }</a>
 <a name="361"><span class="lineNum">     361 </span>            : </a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineCov">     666822 :     return 0;</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">     861177 :     return 0;</span></a>
 <a name="363"><span class="lineNum">     363 </span>            : }</a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span>            : /*</a>

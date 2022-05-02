@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">84</td>
@@ -120,14 +120,14 @@
 <a name="50"><span class="lineNum">      50 </span>            :     }</a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineCov">        626 :     last_key_val = *(const @type@ *)key;</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">       5381 :     for (; key_len &gt; 0; key_len--, key += key_str, ret += ret_str) {</span></a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">       4755 :         const @type@ key_val = *(const @type@ *)key;</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">       5382 :     for (; key_len &gt; 0; key_len--, key += key_str, ret += ret_str) {</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">       4756 :         const @type@ key_val = *(const @type@ *)key;</span></a>
 <a name="55"><span class="lineNum">      55 </span>            :         /*</a>
 <a name="56"><span class="lineNum">      56 </span>            :          * Updating only one of the indices based on the previous key</a>
 <a name="57"><span class="lineNum">      57 </span>            :          * gives the search a big boost when keys are sorted, but slightly</a>
 <a name="58"><span class="lineNum">      58 </span>            :          * slows down things for purely random ones.</a>
 <a name="59"><span class="lineNum">      59 </span>            :          */</a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       4793 :         if (@TYPE@_LT(last_key_val, key_val)) {</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       4794 :         if (@TYPE@_LT(last_key_val, key_val)) {</span></a>
 <a name="61"><span class="lineNum">      61 </span>            :             max_idx = arr_len;</a>
 <a name="62"><span class="lineNum">      62 </span>            :         }</a>
 <a name="63"><span class="lineNum">      63 </span>            :         else {</a>
@@ -135,19 +135,19 @@
 <a name="65"><span class="lineNum">      65 </span><span class="lineCov">       2176 :             max_idx = (max_idx &lt; arr_len) ? (max_idx + 1) : arr_len;</span></a>
 <a name="66"><span class="lineNum">      66 </span>            :         }</a>
 <a name="67"><span class="lineNum">      67 </span>            : </a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">      14533 :         last_key_val = key_val;</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">      14530 :         last_key_val = key_val;</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : </a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">      15891 :         while (min_idx &lt; max_idx) {</span></a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">      11136 :             const npy_intp mid_idx = min_idx + ((max_idx - min_idx) &gt;&gt; 1);</span></a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">      11136 :             const @type@ mid_val = *(const @type@ *)(arr + mid_idx*arr_str);</span></a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineCov">      14498 :             if (@TYPE@_@CMP@(mid_val, key_val)) {</span></a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       4824 :                 min_idx = mid_idx + 1;</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">      15888 :         while (min_idx &lt; max_idx) {</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">      11132 :             const npy_intp mid_idx = min_idx + ((max_idx - min_idx) &gt;&gt; 1);</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">      11132 :             const @type@ mid_val = *(const @type@ *)(arr + mid_idx*arr_str);</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">      14495 :             if (@TYPE@_@CMP@(mid_val, key_val)) {</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       4823 :                 min_idx = mid_idx + 1;</span></a>
 <a name="75"><span class="lineNum">      75 </span>            :             }</a>
 <a name="76"><span class="lineNum">      76 </span>            :             else {</a>
 <a name="77"><span class="lineNum">      77 </span>            :                 max_idx = mid_idx;</a>
 <a name="78"><span class="lineNum">      78 </span>            :             }</a>
 <a name="79"><span class="lineNum">      79 </span>            :         }</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       4755 :         *(npy_intp *)ret = min_idx;</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       4756 :         *(npy_intp *)ret = min_idx;</span></a>
 <a name="81"><span class="lineNum">      81 </span>            :     }</a>
 <a name="82"><span class="lineNum">      82 </span>            : }</a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>

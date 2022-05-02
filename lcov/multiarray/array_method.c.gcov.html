@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -120,35 +120,35 @@
 <a name="50"><span class="lineNum">      50 </span>            :  * this step.</a>
 <a name="51"><span class="lineNum">      51 </span>            :  */</a>
 <a name="52"><span class="lineNum">      52 </span>            : static NPY_CASTING</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">       1856 : default_resolve_descriptors(</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">       1859 : default_resolve_descriptors(</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :         PyArrayMethodObject *method,</a>
 <a name="55"><span class="lineNum">      55 </span>            :         PyArray_DTypeMeta **dtypes,</a>
 <a name="56"><span class="lineNum">      56 </span>            :         PyArray_Descr **input_descrs,</a>
 <a name="57"><span class="lineNum">      57 </span>            :         PyArray_Descr **output_descrs)</a>
 <a name="58"><span class="lineNum">      58 </span>            : {</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       1856 :     int nin = method-&gt;nin;</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       1856 :     int nout = method-&gt;nout;</span></a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">       1856 :     int all_defined = 1;</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       1859 :     int nin = method-&gt;nin;</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       1859 :     int nout = method-&gt;nout;</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">       1859 :     int all_defined = 1;</span></a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineCov">       5568 :     for (int i = 0; i &lt; nin + nout; i++) {</span></a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">       3712 :         PyArray_DTypeMeta *dtype = dtypes[i];</span></a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineCov">       3712 :         if (dtype == NULL) {</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">       5577 :     for (int i = 0; i &lt; nin + nout; i++) {</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">       3718 :         PyArray_DTypeMeta *dtype = dtypes[i];</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">       3718 :         if (dtype == NULL) {</span></a>
 <a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :             output_descrs[i] = NULL;</span></a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 :             all_defined = 0;</span></a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 :             continue;</span></a>
 <a name="69"><span class="lineNum">      69 </span>            :         }</a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">       3712 :         if (NPY_DTYPE(input_descrs[i]) == dtype) {</span></a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">       3712 :             output_descrs[i] = ensure_dtype_nbo(input_descrs[i]);</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">       3718 :         if (NPY_DTYPE(input_descrs[i]) == dtype) {</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">       3718 :             output_descrs[i] = ensure_dtype_nbo(input_descrs[i]);</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :         }</a>
 <a name="73"><span class="lineNum">      73 </span>            :         else {</a>
 <a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 :             output_descrs[i] = dtype-&gt;default_descr(dtype);</span></a>
 <a name="75"><span class="lineNum">      75 </span>            :         }</a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       3712 :         if (NPY_UNLIKELY(output_descrs[i] == NULL)) {</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       3718 :         if (NPY_UNLIKELY(output_descrs[i] == NULL)) {</span></a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :             goto fail;</span></a>
 <a name="78"><span class="lineNum">      78 </span>            :         }</a>
 <a name="79"><span class="lineNum">      79 </span>            :     }</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       1856 :     if (all_defined) {</span></a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">       1856 :         return method-&gt;casting;</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       1859 :     if (all_defined) {</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">       1859 :         return method-&gt;casting;</span></a>
 <a name="82"><span class="lineNum">      82 </span>            :     }</a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineNoCov">          0 :     if (NPY_UNLIKELY(nin == 0 || dtypes[0] == NULL)) {</span></a>
@@ -236,20 +236,20 @@
 <a name="166"><span class="lineNum">     166 </span>            : </a>
 <a name="167"><span class="lineNum">     167 </span><span class="lineCov">     721319 :     int nargs = meth-&gt;nin + meth-&gt;nout;</span></a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineCov">     721319 :     if (aligned) {</span></a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">     706709 :         if (meth-&gt;contiguous_loop == NULL ||</span></a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">     706709 :                 !is_contiguous(strides, descrs, nargs)) {</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">     706710 :         if (meth-&gt;contiguous_loop == NULL ||</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">     706710 :                 !is_contiguous(strides, descrs, nargs)) {</span></a>
 <a name="171"><span class="lineNum">     171 </span><span class="lineCov">     457577 :             *out_loop = meth-&gt;strided_loop;</span></a>
 <a name="172"><span class="lineNum">     172 </span><span class="lineCov">     457577 :             return 0;</span></a>
 <a name="173"><span class="lineNum">     173 </span>            :         }</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">     249132 :         *out_loop = meth-&gt;contiguous_loop;</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">     249133 :         *out_loop = meth-&gt;contiguous_loop;</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :     }</a>
 <a name="176"><span class="lineNum">     176 </span>            :     else {</a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">      14610 :         if (meth-&gt;unaligned_contiguous_loop == NULL ||</span></a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">      14610 :                 !is_contiguous(strides, descrs, nargs)) {</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">      14609 :         if (meth-&gt;unaligned_contiguous_loop == NULL ||</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">      14609 :                 !is_contiguous(strides, descrs, nargs)) {</span></a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineCov">      11145 :             *out_loop = meth-&gt;unaligned_strided_loop;</span></a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineCov">      11145 :             return 0;</span></a>
 <a name="181"><span class="lineNum">     181 </span>            :         }</a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">       3465 :         *out_loop = meth-&gt;unaligned_contiguous_loop;</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">       3464 :         *out_loop = meth-&gt;unaligned_contiguous_loop;</span></a>
 <a name="183"><span class="lineNum">     183 </span>            :     }</a>
 <a name="184"><span class="lineNum">     184 </span>            :     return 0;</a>
 <a name="185"><span class="lineNum">     185 </span>            : }</a>

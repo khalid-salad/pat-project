@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -208,15 +208,15 @@
 <a name="138"><span class="lineNum">     138 </span>            : #define _CMP_TRUE_US    0x1f</a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
 <a name="140"><span class="lineNum">     140 </span>            : extern __inline __m256d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">    1735043 : _mm256_add_pd (__m256d __A, __m256d __B)</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">    2039757 : _mm256_add_pd (__m256d __A, __m256d __B)</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : {</a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">    1735041 :   return (__m256d) ((__v4df)__A + (__v4df)__B);</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">    2039755 :   return (__m256d) ((__v4df)__A + (__v4df)__B);</span></a>
 <a name="144"><span class="lineNum">     144 </span>            : }</a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
 <a name="146"><span class="lineNum">     146 </span>            : extern __inline __m256 __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     817017 : _mm256_add_ps (__m256 __A, __m256 __B)</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     817021 : _mm256_add_ps (__m256 __A, __m256 __B)</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : {</a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">     829516 :   return (__m256) ((__v8sf)__A + (__v8sf)__B);</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">     829520 :   return (__m256) ((__v8sf)__A + (__v8sf)__B);</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : }</a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
 <a name="152"><span class="lineNum">     152 </span>            : extern __inline __m256d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -302,15 +302,15 @@
 <a name="232"><span class="lineNum">     232 </span>            : }</a>
 <a name="233"><span class="lineNum">     233 </span>            : </a>
 <a name="234"><span class="lineNum">     234 </span>            : extern __inline __m256d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">     289763 : _mm256_div_pd (__m256d __A, __m256d __B)</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">     290481 : _mm256_div_pd (__m256d __A, __m256d __B)</span></a>
 <a name="236"><span class="lineNum">     236 </span>            : {</a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">     289763 :   return (__m256d) ((__v4df)__A / (__v4df)__B);</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">     290481 :   return (__m256d) ((__v4df)__A / (__v4df)__B);</span></a>
 <a name="238"><span class="lineNum">     238 </span>            : }</a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
 <a name="240"><span class="lineNum">     240 </span>            : extern __inline __m256 __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">     257559 : _mm256_div_ps (__m256 __A, __m256 __B)</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">     257550 : _mm256_div_ps (__m256 __A, __m256 __B)</span></a>
 <a name="242"><span class="lineNum">     242 </span>            : {</a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">     257559 :   return (__m256) ((__v8sf)__A / (__v8sf)__B);</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">     257550 :   return (__m256) ((__v8sf)__A / (__v8sf)__B);</span></a>
 <a name="244"><span class="lineNum">     244 </span>            : }</a>
 <a name="245"><span class="lineNum">     245 </span>            : </a>
 <a name="246"><span class="lineNum">     246 </span>            : /* Dot product instructions with mask-defined summing and zeroing parts</a>
@@ -379,15 +379,15 @@
 <a name="309"><span class="lineNum">     309 </span>            : }</a>
 <a name="310"><span class="lineNum">     310 </span>            : </a>
 <a name="311"><span class="lineNum">     311 </span>            : extern __inline __m256d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="312"><span class="lineNum">     312 </span><span class="lineCov">    1421859 : _mm256_mul_pd (__m256d __A, __m256d __B)</span></a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineCov">    1423337 : _mm256_mul_pd (__m256d __A, __m256d __B)</span></a>
 <a name="313"><span class="lineNum">     313 </span>            : {</a>
-<a name="314"><span class="lineNum">     314 </span><span class="lineCov">    1421859 :   return (__m256d) ((__v4df)__A * (__v4df)__B);</span></a>
+<a name="314"><span class="lineNum">     314 </span><span class="lineCov">    1423337 :   return (__m256d) ((__v4df)__A * (__v4df)__B);</span></a>
 <a name="315"><span class="lineNum">     315 </span>            : }</a>
 <a name="316"><span class="lineNum">     316 </span>            : </a>
 <a name="317"><span class="lineNum">     317 </span>            : extern __inline __m256 __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="318"><span class="lineNum">     318 </span><span class="lineCov">    1437508 : _mm256_mul_ps (__m256 __A, __m256 __B)</span></a>
+<a name="318"><span class="lineNum">     318 </span><span class="lineCov">    1437514 : _mm256_mul_ps (__m256 __A, __m256 __B)</span></a>
 <a name="319"><span class="lineNum">     319 </span>            : {</a>
-<a name="320"><span class="lineNum">     320 </span><span class="lineCov">    1437508 :   return (__m256) ((__v8sf)__A * (__v8sf)__B);</span></a>
+<a name="320"><span class="lineNum">     320 </span><span class="lineCov">    1437514 :   return (__m256) ((__v8sf)__A * (__v8sf)__B);</span></a>
 <a name="321"><span class="lineNum">     321 </span>            : }</a>
 <a name="322"><span class="lineNum">     322 </span>            : </a>
 <a name="323"><span class="lineNum">     323 </span>            : extern __inline __m256d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -427,15 +427,15 @@
 <a name="357"><span class="lineNum">     357 </span>            : #endif</a>
 <a name="358"><span class="lineNum">     358 </span>            : </a>
 <a name="359"><span class="lineNum">     359 </span>            : extern __inline __m256d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineCov">     696449 : _mm256_sub_pd (__m256d __A, __m256d __B)</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineCov">     697910 : _mm256_sub_pd (__m256d __A, __m256d __B)</span></a>
 <a name="361"><span class="lineNum">     361 </span>            : {</a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineCov">     696447 :   return (__m256d) ((__v4df)__A - (__v4df)__B);</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">     697908 :   return (__m256d) ((__v4df)__A - (__v4df)__B);</span></a>
 <a name="363"><span class="lineNum">     363 </span>            : }</a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span>            : extern __inline __m256 __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="366"><span class="lineNum">     366 </span><span class="lineCov">    1534699 : _mm256_sub_ps (__m256 __A, __m256 __B)</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">    1534705 : _mm256_sub_ps (__m256 __A, __m256 __B)</span></a>
 <a name="367"><span class="lineNum">     367 </span>            : {</a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineCov">     898661 :   return (__m256) ((__v8sf)__A - (__v8sf)__B);</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineCov">     898667 :   return (__m256) ((__v8sf)__A - (__v8sf)__B);</span></a>
 <a name="369"><span class="lineNum">     369 </span>            : }</a>
 <a name="370"><span class="lineNum">     370 </span>            : </a>
 <a name="371"><span class="lineNum">     371 </span>            : extern __inline __m256d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -934,33 +934,33 @@
 <a name="864"><span class="lineNum">     864 </span>            : #endif</a>
 <a name="865"><span class="lineNum">     865 </span>            : </a>
 <a name="866"><span class="lineNum">     866 </span>            : extern __inline __m256d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="867"><span class="lineNum">     867 </span><span class="lineCov">    2467506 : _mm256_load_pd (double const *__P)</span></a>
+<a name="867"><span class="lineNum">     867 </span><span class="lineCov">    2717846 : _mm256_load_pd (double const *__P)</span></a>
 <a name="868"><span class="lineNum">     868 </span>            : {</a>
-<a name="869"><span class="lineNum">     869 </span><span class="lineCov">    2467506 :   return *(__m256d *)__P;</span></a>
+<a name="869"><span class="lineNum">     869 </span><span class="lineCov">    2717846 :   return *(__m256d *)__P;</span></a>
 <a name="870"><span class="lineNum">     870 </span>            : }</a>
 <a name="871"><span class="lineNum">     871 </span>            : </a>
 <a name="872"><span class="lineNum">     872 </span>            : extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="873"><span class="lineNum">     873 </span><span class="lineCov">    4143088 : _mm256_store_pd (double *__P, __m256d __A)</span></a>
+<a name="873"><span class="lineNum">     873 </span><span class="lineCov">    4451459 : _mm256_store_pd (double *__P, __m256d __A)</span></a>
 <a name="874"><span class="lineNum">     874 </span>            : {</a>
-<a name="875"><span class="lineNum">     875 </span><span class="lineCov">    4143088 :   *(__m256d *)__P = __A;</span></a>
+<a name="875"><span class="lineNum">     875 </span><span class="lineCov">    4451459 :   *(__m256d *)__P = __A;</span></a>
 <a name="876"><span class="lineNum">     876 </span>            : }</a>
 <a name="877"><span class="lineNum">     877 </span>            : </a>
 <a name="878"><span class="lineNum">     878 </span>            : extern __inline __m256 __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="879"><span class="lineNum">     879 </span><span class="lineCov">      26722 : _mm256_load_ps (float const *__P)</span></a>
+<a name="879"><span class="lineNum">     879 </span><span class="lineCov">      26315 : _mm256_load_ps (float const *__P)</span></a>
 <a name="880"><span class="lineNum">     880 </span>            : {</a>
-<a name="881"><span class="lineNum">     881 </span><span class="lineCov">      26722 :   return *(__m256 *)__P;</span></a>
+<a name="881"><span class="lineNum">     881 </span><span class="lineCov">      26315 :   return *(__m256 *)__P;</span></a>
 <a name="882"><span class="lineNum">     882 </span>            : }</a>
 <a name="883"><span class="lineNum">     883 </span>            : </a>
 <a name="884"><span class="lineNum">     884 </span>            : extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="885"><span class="lineNum">     885 </span><span class="lineCov">     263950 : _mm256_store_ps (float *__P, __m256 __A)</span></a>
+<a name="885"><span class="lineNum">     885 </span><span class="lineCov">     263957 : _mm256_store_ps (float *__P, __m256 __A)</span></a>
 <a name="886"><span class="lineNum">     886 </span>            : {</a>
-<a name="887"><span class="lineNum">     887 </span><span class="lineCov">     263950 :   *(__m256 *)__P = __A;</span></a>
+<a name="887"><span class="lineNum">     887 </span><span class="lineCov">     263957 :   *(__m256 *)__P = __A;</span></a>
 <a name="888"><span class="lineNum">     888 </span>            : }</a>
 <a name="889"><span class="lineNum">     889 </span>            : </a>
 <a name="890"><span class="lineNum">     890 </span>            : extern __inline __m256d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="891"><span class="lineNum">     891 </span><span class="lineCov">    2057044 : _mm256_loadu_pd (double const *__P)</span></a>
+<a name="891"><span class="lineNum">     891 </span><span class="lineCov">    2107015 : _mm256_loadu_pd (double const *__P)</span></a>
 <a name="892"><span class="lineNum">     892 </span>            : {</a>
-<a name="893"><span class="lineNum">     893 </span><span class="lineCov">    2057044 :   return *(__m256d_u *)__P;</span></a>
+<a name="893"><span class="lineNum">     893 </span><span class="lineCov">    2107015 :   return *(__m256d_u *)__P;</span></a>
 <a name="894"><span class="lineNum">     894 </span>            : }</a>
 <a name="895"><span class="lineNum">     895 </span>            : </a>
 <a name="896"><span class="lineNum">     896 </span>            : extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -970,9 +970,9 @@
 <a name="900"><span class="lineNum">     900 </span>            : }</a>
 <a name="901"><span class="lineNum">     901 </span>            : </a>
 <a name="902"><span class="lineNum">     902 </span>            : extern __inline __m256 __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="903"><span class="lineNum">     903 </span><span class="lineCov">      75538 : _mm256_loadu_ps (float const *__P)</span></a>
+<a name="903"><span class="lineNum">     903 </span><span class="lineCov">      76071 : _mm256_loadu_ps (float const *__P)</span></a>
 <a name="904"><span class="lineNum">     904 </span>            : {</a>
-<a name="905"><span class="lineNum">     905 </span><span class="lineCov">      75538 :   return *(__m256_u *)__P;</span></a>
+<a name="905"><span class="lineNum">     905 </span><span class="lineCov">      76071 :   return *(__m256_u *)__P;</span></a>
 <a name="906"><span class="lineNum">     906 </span>            : }</a>
 <a name="907"><span class="lineNum">     907 </span>            : </a>
 <a name="908"><span class="lineNum">     908 </span>            : extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -1378,9 +1378,9 @@
 <a name="1308"><span class="lineNum">    1308 </span>            : </a>
 <a name="1309"><span class="lineNum">    1309 </span>            : /* Create a vector with all elements equal to A.  */</a>
 <a name="1310"><span class="lineNum">    1310 </span>            : extern __inline __m256d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="1311"><span class="lineNum">    1311 </span><span class="lineCov">      77610 : _mm256_set1_pd (double __A)</span></a>
+<a name="1311"><span class="lineNum">    1311 </span><span class="lineCov">      77611 : _mm256_set1_pd (double __A)</span></a>
 <a name="1312"><span class="lineNum">    1312 </span>            : {</a>
-<a name="1313"><span class="lineNum">    1313 </span><span class="lineCov">      77610 :   return __extension__ (__m256d){ __A, __A, __A, __A };</span></a>
+<a name="1313"><span class="lineNum">    1313 </span><span class="lineCov">      77611 :   return __extension__ (__m256d){ __A, __A, __A, __A };</span></a>
 <a name="1314"><span class="lineNum">    1314 </span>            : }</a>
 <a name="1315"><span class="lineNum">    1315 </span>            : </a>
 <a name="1316"><span class="lineNum">    1316 </span>            : /* Create a vector with all elements equal to A.  */</a>

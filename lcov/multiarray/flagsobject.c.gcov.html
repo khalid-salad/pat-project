@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">27</td>
@@ -129,25 +129,25 @@
 <a name="59"><span class="lineNum">      59 </span>            :  * Update Several Flags at once.</a>
 <a name="60"><span class="lineNum">      60 </span>            :  */</a>
 <a name="61"><span class="lineNum">      61 </span>            : NPY_NO_EXPORT void</a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">   14423205 : PyArray_UpdateFlags(PyArrayObject *ret, int flagmask)</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">   14423542 : PyArray_UpdateFlags(PyArrayObject *ret, int flagmask)</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : {</a>
 <a name="64"><span class="lineNum">      64 </span>            :     /* Always update both, as its not trivial to guess one from the other */</a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineCov">   14423205 :     if (flagmask &amp; (NPY_ARRAY_F_CONTIGUOUS | NPY_ARRAY_C_CONTIGUOUS)) {</span></a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">    1726490 :         _UpdateContiguousFlags(ret);</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">   14423542 :     if (flagmask &amp; (NPY_ARRAY_F_CONTIGUOUS | NPY_ARRAY_C_CONTIGUOUS)) {</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">    1726658 :         _UpdateContiguousFlags(ret);</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :     }</a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">   14423205 :     if (flagmask &amp; NPY_ARRAY_ALIGNED) {</span></a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">   12783073 :         if (IsAligned(ret)) {</span></a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">   12779106 :             PyArray_ENABLEFLAGS(ret, NPY_ARRAY_ALIGNED);</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">   14423542 :     if (flagmask &amp; NPY_ARRAY_ALIGNED) {</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">   12783242 :         if (IsAligned(ret)) {</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">   12779353 :             PyArray_ENABLEFLAGS(ret, NPY_ARRAY_ALIGNED);</span></a>
 <a name="71"><span class="lineNum">      71 </span>            :         }</a>
 <a name="72"><span class="lineNum">      72 </span>            :         else {</a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineCov">       3967 :             PyArray_CLEARFLAGS(ret, NPY_ARRAY_ALIGNED);</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">       3889 :             PyArray_CLEARFLAGS(ret, NPY_ARRAY_ALIGNED);</span></a>
 <a name="74"><span class="lineNum">      74 </span>            :         }</a>
 <a name="75"><span class="lineNum">      75 </span>            :     }</a>
 <a name="76"><span class="lineNum">      76 </span>            :     /*</a>
 <a name="77"><span class="lineNum">      77 </span>            :      * This is not checked by default WRITEABLE is not</a>
 <a name="78"><span class="lineNum">      78 </span>            :      * part of UPDATE_ALL</a>
 <a name="79"><span class="lineNum">      79 </span>            :      */</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">   14423205 :     if (flagmask &amp; NPY_ARRAY_WRITEABLE) {</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">   14423542 :     if (flagmask &amp; NPY_ARRAY_WRITEABLE) {</span></a>
 <a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :         if (_IsWriteable(ret)) {</span></a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 :             PyArray_ENABLEFLAGS(ret, NPY_ARRAY_WRITEABLE);</span></a>
 <a name="83"><span class="lineNum">      83 </span>            :         }</a>
@@ -155,7 +155,7 @@
 <a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :             PyArray_CLEARFLAGS(ret, NPY_ARRAY_WRITEABLE);</span></a>
 <a name="86"><span class="lineNum">      86 </span>            :         }</a>
 <a name="87"><span class="lineNum">      87 </span>            :     }</a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">   14423205 :     return;</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">   14423542 :     return;</span></a>
 <a name="89"><span class="lineNum">      89 </span>            : }</a>
 <a name="90"><span class="lineNum">      90 </span>            : </a>
 <a name="91"><span class="lineNum">      91 </span>            : /*</a>
@@ -191,28 +191,28 @@
 <a name="121"><span class="lineNum">     121 </span>            :  * contains the itemsize.</a>
 <a name="122"><span class="lineNum">     122 </span>            :  */</a>
 <a name="123"><span class="lineNum">     123 </span>            : static void</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">    1726490 : _UpdateContiguousFlags(PyArrayObject *ap)</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">    1726658 : _UpdateContiguousFlags(PyArrayObject *ap)</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : {</a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">    1726490 :     npy_intp sd;</span></a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">    1726490 :     npy_intp dim;</span></a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">    1726490 :     int i;</span></a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineCov">    1726490 :     npy_bool is_c_contig = 1;</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">    1726658 :     npy_intp sd;</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">    1726658 :     npy_intp dim;</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">    1726658 :     int i;</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">    1726658 :     npy_bool is_c_contig = 1;</span></a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">    1726490 :     sd = PyArray_ITEMSIZE(ap);</span></a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">    3979507 :     for (i = PyArray_NDIM(ap) - 1; i &gt;= 0; --i) {</span></a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">    2290241 :         dim = PyArray_DIMS(ap)[i];</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">    1726658 :     sd = PyArray_ITEMSIZE(ap);</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">    3979874 :     for (i = PyArray_NDIM(ap) - 1; i &gt;= 0; --i) {</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">    2290440 :         dim = PyArray_DIMS(ap)[i];</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : #if NPY_RELAXED_STRIDES_CHECKING</a>
 <a name="135"><span class="lineNum">     135 </span>            :         /* contiguous by definition */</a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    2290241 :         if (dim == 0) {</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    2290440 :         if (dim == 0) {</span></a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineCov">      37224 :             PyArray_ENABLEFLAGS(ap, NPY_ARRAY_C_CONTIGUOUS);</span></a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineCov">      37224 :             PyArray_ENABLEFLAGS(ap, NPY_ARRAY_F_CONTIGUOUS);</span></a>
 <a name="139"><span class="lineNum">     139 </span><span class="lineCov">      37224 :             return;</span></a>
 <a name="140"><span class="lineNum">     140 </span>            :         }</a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">    2253017 :         if (dim != 1) {</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">    2018812 :             if (PyArray_STRIDES(ap)[i] != sd) {</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">    2253216 :         if (dim != 1) {</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">    2019015 :             if (PyArray_STRIDES(ap)[i] != sd) {</span></a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineCov">     296954 :                 is_c_contig = 0;</span></a>
 <a name="144"><span class="lineNum">     144 </span>            :             }</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">    2018812 :             sd *= dim;</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">    2019015 :             sd *= dim;</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :         }</a>
 <a name="147"><span class="lineNum">     147 </span>            : #else /* not NPY_RELAXED_STRIDES_CHECKING */</a>
 <a name="148"><span class="lineNum">     148 </span>            :         if (PyArray_STRIDES(ap)[i] != sd) {</a>
@@ -226,8 +226,8 @@
 <a name="156"><span class="lineNum">     156 </span>            :         sd *= dim;</a>
 <a name="157"><span class="lineNum">     157 </span>            : #endif /* not NPY_RELAXED_STRIDES_CHECKING */</a>
 <a name="158"><span class="lineNum">     158 </span>            :     }</a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">    1689266 :     if (is_c_contig) {</span></a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">    1519081 :         PyArray_ENABLEFLAGS(ap, NPY_ARRAY_C_CONTIGUOUS);</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">    1689434 :     if (is_c_contig) {</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">    1519249 :         PyArray_ENABLEFLAGS(ap, NPY_ARRAY_C_CONTIGUOUS);</span></a>
 <a name="161"><span class="lineNum">     161 </span>            :     }</a>
 <a name="162"><span class="lineNum">     162 </span>            :     else {</a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineCov">     170185 :         PyArray_CLEARFLAGS(ap, NPY_ARRAY_C_CONTIGUOUS);</span></a>
@@ -235,15 +235,15 @@
 <a name="165"><span class="lineNum">     165 </span>            : </a>
 <a name="166"><span class="lineNum">     166 </span>            :     /* check if fortran contiguous */</a>
 <a name="167"><span class="lineNum">     167 </span>            :     sd = PyArray_ITEMSIZE(ap);</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">    3146213 :     for (i = 0; i &lt; PyArray_NDIM(ap); ++i) {</span></a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">    1814677 :         dim = PyArray_DIMS(ap)[i];</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">    3146518 :     for (i = 0; i &lt; PyArray_NDIM(ap); ++i) {</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">    1814845 :         dim = PyArray_DIMS(ap)[i];</span></a>
 <a name="170"><span class="lineNum">     170 </span>            : #if NPY_RELAXED_STRIDES_CHECKING</a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">    1814677 :         if (dim != 1) {</span></a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">    1620056 :             if (PyArray_STRIDES(ap)[i] != sd) {</span></a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">     357730 :                 PyArray_CLEARFLAGS(ap, NPY_ARRAY_F_CONTIGUOUS);</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">     357730 :                 return;</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">    1814845 :         if (dim != 1) {</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">    1620228 :             if (PyArray_STRIDES(ap)[i] != sd) {</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">     357761 :                 PyArray_CLEARFLAGS(ap, NPY_ARRAY_F_CONTIGUOUS);</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">     357761 :                 return;</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :             }</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">    1262326 :             sd *= dim;</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">    1262467 :             sd *= dim;</span></a>
 <a name="177"><span class="lineNum">     177 </span>            :         }</a>
 <a name="178"><span class="lineNum">     178 </span>            : #else /* not NPY_RELAXED_STRIDES_CHECKING */</a>
 <a name="179"><span class="lineNum">     179 </span>            :         if (PyArray_STRIDES(ap)[i] != sd) {</a>
@@ -256,7 +256,7 @@
 <a name="186"><span class="lineNum">     186 </span>            :         sd *= dim;</a>
 <a name="187"><span class="lineNum">     187 </span>            : #endif /* not NPY_RELAXED_STRIDES_CHECKING */</a>
 <a name="188"><span class="lineNum">     188 </span>            :     }</a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">    1331536 :     PyArray_ENABLEFLAGS(ap, NPY_ARRAY_F_CONTIGUOUS);</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">    1331673 :     PyArray_ENABLEFLAGS(ap, NPY_ARRAY_F_CONTIGUOUS);</span></a>
 <a name="190"><span class="lineNum">     190 </span>            :     return;</a>
 <a name="191"><span class="lineNum">     191 </span>            : }</a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>

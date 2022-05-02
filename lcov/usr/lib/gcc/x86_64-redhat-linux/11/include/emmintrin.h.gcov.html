@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-01 12:59:13</td>
+            <td class="headerValue">2022-05-01 18:18:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -189,9 +189,9 @@
 <a name="119"><span class="lineNum">     119 </span>            : </a>
 <a name="120"><span class="lineNum">     120 </span>            : /* Load two DPFP values from P.  The address must be 16-byte aligned.  */</a>
 <a name="121"><span class="lineNum">     121 </span>            : extern __inline __m128d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">   34784547 : _mm_load_pd (double const *__P)</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">   34909547 : _mm_load_pd (double const *__P)</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : {</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">   34784547 :   return *(__m128d *)__P;</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">   34909547 :   return *(__m128d *)__P;</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : }</a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
 <a name="127"><span class="lineNum">     127 </span>            : /* Load two DPFP values from P.  The address need not be 16-byte aligned.  */</a>
@@ -238,9 +238,9 @@
 <a name="168"><span class="lineNum">     168 </span>            : </a>
 <a name="169"><span class="lineNum">     169 </span>            : /* Store two DPFP values.  The address need not be 16-byte aligned.  */</a>
 <a name="170"><span class="lineNum">     170 </span>            : extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">     366938 : _mm_storeu_pd (double *__P, __m128d __A)</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">     366936 : _mm_storeu_pd (double *__P, __m128d __A)</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : {</a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">     366938 :   *(__m128d_u *)__P = __A;</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">     366936 :   *(__m128d_u *)__P = __A;</span></a>
 <a name="174"><span class="lineNum">     174 </span>            : }</a>
 <a name="175"><span class="lineNum">     175 </span>            : </a>
 <a name="176"><span class="lineNum">     176 </span>            : /* Stores the lower DPFP value.  */</a>
@@ -293,7 +293,7 @@
 <a name="223"><span class="lineNum">     223 </span>            : extern __inline int __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
 <a name="224"><span class="lineNum">     224 </span><span class="lineCov">     300237 : _mm_cvtsi128_si32 (__m128i __A)</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : {</a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineCov">     280937 :   return __builtin_ia32_vec_ext_v4si ((__v4si)__A, 0);</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineCov">     281062 :   return __builtin_ia32_vec_ext_v4si ((__v4si)__A, 0);</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : }</a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span>            : #ifdef __x86_64__</a>
@@ -337,9 +337,9 @@
 <a name="267"><span class="lineNum">     267 </span>            : }</a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
 <a name="269"><span class="lineNum">     269 </span>            : extern __inline __m128d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="270"><span class="lineNum">     270 </span><span class="lineCov">      90438 : _mm_mul_pd (__m128d __A, __m128d __B)</span></a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineCov">      90440 : _mm_mul_pd (__m128d __A, __m128d __B)</span></a>
 <a name="271"><span class="lineNum">     271 </span>            : {</a>
-<a name="272"><span class="lineNum">     272 </span><span class="lineCov">      33076 :   return (__m128d) ((__v2df)__A * (__v2df)__B);</span></a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineCov">      33078 :   return (__m128d) ((__v2df)__A * (__v2df)__B);</span></a>
 <a name="273"><span class="lineNum">     273 </span>            : }</a>
 <a name="274"><span class="lineNum">     274 </span>            : </a>
 <a name="275"><span class="lineNum">     275 </span>            : extern __inline __m128d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -453,9 +453,9 @@
 <a name="383"><span class="lineNum">     383 </span>            : }</a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
 <a name="385"><span class="lineNum">     385 </span>            : extern __inline __m128d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineCov">   30117538 : _mm_cmpneq_pd (__m128d __A, __m128d __B)</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineCov">   30217538 : _mm_cmpneq_pd (__m128d __A, __m128d __B)</span></a>
 <a name="387"><span class="lineNum">     387 </span>            : {</a>
-<a name="388"><span class="lineNum">     388 </span><span class="lineCov">    7529389 :   return (__m128d)__builtin_ia32_cmpneqpd ((__v2df)__A, (__v2df)__B);</span></a>
+<a name="388"><span class="lineNum">     388 </span><span class="lineCov">    7554389 :   return (__m128d)__builtin_ia32_cmpneqpd ((__v2df)__A, (__v2df)__B);</span></a>
 <a name="389"><span class="lineNum">     389 </span>            : }</a>
 <a name="390"><span class="lineNum">     390 </span>            : </a>
 <a name="391"><span class="lineNum">     391 </span>            : extern __inline __m128d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -657,21 +657,21 @@
 <a name="587"><span class="lineNum">     587 </span>            : /* Create a vector of Qi, where i is the element number.  */</a>
 <a name="588"><span class="lineNum">     588 </span>            : </a>
 <a name="589"><span class="lineNum">     589 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="590"><span class="lineNum">     590 </span><span class="lineCov">     571665 : _mm_set_epi64x (long long __q1, long long __q0)</span></a>
+<a name="590"><span class="lineNum">     590 </span><span class="lineCov">     571667 : _mm_set_epi64x (long long __q1, long long __q0)</span></a>
 <a name="591"><span class="lineNum">     591 </span>            : {</a>
-<a name="592"><span class="lineNum">     592 </span><span class="lineCov">     388861 :   return __extension__ (__m128i)(__v2di){ __q0, __q1 };</span></a>
+<a name="592"><span class="lineNum">     592 </span><span class="lineCov">     388863 :   return __extension__ (__m128i)(__v2di){ __q0, __q1 };</span></a>
 <a name="593"><span class="lineNum">     593 </span>            : }</a>
 <a name="594"><span class="lineNum">     594 </span>            : </a>
 <a name="595"><span class="lineNum">     595 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="596"><span class="lineNum">     596 </span><span class="lineCov">     394993 : _mm_set_epi64 (__m64 __q1,  __m64 __q0)</span></a>
+<a name="596"><span class="lineNum">     596 </span><span class="lineCov">     394995 : _mm_set_epi64 (__m64 __q1,  __m64 __q0)</span></a>
 <a name="597"><span class="lineNum">     597 </span>            : {</a>
-<a name="598"><span class="lineNum">     598 </span><span class="lineCov">     394993 :   return _mm_set_epi64x ((long long)__q1, (long long)__q0);</span></a>
+<a name="598"><span class="lineNum">     598 </span><span class="lineCov">     394995 :   return _mm_set_epi64x ((long long)__q1, (long long)__q0);</span></a>
 <a name="599"><span class="lineNum">     599 </span>            : }</a>
 <a name="600"><span class="lineNum">     600 </span>            : </a>
 <a name="601"><span class="lineNum">     601 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="602"><span class="lineNum">     602 </span><span class="lineCov">     338572 : _mm_set_epi32 (int __q3, int __q2, int __q1, int __q0)</span></a>
+<a name="602"><span class="lineNum">     602 </span><span class="lineCov">     338322 : _mm_set_epi32 (int __q3, int __q2, int __q1, int __q0)</span></a>
 <a name="603"><span class="lineNum">     603 </span>            : {</a>
-<a name="604"><span class="lineNum">     604 </span><span class="lineCov">     338572 :   return __extension__ (__m128i)(__v4si){ __q0, __q1, __q2, __q3 };</span></a>
+<a name="604"><span class="lineNum">     604 </span><span class="lineCov">     338322 :   return __extension__ (__m128i)(__v4si){ __q0, __q1, __q2, __q3 };</span></a>
 <a name="605"><span class="lineNum">     605 </span>            : }</a>
 <a name="606"><span class="lineNum">     606 </span>            : </a>
 <a name="607"><span class="lineNum">     607 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -711,7 +711,7 @@
 <a name="641"><span class="lineNum">     641 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
 <a name="642"><span class="lineNum">     642 </span><span class="lineCov">     105963 : _mm_set1_epi32 (int __A)</span></a>
 <a name="643"><span class="lineNum">     643 </span>            : {</a>
-<a name="644"><span class="lineNum">     644 </span><span class="lineCov">   13837914 :   return _mm_set_epi32 (__A, __A, __A, __A);</span></a>
+<a name="644"><span class="lineNum">     644 </span><span class="lineCov">   13838914 :   return _mm_set_epi32 (__A, __A, __A, __A);</span></a>
 <a name="645"><span class="lineNum">     645 </span>            : }</a>
 <a name="646"><span class="lineNum">     646 </span>            : </a>
 <a name="647"><span class="lineNum">     647 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -723,7 +723,7 @@
 <a name="653"><span class="lineNum">     653 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
 <a name="654"><span class="lineNum">     654 </span><span class="lineCov">      10748 : _mm_set1_epi8 (char __A)</span></a>
 <a name="655"><span class="lineNum">     655 </span>            : {</a>
-<a name="656"><span class="lineNum">     656 </span><span class="lineCov">    6661969 :   return _mm_set_epi8 (__A, __A, __A, __A, __A, __A, __A, __A,</span></a>
+<a name="656"><span class="lineNum">     656 </span><span class="lineCov">    6674469 :   return _mm_set_epi8 (__A, __A, __A, __A, __A, __A, __A, __A,</span></a>
 <a name="657"><span class="lineNum">     657 </span>            :                        __A, __A, __A, __A, __A, __A, __A, __A);</a>
 <a name="658"><span class="lineNum">     658 </span>            : }</a>
 <a name="659"><span class="lineNum">     659 </span>            : </a>
@@ -768,13 +768,13 @@
 <a name="698"><span class="lineNum">     698 </span>            : }</a>
 <a name="699"><span class="lineNum">     699 </span>            : </a>
 <a name="700"><span class="lineNum">     700 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="701"><span class="lineNum">     701 </span><span class="lineCov">   27408101 : _mm_loadu_si128 (__m128i_u const *__P)</span></a>
+<a name="701"><span class="lineNum">     701 </span><span class="lineCov">   27433101 : _mm_loadu_si128 (__m128i_u const *__P)</span></a>
 <a name="702"><span class="lineNum">     702 </span>            : {</a>
-<a name="703"><span class="lineNum">     703 </span><span class="lineCov">   18072587 :   return *__P;</span></a>
+<a name="703"><span class="lineNum">     703 </span><span class="lineCov">   18097587 :   return *__P;</span></a>
 <a name="704"><span class="lineNum">     704 </span>            : }</a>
 <a name="705"><span class="lineNum">     705 </span>            : </a>
 <a name="706"><span class="lineNum">     706 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="707"><span class="lineNum">     707 </span><span class="lineCov">     394993 : _mm_loadl_epi64 (__m128i_u const *__P)</span></a>
+<a name="707"><span class="lineNum">     707 </span><span class="lineCov">     394995 : _mm_loadl_epi64 (__m128i_u const *__P)</span></a>
 <a name="708"><span class="lineNum">     708 </span>            : {</a>
 <a name="709"><span class="lineNum">     709 </span><span class="lineCov">      19951 :   return _mm_set_epi64 ((__m64)0LL, *(__m64_u *)__P);</span></a>
 <a name="710"><span class="lineNum">     710 </span>            : }</a>
@@ -799,9 +799,9 @@
 <a name="729"><span class="lineNum">     729 </span>            : }</a>
 <a name="730"><span class="lineNum">     730 </span>            : </a>
 <a name="731"><span class="lineNum">     731 </span>            : extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="732"><span class="lineNum">     732 </span><span class="lineCov">   13574820 : _mm_store_si128 (__m128i *__P, __m128i __B)</span></a>
+<a name="732"><span class="lineNum">     732 </span><span class="lineCov">   13599820 : _mm_store_si128 (__m128i *__P, __m128i __B)</span></a>
 <a name="733"><span class="lineNum">     733 </span>            : {</a>
-<a name="734"><span class="lineNum">     734 </span><span class="lineCov">   13574820 :   *__P = __B;</span></a>
+<a name="734"><span class="lineNum">     734 </span><span class="lineCov">   13599820 :   *__P = __B;</span></a>
 <a name="735"><span class="lineNum">     735 </span>            : }</a>
 <a name="736"><span class="lineNum">     736 </span>            : </a>
 <a name="737"><span class="lineNum">     737 </span>            : extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -811,9 +811,9 @@
 <a name="741"><span class="lineNum">     741 </span>            : }</a>
 <a name="742"><span class="lineNum">     742 </span>            : </a>
 <a name="743"><span class="lineNum">     743 </span>            : extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="744"><span class="lineNum">     744 </span><span class="lineCov">   33848801 : _mm_storel_epi64 (__m128i_u *__P, __m128i __B)</span></a>
+<a name="744"><span class="lineNum">     744 </span><span class="lineCov">   33873805 : _mm_storel_epi64 (__m128i_u *__P, __m128i __B)</span></a>
 <a name="745"><span class="lineNum">     745 </span>            : {</a>
-<a name="746"><span class="lineNum">     746 </span><span class="lineCov">   33803636 :   *(__m64_u *)__P = (__m64) ((__v2di)__B)[0];</span></a>
+<a name="746"><span class="lineNum">     746 </span><span class="lineCov">   33828640 :   *(__m64_u *)__P = (__m64) ((__v2di)__B)[0];</span></a>
 <a name="747"><span class="lineNum">     747 </span><span class="lineCov">      45161 : }</span></a>
 <a name="748"><span class="lineNum">     748 </span>            : </a>
 <a name="749"><span class="lineNum">     749 </span>            : extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -1036,9 +1036,9 @@
 <a name="966"><span class="lineNum">     966 </span>            : }</a>
 <a name="967"><span class="lineNum">     967 </span>            : </a>
 <a name="968"><span class="lineNum">     968 </span>            : extern __inline __m128d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="969"><span class="lineNum">     969 </span><span class="lineCov">     351520 : _mm_loadh_pd (__m128d __A, double const *__B)</span></a>
+<a name="969"><span class="lineNum">     969 </span><span class="lineCov">     351518 : _mm_loadh_pd (__m128d __A, double const *__B)</span></a>
 <a name="970"><span class="lineNum">     970 </span>            : {</a>
-<a name="971"><span class="lineNum">     971 </span><span class="lineCov">     351139 :   return (__m128d)__builtin_ia32_loadhpd ((__v2df)__A, __B);</span></a>
+<a name="971"><span class="lineNum">     971 </span><span class="lineCov">     351137 :   return (__m128d)__builtin_ia32_loadhpd ((__v2df)__A, __B);</span></a>
 <a name="972"><span class="lineNum">     972 </span>            : }</a>
 <a name="973"><span class="lineNum">     973 </span>            : </a>
 <a name="974"><span class="lineNum">     974 </span>            : extern __inline __m128d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -1048,21 +1048,21 @@
 <a name="978"><span class="lineNum">     978 </span>            : }</a>
 <a name="979"><span class="lineNum">     979 </span>            : </a>
 <a name="980"><span class="lineNum">     980 </span>            : extern __inline int __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="981"><span class="lineNum">     981 </span><span class="lineCov">     964767 : _mm_movemask_pd (__m128d __A)</span></a>
+<a name="981"><span class="lineNum">     981 </span><span class="lineCov">    1064767 : _mm_movemask_pd (__m128d __A)</span></a>
 <a name="982"><span class="lineNum">     982 </span>            : {</a>
-<a name="983"><span class="lineNum">     983 </span><span class="lineCov">     964767 :   return __builtin_ia32_movmskpd ((__v2df)__A);</span></a>
+<a name="983"><span class="lineNum">     983 </span><span class="lineCov">    1064767 :   return __builtin_ia32_movmskpd ((__v2df)__A);</span></a>
 <a name="984"><span class="lineNum">     984 </span>            : }</a>
 <a name="985"><span class="lineNum">     985 </span>            : </a>
 <a name="986"><span class="lineNum">     986 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="987"><span class="lineNum">     987 </span><span class="lineCov">   33707679 : _mm_packs_epi16 (__m128i __A, __m128i __B)</span></a>
+<a name="987"><span class="lineNum">     987 </span><span class="lineCov">   33732679 : _mm_packs_epi16 (__m128i __A, __m128i __B)</span></a>
 <a name="988"><span class="lineNum">     988 </span>            : {</a>
-<a name="989"><span class="lineNum">     989 </span><span class="lineCov">   35799104 :   return (__m128i)__builtin_ia32_packsswb128 ((__v8hi)__A, (__v8hi)__B);</span></a>
+<a name="989"><span class="lineNum">     989 </span><span class="lineCov">   35824104 :   return (__m128i)__builtin_ia32_packsswb128 ((__v8hi)__A, (__v8hi)__B);</span></a>
 <a name="990"><span class="lineNum">     990 </span>            : }</a>
 <a name="991"><span class="lineNum">     991 </span>            : </a>
 <a name="992"><span class="lineNum">     992 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="993"><span class="lineNum">     993 </span><span class="lineCov">   71598186 : _mm_packs_epi32 (__m128i __A, __m128i __B)</span></a>
+<a name="993"><span class="lineNum">     993 </span><span class="lineCov">   71648186 : _mm_packs_epi32 (__m128i __A, __m128i __B)</span></a>
 <a name="994"><span class="lineNum">     994 </span>            : {</a>
-<a name="995"><span class="lineNum">     995 </span><span class="lineCov">   35799093 :   return (__m128i)__builtin_ia32_packssdw128 ((__v4si)__A, (__v4si)__B);</span></a>
+<a name="995"><span class="lineNum">     995 </span><span class="lineCov">   35824093 :   return (__m128i)__builtin_ia32_packssdw128 ((__v4si)__A, (__v4si)__B);</span></a>
 <a name="996"><span class="lineNum">     996 </span>            : }</a>
 <a name="997"><span class="lineNum">     997 </span>            : </a>
 <a name="998"><span class="lineNum">     998 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -1108,15 +1108,15 @@
 <a name="1038"><span class="lineNum">    1038 </span>            : }</a>
 <a name="1039"><span class="lineNum">    1039 </span>            : </a>
 <a name="1040"><span class="lineNum">    1040 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="1041"><span class="lineNum">    1041 </span><span class="lineCov">     174538 : _mm_unpacklo_epi32 (__m128i __A, __m128i __B)</span></a>
+<a name="1041"><span class="lineNum">    1041 </span><span class="lineCov">     174288 : _mm_unpacklo_epi32 (__m128i __A, __m128i __B)</span></a>
 <a name="1042"><span class="lineNum">    1042 </span>            : {</a>
-<a name="1043"><span class="lineNum">    1043 </span><span class="lineCov">     113421 :   return (__m128i)__builtin_ia32_punpckldq128 ((__v4si)__A, (__v4si)__B);</span></a>
+<a name="1043"><span class="lineNum">    1043 </span><span class="lineCov">     113296 :   return (__m128i)__builtin_ia32_punpckldq128 ((__v4si)__A, (__v4si)__B);</span></a>
 <a name="1044"><span class="lineNum">    1044 </span>            : }</a>
 <a name="1045"><span class="lineNum">    1045 </span>            : </a>
 <a name="1046"><span class="lineNum">    1046 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">     216797 : _mm_unpacklo_epi64 (__m128i __A, __m128i __B)</span></a>
+<a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">     216547 : _mm_unpacklo_epi64 (__m128i __A, __m128i __B)</span></a>
 <a name="1048"><span class="lineNum">    1048 </span>            : {</a>
-<a name="1049"><span class="lineNum">    1049 </span><span class="lineCov">     211842 :   return (__m128i)__builtin_ia32_punpcklqdq128 ((__v2di)__A, (__v2di)__B);</span></a>
+<a name="1049"><span class="lineNum">    1049 </span><span class="lineCov">     211592 :   return (__m128i)__builtin_ia32_punpcklqdq128 ((__v2di)__A, (__v2di)__B);</span></a>
 <a name="1050"><span class="lineNum">    1050 </span>            : }</a>
 <a name="1051"><span class="lineNum">    1051 </span>            : </a>
 <a name="1052"><span class="lineNum">    1052 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -1377,15 +1377,15 @@
 <a name="1307"><span class="lineNum">    1307 </span>            : }</a>
 <a name="1308"><span class="lineNum">    1308 </span>            : </a>
 <a name="1309"><span class="lineNum">    1309 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="1310"><span class="lineNum">    1310 </span><span class="lineCov">   51932475 : _mm_and_si128 (__m128i __A, __m128i __B)</span></a>
+<a name="1310"><span class="lineNum">    1310 </span><span class="lineCov">   51969975 : _mm_and_si128 (__m128i __A, __m128i __B)</span></a>
 <a name="1311"><span class="lineNum">    1311 </span>            : {</a>
-<a name="1312"><span class="lineNum">    1312 </span><span class="lineCov">   51917246 :   return (__m128i) ((__v2du)__A &amp; (__v2du)__B);</span></a>
+<a name="1312"><span class="lineNum">    1312 </span><span class="lineCov">   51954746 :   return (__m128i) ((__v2du)__A &amp; (__v2du)__B);</span></a>
 <a name="1313"><span class="lineNum">    1313 </span>            : }</a>
 <a name="1314"><span class="lineNum">    1314 </span>            : </a>
 <a name="1315"><span class="lineNum">    1315 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="1316"><span class="lineNum">    1316 </span><span class="lineCov">    7338027 : _mm_andnot_si128 (__m128i __A, __m128i __B)</span></a>
+<a name="1316"><span class="lineNum">    1316 </span><span class="lineCov">    7363027 : _mm_andnot_si128 (__m128i __A, __m128i __B)</span></a>
 <a name="1317"><span class="lineNum">    1317 </span>            : {</a>
-<a name="1318"><span class="lineNum">    1318 </span><span class="lineCov">    6921151 :   return (__m128i)__builtin_ia32_pandn128 ((__v2di)__A, (__v2di)__B);</span></a>
+<a name="1318"><span class="lineNum">    1318 </span><span class="lineCov">    6933651 :   return (__m128i)__builtin_ia32_pandn128 ((__v2di)__A, (__v2di)__B);</span></a>
 <a name="1319"><span class="lineNum">    1319 </span>            : }</a>
 <a name="1320"><span class="lineNum">    1320 </span>            : </a>
 <a name="1321"><span class="lineNum">    1321 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -1401,9 +1401,9 @@
 <a name="1331"><span class="lineNum">    1331 </span>            : }</a>
 <a name="1332"><span class="lineNum">    1332 </span>            : </a>
 <a name="1333"><span class="lineNum">    1333 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="1334"><span class="lineNum">    1334 </span><span class="lineCov">   45558871 : _mm_cmpeq_epi8 (__m128i __A, __m128i __B)</span></a>
+<a name="1334"><span class="lineNum">    1334 </span><span class="lineCov">   45596371 : _mm_cmpeq_epi8 (__m128i __A, __m128i __B)</span></a>
 <a name="1335"><span class="lineNum">    1335 </span>            : {</a>
-<a name="1336"><span class="lineNum">    1336 </span><span class="lineCov">   35131934 :   return (__m128i) ((__v16qi)__A == (__v16qi)__B);</span></a>
+<a name="1336"><span class="lineNum">    1336 </span><span class="lineCov">   35156934 :   return (__m128i) ((__v16qi)__A == (__v16qi)__B);</span></a>
 <a name="1337"><span class="lineNum">    1337 </span>            : }</a>
 <a name="1338"><span class="lineNum">    1338 </span>            : </a>
 <a name="1339"><span class="lineNum">    1339 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -1462,9 +1462,9 @@
 <a name="1392"><span class="lineNum">    1392 </span>            : }</a>
 <a name="1393"><span class="lineNum">    1393 </span>            : </a>
 <a name="1394"><span class="lineNum">    1394 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="1395"><span class="lineNum">    1395 </span><span class="lineCov">      56183 : _mm_insert_epi16 (__m128i const __A, int const __D, int const __N)</span></a>
+<a name="1395"><span class="lineNum">    1395 </span><span class="lineCov">      57183 : _mm_insert_epi16 (__m128i const __A, int const __D, int const __N)</span></a>
 <a name="1396"><span class="lineNum">    1396 </span>            : {</a>
-<a name="1397"><span class="lineNum">    1397 </span><span class="lineCov">      56183 :   return (__m128i) __builtin_ia32_vec_set_v8hi ((__v8hi)__A, __D, __N);</span></a>
+<a name="1397"><span class="lineNum">    1397 </span><span class="lineCov">      57183 :   return (__m128i) __builtin_ia32_vec_set_v8hi ((__v8hi)__A, __D, __N);</span></a>
 <a name="1398"><span class="lineNum">    1398 </span>            : }</a>
 <a name="1399"><span class="lineNum">    1399 </span>            : #else</a>
 <a name="1400"><span class="lineNum">    1400 </span>            : #define _mm_extract_epi16(A, N) \</a>
@@ -1524,9 +1524,9 @@
 <a name="1454"><span class="lineNum">    1454 </span>            : }</a>
 <a name="1455"><span class="lineNum">    1455 </span>            : </a>
 <a name="1456"><span class="lineNum">    1456 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="1457"><span class="lineNum">    1457 </span><span class="lineCov">     133269 : _mm_shuffle_epi32 (__m128i __A, const int __mask)</span></a>
+<a name="1457"><span class="lineNum">    1457 </span><span class="lineCov">     132519 : _mm_shuffle_epi32 (__m128i __A, const int __mask)</span></a>
 <a name="1458"><span class="lineNum">    1458 </span>            : {</a>
-<a name="1459"><span class="lineNum">    1459 </span><span class="lineCov">      57087 :   return (__m128i)__builtin_ia32_pshufd ((__v4si)__A, __mask);</span></a>
+<a name="1459"><span class="lineNum">    1459 </span><span class="lineCov">      56837 :   return (__m128i)__builtin_ia32_pshufd ((__v4si)__A, __mask);</span></a>
 <a name="1460"><span class="lineNum">    1460 </span>            : }</a>
 <a name="1461"><span class="lineNum">    1461 </span>            : #else</a>
 <a name="1462"><span class="lineNum">    1462 </span>            : #define _mm_shufflehi_epi16(A, N) \</a>
@@ -1606,9 +1606,9 @@
 <a name="1536"><span class="lineNum">    1536 </span>            : }</a>
 <a name="1537"><span class="lineNum">    1537 </span>            : </a>
 <a name="1538"><span class="lineNum">    1538 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="1539"><span class="lineNum">    1539 </span><span class="lineCov">     232601 : _mm_cvtsi32_si128 (int __A)</span></a>
+<a name="1539"><span class="lineNum">    1539 </span><span class="lineCov">     232351 : _mm_cvtsi32_si128 (int __A)</span></a>
 <a name="1540"><span class="lineNum">    1540 </span>            : {</a>
-<a name="1541"><span class="lineNum">    1541 </span><span class="lineCov">     231570 :   return _mm_set_epi32 (0, 0, 0, __A);</span></a>
+<a name="1541"><span class="lineNum">    1541 </span><span class="lineCov">     231320 :   return _mm_set_epi32 (0, 0, 0, __A);</span></a>
 <a name="1542"><span class="lineNum">    1542 </span>            : }</a>
 <a name="1543"><span class="lineNum">    1543 </span>            : </a>
 <a name="1544"><span class="lineNum">    1544 </span>            : #ifdef __x86_64__</a>
@@ -1638,7 +1638,7 @@
 <a name="1568"><span class="lineNum">    1568 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
 <a name="1569"><span class="lineNum">    1569 </span><span class="lineCov">     130401 : _mm_castpd_si128(__m128d __A)</span></a>
 <a name="1570"><span class="lineNum">    1570 </span>            : {</a>
-<a name="1571"><span class="lineNum">    1571 </span><span class="lineCov">   33863415 :   return (__m128i) __A;</span></a>
+<a name="1571"><span class="lineNum">    1571 </span><span class="lineCov">   33888419 :   return (__m128i) __A;</span></a>
 <a name="1572"><span class="lineNum">    1572 </span>            : }</a>
 <a name="1573"><span class="lineNum">    1573 </span>            : </a>
 <a name="1574"><span class="lineNum">    1574 </span>            : extern __inline __m128d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
@@ -1650,19 +1650,19 @@
 <a name="1580"><span class="lineNum">    1580 </span>            : extern __inline __m128i __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
 <a name="1581"><span class="lineNum">    1581 </span><span class="lineCov">       3116 : _mm_castps_si128(__m128 __A)</span></a>
 <a name="1582"><span class="lineNum">    1582 </span>            : {</a>
-<a name="1583"><span class="lineNum">    1583 </span><span class="lineCov">    2236748 :   return (__m128i) __A;</span></a>
+<a name="1583"><span class="lineNum">    1583 </span><span class="lineCov">    2237498 :   return (__m128i) __A;</span></a>
 <a name="1584"><span class="lineNum">    1584 </span>            : }</a>
 <a name="1585"><span class="lineNum">    1585 </span>            : </a>
 <a name="1586"><span class="lineNum">    1586 </span>            : extern __inline __m128 __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="1587"><span class="lineNum">    1587 </span><span class="lineCov">     295880 : _mm_castsi128_ps(__m128i __A)</span></a>
+<a name="1587"><span class="lineNum">    1587 </span><span class="lineCov">     296630 : _mm_castsi128_ps(__m128i __A)</span></a>
 <a name="1588"><span class="lineNum">    1588 </span>            : {</a>
-<a name="1589"><span class="lineNum">    1589 </span><span class="lineCov">     295878 :   return (__m128) __A;</span></a>
+<a name="1589"><span class="lineNum">    1589 </span><span class="lineCov">     296628 :   return (__m128) __A;</span></a>
 <a name="1590"><span class="lineNum">    1590 </span>            : }</a>
 <a name="1591"><span class="lineNum">    1591 </span>            : </a>
 <a name="1592"><span class="lineNum">    1592 </span>            : extern __inline __m128d __attribute__((__gnu_inline__, __always_inline__, __artificial__))</a>
-<a name="1593"><span class="lineNum">    1593 </span><span class="lineCov">     623945 : _mm_castsi128_pd(__m128i __A)</span></a>
+<a name="1593"><span class="lineNum">    1593 </span><span class="lineCov">     623947 : _mm_castsi128_pd(__m128i __A)</span></a>
 <a name="1594"><span class="lineNum">    1594 </span>            : {</a>
-<a name="1595"><span class="lineNum">    1595 </span><span class="lineCov">     419101 :   return (__m128d) __A;</span></a>
+<a name="1595"><span class="lineNum">    1595 </span><span class="lineCov">     419103 :   return (__m128d) __A;</span></a>
 <a name="1596"><span class="lineNum">    1596 </span>            : }</a>
 <a name="1597"><span class="lineNum">    1597 </span>            : </a>
 <a name="1598"><span class="lineNum">    1598 </span>            : #ifdef __DISABLE_SSE2__</a>
